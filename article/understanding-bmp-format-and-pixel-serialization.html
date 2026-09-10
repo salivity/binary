@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding BMP Format and Pixel Serialization - binary</title>
+    <meta name="description" content="The Bitmap (BMP) file format is a foundational raster graphics format that stores digital images as an uncompressed, raw grid of pixels. This article explores the architecture of a BMP file, explains how a two-dimensional visual image is translated into">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/understanding-bmp-format-and-pixel-serialization">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Understanding BMP Format and Pixel Serialization - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/understanding-bmp-format-and-pixel-serialization" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Bitmap (BMP) file format is a foundational raster graphics format that stores digital images as an uncompressed, raw grid of pixels. This article explores the architecture of a BMP file, explains how a two-dimensional visual image is translated into" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="understanding-bmp-format-and-pixel-serialization">Understanding
+BMP Format and Pixel Serialization</h1>
+<p>The Bitmap (BMP) file format is a foundational raster graphics format
+that stores digital images as an uncompressed, raw grid of pixels. This
+article explores the architecture of a BMP file, explains how a
+two-dimensional visual image is translated into a sequential stream of
+binary values, and examines how bit depth, row padding, and coordinate
+systems govern the serialization of pixel matrices into raw binary
+data.</p>
+<h2 id="what-is-a-bmp-file">What is a BMP File?</h2>
+<p>A Bitmap (BMP) file, also known as device-independent bitmap (DIB)
+file format, is a raster image format developed by Microsoft to display
+digital images reliably across different devices without requiring
+hardware-specific graphics processing. Unlike compressed formats such as
+JPEG or PNG, BMP traditionally stores image data in an uncompressed or
+losslessly compressed state, preserving the exact numerical value of
+every individual pixel.</p>
+<h2 id="structural-anatomy-of-a-bmp-file">Structural Anatomy of a BMP
+File</h2>
+<p>A standard BMP file consists of four primary structural blocks
+ordered sequentially:</p>
+<ol type="1">
+<li><strong>Bitmap File Header (14 bytes):</strong> Contains general
+information about the file, including the signature <code>BM</code>
+(0x4D42 in hexadecimal) identifying the file type, the total file size
+in bytes, and the memory offset indicating where the raw pixel data
+begins.</li>
+<li><strong>DIB Header (Bitmap Information Header):</strong> Specifies
+the image dimensions (width and height in pixels), the number of color
+planes, the color depth (bits per pixel), the compression method
+(usually 0 for uncompressed RGB), and the resolution. The standard
+header is <code>BITMAPINFOHEADER</code> (40 bytes).</li>
+<li><strong>Color Palette / Color Table:</strong> An optional block used
+primarily when the bit depth is 8 bits per pixel (bpp) or lower. It
+defines the specific color values referenced by index numbers in the
+pixel array.</li>
+<li><strong>Pixel Array (Bitmap Data):</strong> The contiguous block of
+binary data representing the serialized pixel matrix.</li>
+</ol>
+<h2 id="translating-pixels-into-binary-values">Translating Pixels into
+Binary Values</h2>
+<p>Digital images are two-dimensional matrices of <span
+class="math inline">\(W \times H\)</span> pixels, where each pixel
+corresponds to a discrete color. In the binary number system, these
+colors are represented by groups of bits:</p>
+<ul>
+<li><strong>1-Bit Monochrome:</strong> Each pixel is represented by a
+single bit (<code>0</code> for black, <code>1</code> for white). Eight
+pixels are packed into a single byte.</li>
+<li><strong>8-Bit Indexed:</strong> Each pixel is 1 byte (<span
+class="math inline">\(2^8 = 256\)</span> possible values). The byte
+value does not contain color directly; instead, it acts as an index
+pointer to a color in the Color Palette.</li>
+<li><strong>24-Bit True Color:</strong> Each pixel occupies 3 bytes (24
+bits), allowing for <span class="math inline">\(16,777,216\)</span>
+distinct colors. The color channels are divided into Red, Green, and
+Blue, each allocated 8 bits (<span
+class="math inline">\(00000000_2\)</span> to <span
+class="math inline">\(11111111_2\)</span>, or 0 to 255 in decimal). In
+BMP format, these are serialized in reverse order: <strong>Blue, Green,
+Red (BGR)</strong>.</li>
+<li><strong>32-Bit True Color with Alpha:</strong> Each pixel occupies 4
+bytes (32 bits), formatted as <strong>BGRA</strong>, adding an 8-bit
+channel for transparency (Alpha).</li>
+</ul>
+<h2 id="the-serialization-process-from-matrix-to-byte-stream">The
+Serialization Process: From Matrix to Byte Stream</h2>
+<p>Serialization is the process of converting the 2D coordinate matrix
+<span class="math inline">\((x, y)\)</span> of pixels into a linear, 1D
+sequence of binary bytes stored on disk. The BMP format follows specific
+technical rules during this conversion:</p>
+<h3 id="1-coordinate-orientation-bottom-up-storage">1. Coordinate
+Orientation (Bottom-Up Storage)</h3>
+<p>By default, BMP serializes pixel matrices starting from the
+<strong>bottom-left corner</strong> of the image and moving
+left-to-right across the row, then bottom-to-top toward the top-right
+corner. If the height value in the DIB header is negative, the image is
+stored top-to-bottom instead.</p>
+<h3 id="2-the-4-byte-alignment-rule-row-padding">2. The 4-Byte Alignment
+Rule (Row Padding)</h3>
+<p>To optimize data reads for 32-bit processor architectures, the BMP
+specification requires that the binary size of every horizontal row
+(scanline) must be a multiple of 4 bytes (32 bits).</p>
+<p>If the raw data for a row does not divide evenly by 4, null bytes
+(<code>0x00</code>, or <code>00000000</code> in binary) are appended to
+the end of that row as padding before serialization begins for the next
+row.</p>
+<p>The formula to calculate the padded row size is:</p>
+<p><span class="math display">\[\text{Row Size (Bytes)} = \left\lfloor
+\frac{(\text{Bits Per Pixel} \times \text{Width}) + 31}{32}
+\right\rfloor \times 4\]</span></p>
+<h3 id="example-of-24-bit-binary-serialization">Example of 24-Bit Binary
+Serialization</h3>
+<p>Consider a simple <span class="math inline">\(2 \times 2\)</span>
+pixel image in 24-bit color:</p>
+<ul>
+<li>Row 0 (Bottom): Pixel A (Pure Red: B=0, G=0, R=255), Pixel B (Pure
+Green: B=0, G=255, R=0)</li>
+<li>Row 1 (Top): Pixel C (Pure Blue: B=255, G=0, R=0), Pixel D (Pure
+White: B=255, G=255, R=255)</li>
+</ul>
+<p>The binary serialization process works as follows:</p>
+<ol type="1">
+<li><strong>Calculate Row Data:</strong> 2 pixels <span
+class="math inline">\(\times\)</span> 3 bytes = 6 bytes per row.</li>
+<li><strong>Calculate Padding:</strong> The nearest multiple of 4 is 8
+bytes. Therefore, each row requires 2 padding bytes
+(<code>0x00 0x00</code>).</li>
+<li><strong>Serialize Row 0 (Bottom Row):</strong>
+<ul>
+<li>Pixel A: <code>00000000 00000000 11111111</code> (B: 0, G: 0, R:
+255)</li>
+<li>Pixel B: <code>00000000 11111111 00000000</code> (B: 0, G: 255, R:
+0)</li>
+<li>Padding: <code>00000000 00000000</code></li>
+</ul></li>
+<li><strong>Serialize Row 1 (Top Row):</strong>
+<ul>
+<li>Pixel C: <code>11111111 00000000 00000000</code> (B: 255, G: 0, R:
+0)</li>
+<li>Pixel D: <code>11111111 11111111 11111111</code> (B: 255, G: 255, R:
+255)</li>
+<li>Padding: <code>00000000 00000000</code></li>
+</ul></li>
+</ol>
+<p>The resulting contiguous binary stream written to disk for the pixel
+data block is:
+<code>00000000 00000000 11111111 00000000 11111111 00000000 00000000 00000000 11111111 00000000 00000000 11111111 11111111 11111111 00000000 00000000</code></p>
+<p>Through this direct mapping of binary values, byte-aligned rows, and
+explicit color depth definitions, the BMP format reliably transforms
+two-dimensional visual matrix data into a sequential binary structure
+readable by any compatible system.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

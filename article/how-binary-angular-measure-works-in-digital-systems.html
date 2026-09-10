@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Binary Angular Measure Works in Digital Systems - binary</title>
+    <meta name="description" content="Binary Angular Measure (BAM) is a method of representing angles in digital systems by mapping the continuous range of a full circle ($0^\circ$ to $360^\circ$ or $0$ to $2\pi$ radians) directly onto the discrete range of an $n$-bit binary integer. By alig">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-binary-angular-measure-works-in-digital-systems">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Binary Angular Measure Works in Digital Systems - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-binary-angular-measure-works-in-digital-systems" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Binary Angular Measure (BAM) is a method of representing angles in digital systems by mapping the continuous range of a full circle ($0^\circ$ to $360^\circ$ or $0$ to $2\pi$ radians) directly onto the discrete range of an $n$-bit binary integer. By alig" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-binary-angular-measure-works-in-digital-systems">How Binary
+Angular Measure Works in Digital Systems</h1>
+<p>Binary Angular Measure (BAM) is a method of representing angles in
+digital systems by mapping the continuous range of a full circle (<span
+class="math inline">\(0^\circ\)</span> to <span
+class="math inline">\(360^\circ\)</span> or <span
+class="math inline">\(0\)</span> to <span
+class="math inline">\(2\pi\)</span> radians) directly onto the discrete
+range of an <span class="math inline">\(n\)</span>-bit binary integer.
+By aligning the circular nature of angles with the naturally cyclic
+behavior of binary overflow, digital processors can perform fast,
+high-precision angular arithmetic—such as calculating complementary,
+supplementary, and negative angles—using native bitwise and integer
+operations instead of expensive floating-point calculations.</p>
+<h2 id="the-principle-of-binary-angular-measure">The Principle of Binary
+Angular Measure</h2>
+<p>In a standard <span class="math inline">\(n\)</span>-bit BAM system,
+a complete circle of <span class="math inline">\(360^\circ\)</span> is
+divided into <span class="math inline">\(2^n\)</span> equal increments.
+The angular resolution per bit is given by:</p>
+<p><span class="math display">\[\text{Resolution} =
+\frac{360^\circ}{2^n}\]</span></p>
+<ul>
+<li><strong>8-bit BAM:</strong> Divides a circle into 256 units (<span
+class="math inline">\(\approx 1.40625^\circ\)</span> per step).</li>
+<li><strong>16-bit BAM:</strong> Divides a circle into 65,536 units
+(<span class="math inline">\(\approx 0.00549^\circ\)</span> per
+step).</li>
+<li><strong>32-bit BAM:</strong> Divides a circle into over 4.29 billion
+units (<span class="math inline">\(\approx 0.000000084^\circ\)</span>
+per step).</li>
+</ul>
+<p>An angle of <span class="math inline">\(0^\circ\)</span> corresponds
+to integer <code>0</code>, while the maximum value (<span
+class="math inline">\(2^n - 1\)</span>) corresponds to one increment
+short of <span class="math inline">\(360^\circ\)</span>.</p>
+<h2 id="natural-modulo-arithmetic-and-wraparound">Natural Modulo
+Arithmetic and Wraparound</h2>
+<p>One of the primary advantages of BAM in digital systems is the
+elimination of boundary checks for angular overflow:</p>
+<ul>
+<li><strong>Automatic Wrapping:</strong> When an angle exceeds <span
+class="math inline">\(360^\circ\)</span>, it naturally wraps back to
+<span class="math inline">\(0^\circ\)</span>. In binary arithmetic,
+adding two values that exceed <span class="math inline">\(2^n\)</span>
+triggers an integer overflow that automatically discards the carry bit,
+leaving the exact modulo-<span class="math inline">\(2^n\)</span>
+result.</li>
+<li><strong>No Modulo Operations:</strong> In standard degrees,
+maintaining values within <span class="math inline">\([0^\circ,
+360^\circ)\)</span> requires software checks or a modulo command
+(<code>angle % 360</code>). In BAM, the CPU or FPGA hardware handles
+this at the register level in a single clock cycle.</li>
+</ul>
+<h2 id="complementary-and-supplementary-angles-in-bam">Complementary and
+Supplementary Angles in BAM</h2>
+<p>Because binary numbers are aligned with power-of-two divisions, key
+geometric relationships map cleanly to binary constants and bitwise
+operations:</p>
+<h3 id="1-quadrant-and-axis-alignments">1. Quadrant and Axis
+Alignments</h3>
+<p>In an <span class="math inline">\(n\)</span>-bit BAM
+representation:</p>
+<ul>
+<li><span class="math inline">\(0^\circ = 0\)</span></li>
+<li><span class="math inline">\(90^\circ = 2^{n-2}\)</span> (e.g.,
+<code>0x4000</code> in 16-bit)</li>
+<li><span class="math inline">\(180^\circ = 2^{n-1}\)</span> (e.g.,
+<code>0x8000</code> in 16-bit)</li>
+<li><span class="math inline">\(270^\circ = 3 \times 2^{n-2}\)</span>
+(e.g., <code>0xC000</code> in 16-bit)</li>
+</ul>
+<h3 id="2-complementary-angles-90circ---theta">2. Complementary Angles
+(<span class="math inline">\(90^\circ - \theta\)</span>)</h3>
+<p>To find the complementary angle, digital hardware subtracts the angle
+<span class="math inline">\(\theta\)</span> from the fixed binary
+representation of <span class="math inline">\(90^\circ\)</span>:</p>
+<p><span class="math display">\[\theta_{\text{comp}} = 2^{n-2} -
+\theta\]</span></p>
+<p>Because <span class="math inline">\(90^\circ\)</span> is a precise
+power of two, this requires a single integer subtraction with zero
+rounding error.</p>
+<h3 id="3-supplementary-angles-180circ---theta-and-negation">3.
+Supplementary Angles (<span class="math inline">\(180^\circ -
+\theta\)</span>) and Negation</h3>
+<ul>
+<li><strong>Opposite / Negative Angles (<span
+class="math inline">\(-\theta\)</span> or <span
+class="math inline">\(360^\circ - \theta\)</span>):</strong> Computed
+using standard two's complement negation (<code>~θ + 1</code>).</li>
+<li><strong>Supplementary Angles (<span class="math inline">\(180^\circ
+- \theta\)</span>):</strong> Computed by inverting the most significant
+bit (MSB) or subtracting the angle from <code>0x8000...</code>.</li>
+</ul>
+<h2 id="quadrant-decoding-via-msbs">Quadrant Decoding via MSBs</h2>
+<p>The Most Significant Bits (MSBs) of a BAM-encoded value directly
+decode the geometric quadrant without requiring comparison
+operations:</p>
+<ul>
+<li><strong>Bit <span class="math inline">\(n-1\)</span> and Bit <span
+class="math inline">\(n-2\)</span> determine the quadrant:</strong>
+<ul>
+<li><code>00</code>: Quadrant I (<span
+class="math inline">\(0^\circ\)</span> to <span
+class="math inline">\(90^\circ\)</span>)</li>
+<li><code>01</code>: Quadrant II (<span
+class="math inline">\(90^\circ\)</span> to <span
+class="math inline">\(180^\circ\)</span>)</li>
+<li><code>10</code>: Quadrant III (<span
+class="math inline">\(180^\circ\)</span> to <span
+class="math inline">\(270^\circ\)</span>)</li>
+<li><code>11</code>: Quadrant IV (<span
+class="math inline">\(270^\circ\)</span> to <span
+class="math inline">\(360^\circ\)</span>)</li>
+</ul></li>
+</ul>
+<p>The remaining lower bits (<span class="math inline">\(n-3\)</span>
+down to <span class="math inline">\(0\)</span>) represent the relative
+angle within that specific quadrant. This enables hardware
+implementations of trigonometric look-up tables (LUTs) and CORDIC
+(Coordinate Rotation Digital Computer) algorithms to store data for only
+a single quadrant (<span class="math inline">\(0^\circ\)</span> to <span
+class="math inline">\(90^\circ\)</span>), using the MSBs to determine
+symmetry, sign, and axis reflections instantly.</p>
+<h2 id="hardware-and-dsp-advantages">Hardware and DSP Advantages</h2>
+<ol type="1">
+<li><strong>Deterministic Execution:</strong> Eliminates floating-point
+non-determinism, branching statements, and range-checking cycles.</li>
+<li><strong>Reduced Silicon Area:</strong> Integer adders and
+subtractors replace complex floating-point units (FPUs) in
+microcontrollers, FPGAs, and ASICs.</li>
+<li><strong>No Rounding Drift:</strong> Repeated additions and rotations
+do not accumulate floating-point rounding errors across full-circle
+revolutions.</li>
+</ol></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

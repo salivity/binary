@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reversible Computing and Zero Heat Dissipation - binary</title>
+    <meta name="description" content="Reversible computing is a non-traditional paradigm of computation where operations can be undone, allowing information processing to occur without the theoretical requirement of energy dissipation. Traditional electronic computing generates heat primaril">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/reversible-computing-and-zero-heat-dissipation">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Reversible Computing and Zero Heat Dissipation - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/reversible-computing-and-zero-heat-dissipation" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Reversible computing is a non-traditional paradigm of computation where operations can be undone, allowing information processing to occur without the theoretical requirement of energy dissipation. Traditional electronic computing generates heat primaril" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="reversible-computing-and-zero-heat-dissipation">Reversible
+Computing and Zero Heat Dissipation</h1>
+<p>Reversible computing is a non-traditional paradigm of computation
+where operations can be undone, allowing information processing to occur
+without the theoretical requirement of energy dissipation. Traditional
+electronic computing generates heat primarily through the erasure of
+information during logic operations. By ensuring that every
+computational step is completely deterministic in both the forward and
+backward directions, reversible computing bypasses fundamental
+thermodynamic limits, enabling binary logic operations to be carried out
+without releasing heat.</p>
+<h3 id="the-physics-of-heat-in-conventional-computing">The Physics of
+Heat in Conventional Computing</h3>
+<p>In standard digital circuits, logic gates such as AND, OR, and NAND
+are logically irreversible. For example, if a standard two-input AND
+gate produces an output of <code>0</code>, it is impossible to determine
+whether the input was <code>(0,0)</code>, <code>(0,1)</code>, or
+<code>(1,0)</code> without additional data. This represents a loss of
+information.</p>
+<p>According to Landauer's Principle, formulated by Rolf Landauer in
+1961, any logically irreversible manipulation of information that erases
+one bit of data must dissipate a minimum amount of energy as heat into
+the environment. This physical limit is expressed as:</p>
+<p><span class="math display">\[E \ge k_B T \ln 2\]</span></p>
+<p>where <span class="math inline">\(k_B\)</span> is the Boltzmann
+constant and <span class="math inline">\(T\)</span> is the absolute
+temperature in Kelvin. When a bit is erased, the entropy of the
+computational system decreases, requiring an equivalent increase in the
+entropy of the surroundings via thermal dissipation.</p>
+<h3 id="achieving-zero-heat-logic-through-reversibility">Achieving
+Zero-Heat Logic Through Reversibility</h3>
+<p>To perform binary logic operations without dissipating heat,
+computation must satisfy two conditions: logical reversibility and
+physical reversibility.</p>
+<h4 id="1-logical-reversibility">1. Logical Reversibility</h4>
+<p>A computation is logically reversible if its mapping from inputs to
+outputs is bijective (one-to-one and onto). Because every output state
+corresponds to exactly one unique input state, no information is
+destroyed, and the process can be run backward to recover the original
+inputs.</p>
+<p>Standard binary logic is replaced by reversible logic gates, such
+as:</p>
+<ul>
+<li><strong>NOT Gate:</strong> Naturally reversible because an output of
+<code>1</code> always implies an input of <code>0</code>, and vice
+versa.</li>
+<li><strong>Toffoli Gate (Controlled-Controlled-NOT):</strong> Maps
+three inputs <span class="math inline">\((A, B, C)\)</span> to three
+outputs <span class="math inline">\((A, B, C \oplus (A \cdot
+B))\)</span>. It is a universal gate capable of constructing any
+classical logic function without erasing bits.</li>
+<li><strong>Fredkin Gate (Controlled-SWAP):</strong> Uses one control
+bit to determine whether two other bits should be swapped. It conserves
+the total number of <code>0</code>s and <code>1</code>s between input
+and output.</li>
+</ul>
+<p>Because these gates maintain identical input and output bit
+counts—often using additional "ancilla" bits to store intermediate
+states—no information is lost, and the Landauer limit of energy
+dissipation drops to zero.</p>
+<h4 id="2-physical-reversibility-and-adiabatic-switching">2. Physical
+Reversibility and Adiabatic Switching</h4>
+<p>Logical reversibility alone is not enough; the physical hardware must
+also avoid standard resistive dissipation (Joule heating, where <span
+class="math inline">\(P = I^2 R\)</span>). This is achieved through
+<strong>adiabatic charging and switching</strong>.</p>
+<p>In standard CMOS circuits, energy stored in a gate capacitor (<span
+class="math inline">\(E = \frac{1}{2} C V^2\)</span>) is discharged
+directly to ground and lost as heat whenever a bit transitions from
+<code>1</code> to <code>0</code>. In adiabatic circuits:</p>
+<ul>
+<li>Voltages are ramped up and down slowly rather than abruptly
+switched.</li>
+<li>The potential difference across the switching element is kept near
+zero during current flow.</li>
+<li>Instead of dumping charge to the ground, energy is recycled back
+into the power clock for subsequent operations.</li>
+</ul>
+<p>By slowing down the transition time relative to the circuit's
+relaxation time, the electrical energy lost to heat can be made
+arbitrarily small.</p>
+<h3 id="quantum-and-mechanical-systems">Quantum and Mechanical
+Systems</h3>
+<p>Reversible computing is also the foundation of quantum computing.
+Quantum logic gates are represented by unitary operators (<span
+class="math inline">\(U^\dagger U = I\)</span>), which are inherently
+reversible and conserve physical information. In theoretical mechanical
+computers, such as billiard-ball models or molecular mechanical logic,
+collisions between components are modeled as perfectly elastic,
+transferring kinetic and potential energy without generating thermal
+dissipation.</p>
+<p>By combining bijective logic functions that preserve state
+information with adiabatic physical implementations that recycle charge,
+binary logic operations can theoretically operate with zero heat
+dissipation.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

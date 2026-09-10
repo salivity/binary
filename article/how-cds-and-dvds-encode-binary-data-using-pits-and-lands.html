@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How CDs and DVDs Encode Binary Data Using Pits and Lands - binary</title>
+    <meta name="description" content="Optical discs like CDs and DVDs store digital information physically on a microscopic scale using a continuous spiral track of microscopic indentations known as "pits" and flat spaces known as "lands." Rather than a pit simply equaling a zero and a land">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-cds-and-dvds-encode-binary-data-using-pits-and-lands">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How CDs and DVDs Encode Binary Data Using Pits and Lands - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-cds-and-dvds-encode-binary-data-using-pits-and-lands" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Optical discs like CDs and DVDs store digital information physically on a microscopic scale using a continuous spiral track of microscopic indentations known as "pits" and flat spaces known as "lands." Rather than a pit simply equaling a zero and a land" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-cds-and-dvds-encode-binary-data-using-pits-and-lands">How
+CDs and DVDs Encode Binary Data Using Pits and Lands</h1>
+<p>Optical discs like CDs and DVDs store digital information physically
+on a microscopic scale using a continuous spiral track of microscopic
+indentations known as "pits" and flat spaces known as "lands." Rather
+than a pit simply equaling a zero and a land equaling a one, the disc's
+binary data is encoded based on how a laser beam detects the physical
+transitions between these two states. This article explains the physical
+structure of optical media, the mechanism of optical reading, and the
+modulation system used to translate physical disc features into readable
+binary code.</p>
+<h3 id="the-physical-structure-of-optical-discs">The Physical Structure
+of Optical Discs</h3>
+<p>An optical disc is built from a clear polycarbonate plastic
+substrate, a micro-thin reflective metal layer (usually aluminum), and a
+protective acrylic lacquer coat.</p>
+<p>Data is molded into the polycarbonate layer along a single continuous
+spiral track that starts near the center hole and moves outward toward
+the edge. Along this track lie microscopic features:</p>
+<ul>
+<li><strong>Pits:</strong> Tiny recessed grooves or depressions pressed
+into the surface.</li>
+<li><strong>Lands:</strong> The flat, unpressed surfaces between the
+pits.</li>
+</ul>
+<p>In standard CDs, this spiral track is roughly 0.5 micrometers wide,
+with pits measuring approximately 0.11 to 0.13 micrometers deep. On
+DVDs, the laser uses a shorter wavelength, allowing the track pitch, pit
+width, and pit length to be significantly smaller, which drastically
+increases storage capacity.</p>
+<h3 id="the-laser-reading-mechanism-and-destructive-interference">The
+Laser Reading Mechanism and Destructive Interference</h3>
+<p>Optical drives read data without physical contact by focusing a
+semiconductor laser onto the disc's reflective layer from below.</p>
+<ol type="1">
+<li><strong>Reflection on Lands:</strong> When the laser hits a flat
+"land," the light reflects directly back through the transparent
+polycarbonate layer and strikes an optical photodetector at full
+intensity.</li>
+<li><strong>Interference at Pit Edges:</strong> The depth of a pit is
+carefully manufactured to be precisely one-quarter of the laser's
+effective wavelength inside the plastic. When the laser spot moves over
+the edge between a pit and a land, part of the beam reflects from the
+pit floor while the other part reflects from the land. The light
+traveling from the pit floor travels an extra half-wavelength
+round-trip. This causes destructive interference, canceling out the
+reflected light and creating a drop in brightness detected by the
+photodiode.</li>
+</ol>
+<h3 id="the-binary-encoding-system-transitions-as-bits">The Binary
+Encoding System: Transitions as Bits</h3>
+<p>A common misconception is that a pit directly represents a binary
+<code>0</code> and a land directly represents a binary <code>1</code>.
+In optical storage standards, data is encoded using a scheme based on
+<strong>transitions</strong>:</p>
+<ul>
+<li><strong>Binary <code>1</code>:</strong> Represented by a physical
+change in elevation—a transition from a pit to a land, or from a land to
+a pit.</li>
+<li><strong>Binary <code>0</code>:</strong> Represented by no change in
+elevation—the continuation of a flat land or the continuation of an
+existing pit over a standardized unit of track length.</li>
+</ul>
+<p>Because the photodetector senses the drop in light caused by
+destructive interference at the step-edges, every detected edge
+registers as a <code>1</code>. The length of uninterrupted time between
+these edges determines the number of consecutive <code>0</code>s.</p>
+<h3 id="modulation-and-error-control-efm">Modulation and Error Control
+(EFM)</h3>
+<p>To ensure the laser can reliably track the spiral and maintain clock
+synchronization, the system cannot allow pits or lands to be too short
+(which the laser could miss) or too long (which would cause the drive to
+lose track of time).</p>
+<p>To solve this, optical media use modulation schemes:</p>
+<ul>
+<li><strong>Eight-to-Fourteen Modulation (EFM):</strong> Used in CDs,
+this converts every 8-bit byte of raw data into a 14-bit "channel code"
+combined with 3 "merging bits." This guarantees that every
+<code>1</code> is separated by at least two, but no more than ten,
+consecutive <code>0</code>s.</li>
+<li><strong>EFMPlus:</strong> An optimized variation used in DVDs that
+maps 8-bit data into 16-bit channel words without requiring separate
+merging bits, maximizing storage efficiency.</li>
+</ul>
+<p>Once the photodetector translates the light pulses into channel bits,
+the drive's onboard decoder strips away the modulation and
+error-correction codes, converting the raw pit-and-land transitions back
+into the exact stream of standard digital bytes used by computers and
+media players.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

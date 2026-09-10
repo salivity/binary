@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is Binary Serialization and How It Works - binary</title>
+    <meta name="description" content="Binary serialization is the process of converting structured in-memory data objects into a contiguous, compact stream of binary digits (zeros and ones) for storage or network transmission. Unlike human-readable formats such as JSON or XML that rely on pl">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-binary-serialization-and-how-it-works">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is Binary Serialization and How It Works - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-binary-serialization-and-how-it-works" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Binary serialization is the process of converting structured in-memory data objects into a contiguous, compact stream of binary digits (zeros and ones) for storage or network transmission. Unlike human-readable formats such as JSON or XML that rely on pl" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-binary-serialization-and-how-it-works">What Is Binary
+Serialization and How It Works</h1>
+<p>Binary serialization is the process of converting structured
+in-memory data objects into a contiguous, compact stream of binary
+digits (zeros and ones) for storage or network transmission. Unlike
+human-readable formats such as JSON or XML that rely on plain text,
+binary serialization maps data types directly into raw byte
+representations using precise encoding rules. This article explains what
+binary serialization is, how it processes complex data structures, and
+the specific mechanisms used to translate data objects into minimal,
+machine-optimized binary sequences.</p>
+<h2 id="understanding-binary-serialization">Understanding Binary
+Serialization</h2>
+<p>At its core, serialization takes complex runtime memory
+structures—such as objects, arrays, nested classes, and dictionaries—and
+flattens them into a linear format. Binary serialization specifically
+converts these structures into raw bytes rather than ASCII or Unicode
+text characters.</p>
+<p>In a text-based format, the number <code>255</code> is stored as
+three separate character bytes (<code>'2'</code>, <code>'5'</code>,
+<code>'5'</code>), taking up 24 bits. In binary serialization, that same
+number fits into a single 8-bit unsigned byte (<code>11111111</code>).
+By bypassing string parsing and text formatting, binary serialization
+minimizes payload size and drastically speeds up encoding and decoding
+operations.</p>
+<h2 id="how-structured-objects-convert-to-binary-sequences">How
+Structured Objects Convert to Binary Sequences</h2>
+<p>The conversion from a high-level data object to a raw binary sequence
+involves several discrete steps:</p>
+<h3 id="1-object-traversal-and-schema-resolution">1. Object Traversal
+and Schema Resolution</h3>
+<p>When a serialization engine targets an object, it recursively
+inspects the object's properties, fields, and child references. Systems
+use either a predefined schema (such as Protocol Buffers or FlatBuffers)
+or embedded metadata (such as Java Serialization or MessagePack) to
+determine the layout, data types, and field ordering.</p>
+<h3 id="2-primitive-type-encoding">2. Primitive Type Encoding</h3>
+<p>Every individual property is translated directly into its standard
+binary equivalent:</p>
+<ul>
+<li><strong>Integers:</strong> Converted using two's complement
+representation into standard fixed sizes (1, 2, 4, or 8 bytes) or
+variable-length encodings.</li>
+<li><strong>Floating-Point Numbers:</strong> Encoded directly into
+standard IEEE 754 representations (typically 4 bytes for single
+precision, 8 bytes for double precision).</li>
+<li><strong>Booleans:</strong> Represented by a single bit or a single
+byte (<code>00000001</code> for true, <code>00000000</code> for
+false).</li>
+<li><strong>Strings:</strong> Transformed into byte arrays using
+character encodings like UTF-8, typically prefixed by an integer
+indicating the byte length.</li>
+</ul>
+<h3 id="3-field-identification-and-tagging">3. Field Identification and
+Tagging</h3>
+<p>To allow the deserializer to reconstruct the object, the serializer
+must preserve field associations. Text formats include full property
+names (e.g., <code>"age": 30</code>), but binary formats use more
+compact identifiers:</p>
+<ul>
+<li><strong>Positional Offsets:</strong> In strictly typed systems,
+fields are placed in a fixed, known sequence without any identifiers,
+relying on exact byte offsets.</li>
+<li><strong>Field Tags (Varints):</strong> Formats like Protocol Buffers
+assign small integer IDs (1 byte or less) to represent field names.</li>
+<li><strong>Type Headers:</strong> Some formats prepend a single byte
+indicating the data type of the subsequent payload (e.g., a header byte
+specifying that the next 4 bytes are a 32-bit integer).</li>
+</ul>
+<h3 id="4-handling-variable-length-data-and-collections">4. Handling
+Variable-Length Data and Collections</h3>
+<p>For variable-length elements—such as strings, lists, and nested
+objects—binary serialization typically uses a "Length-Prefix" pattern or
+a delimiter approach. In the length-prefix approach, the serializer
+writes an encoded integer indicating the size or element count
+immediately before writing the raw payload bytes. The deserializer reads
+this length to know precisely how many bytes to allocate and ingest.</p>
+<h3 id="5-compacting-techniques">5. Compacting Techniques</h3>
+<p>To achieve maximum compression in raw binary systems, serializers
+implement bit-level optimizations:</p>
+<ul>
+<li><strong>Variable-Byte Encoding (Varints):</strong> Smaller numbers
+use fewer bytes. For example, integers smaller than 128 are stored in a
+single byte by using the most significant bit as a continuation
+flag.</li>
+<li><strong>ZigZag Encoding:</strong> Maps signed integers to positive
+integers so that negative numbers with small absolute values (like
+<code>-1</code>) do not require the full 64-bit sequence.</li>
+<li><strong>Bit Packing:</strong> Multiple boolean flags or small
+integer ranges are packed together into the individual bits of a single
+byte.</li>
+</ul>
+<h2 id="assembly-into-the-final-byte-stream">Assembly into the Final
+Byte Stream</h2>
+<p>Once all fields, nested objects, and collections are resolved and
+encoded, the resulting bytes are concatenated into a contiguous buffer.
+The output is a raw binary stream that mirrors machine-level memory
+layouts far more closely than text-based representations. When sent
+across a network or saved to disk, this binary sequence requires no
+parsing of delimiters or character escapes, allowing the receiving
+system to reconstitute the original object graph through direct,
+high-performance byte reading.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GF(2) Polynomial vs Binary Integer Multiplication - binary</title>
+    <meta name="description" content="Polynomial multiplication over the Galois Field $\text{GF}(2)$ and standard binary integer multiplication both process sequences of binary digits (0s and 1s) using a shift-and-add approach, but they differ fundamentally in how partial products are accumu">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/gf-2-polynomial-vs-binary-integer-multiplication">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GF(2) Polynomial vs Binary Integer Multiplication - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/gf-2-polynomial-vs-binary-integer-multiplication" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Polynomial multiplication over the Galois Field $\text{GF}(2)$ and standard binary integer multiplication both process sequences of binary digits (0s and 1s) using a shift-and-add approach, but they differ fundamentally in how partial products are accumu" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="gf2-polynomial-vs-binary-integer-multiplication">GF(2)
+Polynomial vs Binary Integer Multiplication</h1>
+<p>Polynomial multiplication over the Galois Field <span
+class="math inline">\(\text{GF}(2)\)</span> and standard binary integer
+multiplication both process sequences of binary digits (0s and 1s) using
+a shift-and-add approach, but they differ fundamentally in how partial
+products are accumulated. In standard binary multiplication, overlapping
+bits generate a carry that propagates to higher-order positions. In
+<span class="math inline">\(\text{GF}(2)\)</span> polynomial
+multiplication—commonly referred to as carry-less
+multiplication—addition is performed modulo 2 (the logical XOR
+operation), meaning carries are never generated or propagated.</p>
+<h3 id="the-fundamental-mechanism-carry-vs-xor">The Fundamental
+Mechanism: Carry vs. XOR</h3>
+<p>Standard integer arithmetic in base 2 relies on positional value
+where <span class="math inline">\(1_2 + 1_2 = 10_2\)</span> (a sum of 0
+and a carry of 1 to the next higher bit). When multiplying two binary
+integers, every partial product is shifted and added together using
+standard binary addition, creating carry chains that propagate through
+the result.</p>
+<p>In <span class="math inline">\(\text{GF}(2)[x]\)</span>, binary
+sequences represent polynomials where each bit corresponds to the
+coefficient of a specific power of <span
+class="math inline">\(x\)</span>. In this field:</p>
+<ul>
+<li><strong>Multiplication</strong> of coefficients is defined as
+standard multiplication (logical AND): <span class="math inline">\(1
+\cdot 1 = 1\)</span>, and all other combinations equal <span
+class="math inline">\(0\)</span>.</li>
+<li><strong>Addition</strong> of coefficients is defined as addition
+modulo 2 (logical XOR): <span class="math inline">\(1 + 1 = 0\)</span>,
+<span class="math inline">\(1 + 0 = 1\)</span>, and <span
+class="math inline">\(0 + 0 = 0\)</span>.</li>
+</ul>
+<p>Because addition never produces a carry, each polynomial degree
+remains completely independent of neighboring terms.</p>
+<h3 id="comparative-example">Comparative Example</h3>
+<p>To illustrate the difference, consider the operands <span
+class="math inline">\(A = 110_2\)</span> and <span
+class="math inline">\(B = 101_2\)</span>.</p>
+<h4 id="standard-binary-multiplication">Standard Binary
+Multiplication</h4>
+<p>Representing integers <span class="math inline">\(6 \times
+5\)</span>:</p>
+<pre class="text"><code>      1 1 0  (6)
+    × 1 0 1  (5)
+    -------
+      1 1 0  (110 × 1)
+    0 0 0 .  (110 × 0, shifted)
+  1 1 0 . .  (110 × 1, shifted)
+  ---------
+  1 1 1 1 0  (30 in decimal)</code></pre>
+<p>Carries are generated during the column additions to produce the
+correct integer value.</p>
+<h4 id="gf2-polynomial-multiplication">GF(2) Polynomial
+Multiplication</h4>
+<p>Representing polynomials <span class="math inline">\((x^2 +
+x)\)</span> and <span class="math inline">\((x^2 + 1)\)</span>:</p>
+<pre class="text"><code>      1 1 0  (x^2 + x)
+    × 1 0 1  (x^2 + 1)
+    -------
+      1 1 0  (x^2 + x)
+    0 0 0 .  
+  1 1 0 . .  (x^4 + x^3)
+  ---------
+  1 1 1 1 0  (x^4 + x^3 + x^2 + x)</code></pre>
+<p>If an addition step encounters <span class="math inline">\(1 +
+1\)</span>, the result is strictly <span
+class="math inline">\(0\)</span>: For <span class="math inline">\((x +
+1) \times (x + 1) = (11_2) \times (11_2)\)</span>:</p>
+<ul>
+<li><strong>Binary:</strong> <span class="math inline">\(3 \times 3 =
+9\)</span> (<span class="math inline">\(1001_2\)</span>) due to
+carries.</li>
+<li><strong>GF(2):</strong> <span class="math inline">\((x+1)(x+1) = x^2
++ (1+1)x + 1 = x^2 + 0x + 1 = x^2 + 1\)</span> (<span
+class="math inline">\(101_2\)</span>).</li>
+</ul>
+<h3 id="key-differences-summary">Key Differences Summary</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">Standard Binary Multiplication</th>
+<th style="text-align: left;">GF(2) Polynomial Multiplication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Data Representation</strong></td>
+<td style="text-align: left;">Positional base-2 integers</td>
+<td style="text-align: left;">Polynomials with binary coefficients</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Addition Operator</strong></td>
+<td style="text-align: left;">Base-2 addition with carry</td>
+<td style="text-align: left;">Modulo-2 addition (XOR, carry-less)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Bit Interaction</strong></td>
+<td style="text-align: left;">Lower bits affect higher bits via
+carries</td>
+<td style="text-align: left;">Bit positions are strictly isolated</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Hardware Complexity</strong></td>
+<td style="text-align: left;">Requires carry-lookahead/ripple logic</td>
+<td style="text-align: left;">Requires only simple XOR tree
+networks</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Overflow Behavior</strong></td>
+<td style="text-align: left;">Values wrap around <span
+class="math inline">\(2^N\)</span> in fixed-width registers</td>
+<td style="text-align: left;">Reduction is performed using an
+irreducible polynomial</td>
+</tr>
+</tbody>
+</table>
+<h3 id="practical-applications">Practical Applications</h3>
+<p>Because <span class="math inline">\(\text{GF}(2)\)</span> arithmetic
+eliminates carry propagation delays, hardware implementations can
+execute multiplications in parallel with extremely low latency.
+Consequently, carry-less multiplication is the foundation for:</p>
+<ol type="1">
+<li><strong>Cryptography:</strong> The Advanced Encryption Standard
+(AES) operates over <span class="math inline">\(\text{GF}(2^8)\)</span>,
+and Galois/Counter Mode (GCM) for authenticated encryption uses
+carry-less multiplication (often accelerated via dedicated CPU
+instructions like <code>CLMUL</code> or <code>PMULL</code>).</li>
+<li><strong>Error Detection and Correction:</strong> Cyclic Redundancy
+Checks (CRCs), BCH codes, and Reed-Solomon codes rely on polynomial
+arithmetic over <span class="math inline">\(\text{GF}(2)\)</span> to
+compute checksums and detect corrupted transmission bits.</li>
+</ol></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

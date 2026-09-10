@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Binary Governs Paging and Memory Segmentation - binary</title>
+    <meta name="description" content="Virtual memory systems rely entirely on the binary number system to manage hardware resources, isolate processes, and translate virtual addresses into physical locations. Because digital hardware operates using base-2 logic, memory architectures structur">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-binary-governs-paging-and-memory-segmentation">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Binary Governs Paging and Memory Segmentation - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-binary-governs-paging-and-memory-segmentation" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Virtual memory systems rely entirely on the binary number system to manage hardware resources, isolate processes, and translate virtual addresses into physical locations. Because digital hardware operates using base-2 logic, memory architectures structur" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-binary-governs-paging-and-memory-segmentation">How Binary
+Governs Paging and Memory Segmentation</h1>
+<p>Virtual memory systems rely entirely on the binary number system to
+manage hardware resources, isolate processes, and translate virtual
+addresses into physical locations. Because digital hardware operates
+using base-2 logic, memory architectures structure address spaces in
+exact powers of two. This mathematical alignment enables central
+processing units (CPUs) and Memory Management Units (MMUs) to perform
+memory segmentation, paging table indexing, and address translation via
+instantaneous bitwise operations rather than slow arithmetic
+calculations.</p>
+<h3 id="the-power-of-two-principle-in-memory-addressing">The
+Power-of-Two Principle in Memory Addressing</h3>
+<p>A computer address is a fixed-width binary integer, typically 32 or
+64 bits wide. Each bit added to an address bus doubles the addressable
+memory space (<span class="math inline">\(2^n\)</span>). Virtual memory
+architectures leverage this binary structure by partitioning the bit
+string of an address into distinct functional fields: identifiers and
+offsets. Because memory boundaries are defined as powers of two, the
+system can extract structural locations directly from the bit pattern
+using binary masks and bit shifts.</p>
+<h3 id="binary-mechanics-in-paging">Binary Mechanics in Paging</h3>
+<p>Paging divides virtual memory into fixed-size blocks called pages,
+and physical memory into corresponding frames. The size of a page is
+always a power of two, most commonly 4 Kilobytes (<span
+class="math inline">\(4,096\text{ bytes} = 2^{12}\text{
+bytes}\)</span>).</p>
+<p>A virtual address in a paged architecture is split into two binary
+components:</p>
+<ol type="1">
+<li><strong>Virtual Page Number (VPN):</strong> The higher-order
+bits.</li>
+<li><strong>Page Offset:</strong> The lower-order bits.</li>
+</ol>
+<p>For a 32-bit architecture with 4 KB pages:</p>
+<ul>
+<li>The lower 12 bits (<span class="math inline">\(2^{12} =
+4096\)</span>) represent the byte offset within the page.</li>
+<li>The remaining upper 20 bits (<span class="math inline">\(32 - 12 =
+20\)</span>) represent the virtual page number, allowing for <span
+class="math inline">\(2^{20}\)</span> (1,048,576) distinct virtual
+pages.</li>
+</ul>
+<p>Address translation does not require addition or multiplication. The
+MMU uses the upper bits directly as an index into the page table array
+to retrieve the Physical Frame Number (PFN). Once the PFN is retrieved,
+the hardware concatenates the PFN bits with the original 12 offset bits
+to form the complete physical address.</p>
+<p>In multi-level paging schemes (such as four-level paging in x86-64),
+the binary address is simply split into multiple bit fields (e.g., 9
+bits per level), where each field serves as an array index for
+successive hierarchical tables.</p>
+<h3 id="binary-governance-in-segmentation">Binary Governance in
+Segmentation</h3>
+<p>Memory segmentation divides memory into variable-length logical units
+(such as code, data, and stack segments). A segmented address typically
+consists of a Segment Selector and an Offset.</p>
+<p>The binary structure governs segmentation in two ways:</p>
+<ol type="1">
+<li><strong>Selector Bitfields:</strong> In architectures like x86, the
+segment selector is a 16-bit binary value. The lowest 2 bits dictate the
+Requested Privilege Level (RPL, from 0 to 3), the 3rd bit indicates the
+table indicator (Global or Local Descriptor Table), and the upper 13
+bits index the specific segment descriptor in memory.</li>
+<li><strong>Base and Limit Checks:</strong> A segment descriptor
+contains a 32-bit or 64-bit base address and a limit value. The MMU
+evaluates whether the offset bitfield is strictly less than the segment
+limit using binary comparison gates. If the check passes, the physical
+address is calculated by adding the segment base address to the
+offset.</li>
+</ol>
+<h3 id="flag-storage-via-bit-level-alignment">Flag Storage via Bit-Level
+Alignment</h3>
+<p>Because physical page frames are aligned to power-of-two boundaries
+(e.g., 4 KB boundaries end with 12 zero bits in binary), the lowest 12
+bits of a physical frame address stored in a page table entry are
+inherently unused.</p>
+<p>Operating systems and hardware exploit these unused low-order bits as
+status flags:</p>
+<ul>
+<li><strong>Present Bit (Bit 0):</strong> Indicates whether the page
+resides in physical RAM or has been swapped to disk.</li>
+<li><strong>Read/Write Bit (Bit 1):</strong> Sets access permissions (1
+for read/write, 0 for read-only).</li>
+<li><strong>User/Supervisor Bit (Bit 2):</strong> Controls privilege
+requirements.</li>
+<li><strong>Dirty Bit (Bit 6):</strong> Marks whether data in the page
+has been modified.</li>
+</ul>
+<p>Hardware checks and modifies these attributes using bitwise
+<code>AND</code>, <code>OR</code>, and <code>NOT</code> operations,
+eliminating the overhead of dedicated metadata storage. Through these
+binary mechanisms, operating systems maintain memory protection, address
+translation, and high-performance virtual memory management.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

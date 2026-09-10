@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finding the First Set Bit Using Bitwise Algorithms - binary</title>
+    <meta name="description" content="Finding the index of the first set bit—the position of the least significant 1 in a binary representation—is a fundamental operation in computer science with applications in graphics, chess engines, and data compression. Bitwise algorithms solve this">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/finding-the-first-set-bit-using-bitwise-algorithms">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Finding the First Set Bit Using Bitwise Algorithms - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/finding-the-first-set-bit-using-bitwise-algorithms" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Finding the index of the first set bit—the position of the least significant 1 in a binary representation—is a fundamental operation in computer science with applications in graphics, chess engines, and data compression. Bitwise algorithms solve this" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="finding-the-first-set-bit-using-bitwise-algorithms">Finding the
+First Set Bit Using Bitwise Algorithms</h1>
+<p>Finding the index of the first set bit—the position of the least
+significant <code>1</code> in a binary representation—is a fundamental
+operation in computer science with applications in graphics, chess
+engines, and data compression. Bitwise algorithms solve this problem in
+constant or near-constant time by first isolating the lowest set bit
+using two's complement arithmetic, then determining its positional index
+using hardware instructions, De Bruijn sequences, or binary search.</p>
+<h3 id="isolating-the-lowest-set-bit">Isolating the Lowest Set Bit</h3>
+<p>The critical first step in most bitwise approaches is isolating the
+least significant bit. This is achieved using the formula:</p>
+<p><span class="math display">\[\text{isolated\_bit} = n \ \&amp; \
+(-n)\]</span></p>
+<p>In modern computing, negative integers are represented using two's
+complement notation, where <span class="math inline">\(-n\)</span> is
+equivalent to <span class="math inline">\((\sim n) + 1\)</span>.
+Inverting the bits (<span class="math inline">\(\sim n\)</span>) flips
+all bits, and adding <span class="math inline">\(1\)</span> ripples a
+carry through the inverted trailing zeros until it reaches the first
+zero, flipping it back to <span class="math inline">\(1\)</span>. When
+performing a bitwise <code>AND</code> between the original integer <span
+class="math inline">\(n\)</span> and <span
+class="math inline">\(-n\)</span>, all higher bits cancel out, leaving
+only the lowest set bit as a pure power of two (e.g.,
+<code>0000 1000</code>).</p>
+<h3 id="method-1-hardware-instructions-ctz-and-bsf">Method 1: Hardware
+Instructions (CTZ and BSF)</h3>
+<p>Modern processors include dedicated instruction set architecture
+(ISA) operations that determine the index in a single CPU cycle.</p>
+<ul>
+<li><strong>x86/x64:</strong> Uses <code>TZCNT</code> (Count Trailing
+Zeros) or <code>BSF</code> (Bit Scan Forward).</li>
+<li><strong>ARM:</strong> Uses <code>CLZ</code> (Count Leading Zeros)
+combined with bit reversal or arithmetic subtraction.</li>
+</ul>
+<p>Most programming languages expose these instructions through compiler
+intrinsics, such as <code>__builtin_ctz()</code> in GCC/Clang or
+<code>_BitScanForward()</code> in MSVC. The CPU executes this using
+dedicated barrel shifters and logic gates, finding the index in <span
+class="math inline">\(O(1)\)</span> time with zero branching.</p>
+<h3 id="method-2-de-bruijn-sequences">Method 2: De Bruijn Sequences</h3>
+<p>When dedicated hardware instructions are unavailable, De Bruijn
+sequences offer an <span class="math inline">\(O(1)\)</span> lookup
+solution without conditional branching. A De Bruijn sequence contains
+every sequence of length <span class="math inline">\(k\)</span> over an
+alphabet.</p>
+<p>Once the lowest bit is isolated into a power of two using
+<code>n &amp; -n</code>, multiplying it by a specially chosen 32-bit De
+Bruijn constant shifts the unique sequence into the most significant
+bits. Shifting the result down produces a unique key between <span
+class="math inline">\(0\)</span> and <span
+class="math inline">\(31\)</span>, which directly indexes a precomputed
+32-element array containing the bit positions.</p>
+<h3 id="method-3-binary-search-divide-and-conquer">Method 3: Binary
+Search (Divide and Conquer)</h3>
+<p>For environments without lookup tables or hardware intrinsics, a
+binary search approach determines the index in <span
+class="math inline">\(O(\log B)\)</span> steps, where <span
+class="math inline">\(B\)</span> is the bit width of the integer
+(requiring only 5 checks for a 32-bit integer).</p>
+<p>The algorithm checks whether the set bit resides in the lower or
+upper half of the register using bitmasks:</p>
+<ol type="1">
+<li>Check if the lowest set bit is in the lower 16 bits
+(<code>n &amp; 0x0000FFFF</code>). If not, add 16 to the index counter
+and shift the number right by 16 bits.</li>
+<li>Check the lower 8 bits (<code>n &amp; 0x00FF</code>). If not
+present, add 8 to the counter and shift right by 8.</li>
+<li>Repeat for 4 bits, 2 bits, and 1 bit.</li>
+</ol>
+<p>By eliminating half of the remaining bit positions at each step, the
+exact zero-based index is determined rapidly without sequential
+loops.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

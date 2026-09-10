@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Run-Length Encoding Compresses Binary Data - binary</title>
+    <meta name="description" content="Run-Length Encoding (RLE) is a simple, lossless data compression algorithm that reduces the size of binary sequences by replacing consecutive, identical bits with a count of their occurrences. In binary systems, where the only possible values are 0 and 1">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-run-length-encoding-compresses-binary-data">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Run-Length Encoding Compresses Binary Data - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-run-length-encoding-compresses-binary-data" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Run-Length Encoding (RLE) is a simple, lossless data compression algorithm that reduces the size of binary sequences by replacing consecutive, identical bits with a count of their occurrences. In binary systems, where the only possible values are 0 and 1" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-run-length-encoding-compresses-binary-data">How Run-Length
+Encoding Compresses Binary Data</h1>
+<p>Run-Length Encoding (RLE) is a simple, lossless data compression
+algorithm that reduces the size of binary sequences by replacing
+consecutive, identical bits with a count of their occurrences. In binary
+systems, where the only possible values are 0 and 1, RLE is particularly
+effective because the alternating nature of the digits allows for highly
+compact representations. This article explains the mechanics of binary
+RLE, demonstrates a step-by-step example, and outlines the scenarios
+where this compression technique is most effective.</p>
+<h3 id="the-mechanics-of-binary-run-length-encoding">The Mechanics of
+Binary Run-Length Encoding</h3>
+<p>At its core, a "run" refers to an unbroken sequence of identical data
+elements. In a standard stream of raw binary data, each bit occupies one
+bit of storage. When long sequences of the same bit appear
+consecutively, storing every individual digit creates unnecessary
+redundancy.</p>
+<p>In general data streams (such as text or color images), RLE stores
+pairs consisting of the data value and its frequency (e.g., "four A's"
+becomes <code>A4</code>). Binary data has an inherent advantage: the
+values can only alternate between <code>0</code> and <code>1</code>.</p>
+<p>Because values strictly alternate after each run, a binary RLE system
+often does not need to store the actual bit values. Instead, the encoder
+only needs:</p>
+<ol type="1">
+<li>A single indicator for the starting bit (whether the stream begins
+with a <code>0</code> or a <code>1</code>).</li>
+<li>A sequence of integers representing the length of each consecutive
+run.</li>
+</ol>
+<h3 id="step-by-step-binary-example">Step-by-Step Binary Example</h3>
+<p>Consider the following 24-bit binary sequence:</p>
+<p><code>00000000 00001111 11110000</code></p>
+<p>Without compression, storing this raw sequence requires 24 individual
+bits.</p>
+<p>To compress this sequence using binary RLE:</p>
+<ol type="1">
+<li><strong>Identify the runs:</strong>
+<ul>
+<li>Twelve consecutive <code>0</code>s (length: 12)</li>
+<li>Eight consecutive <code>1</code>s (length: 8)</li>
+<li>Four consecutive <code>0</code>s (length: 4)</li>
+</ul></li>
+<li><strong>Record the starting bit:</strong> The stream begins with
+<code>0</code>.</li>
+<li><strong>Record the run lengths:</strong> <code>12, 8, 4</code>.</li>
+</ol>
+<p>To store these counts digitally, each run length is converted into
+binary using a fixed number of bits (for example, a 4-bit integer, which
+can represent values up to 15):</p>
+<ul>
+<li>12 becomes <code>1100</code></li>
+<li>8 becomes <code>1000</code></li>
+<li>4 becomes <code>0100</code></li>
+</ul>
+<p>Combining the single starting bit with the encoded lengths yields:
+<code>0</code> (start bit) + <code>1100</code> (12) + <code>1000</code>
+(8) + <code>0100</code> (4) = <strong>13 bits</strong>.</p>
+<p>The original 24-bit sequence is reduced to 13 bits, achieving
+significant storage savings.</p>
+<h3 id="handling-edge-cases">Handling Edge Cases</h3>
+<ul>
+<li><strong>Runs Exceeding the Maximum Integer Limit:</strong> If a run
+length exceeds the capacity of the chosen bit-width (such as a run of 20
+with a 4-bit limit of 15), encoders split the run. A run of twenty
+<code>0</code>s is recorded as 15 <code>0</code>s, followed by a run of
+zero <code>1</code>s, followed by the remaining 5 <code>0</code>s.</li>
+<li><strong>Frequent Alternation (Data Expansion):</strong> When the
+input data changes rapidly—such as <code>01010101</code>—RLE causes data
+expansion. Each single-bit run (length 1) requires multiple bits to
+represent the number "1," resulting in an output larger than the
+original uncompressed stream.</li>
+</ul>
+<h3 id="practical-applications">Practical Applications</h3>
+<p>Binary RLE is optimal for data with long stretches of identical bits,
+including:</p>
+<ul>
+<li><strong>Monochrome Images and Fax Transmissions:</strong> 1-bit
+black-and-white documents typically contain large areas of blank space
+(runs of 0s) punctuated by small amounts of text (runs of 1s).</li>
+<li><strong>Sparse Bitmaps and Masks:</strong> Graphics masks and binary
+index structures frequently contain large blocks of contiguous identical
+states.</li>
+<li><strong>Pre-processing Pipelines:</strong> Binary RLE is often used
+as a first-pass algorithm before applying secondary compression methods,
+such as Huffman coding or Deflate.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

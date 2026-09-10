@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is an Asynchronous Circuit and How It Works - binary</title>
+    <meta name="description" content="An asynchronous circuit is a digital system that performs computations without relying on a centralized global clock signal to synchronize its operations. Instead of waiting for periodic clock pulses to advance state changes, asynchronous circuits coordi">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-an-asynchronous-circuit-and-how-it-works">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is an Asynchronous Circuit and How It Works - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-an-asynchronous-circuit-and-how-it-works" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="An asynchronous circuit is a digital system that performs computations without relying on a centralized global clock signal to synchronize its operations. Instead of waiting for periodic clock pulses to advance state changes, asynchronous circuits coordi" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-an-asynchronous-circuit-and-how-it-works">What Is an
+Asynchronous Circuit and How It Works</h1>
+<p>An asynchronous circuit is a digital system that performs
+computations without relying on a centralized global clock signal to
+synchronize its operations. Instead of waiting for periodic clock pulses
+to advance state changes, asynchronous circuits coordinate data
+transfers dynamically using localized handshaking protocols and
+specialized binary encoding schemes. This article explains the
+fundamental architecture of asynchronous circuits, details how they
+maintain data integrity across binary operations, and explores the
+mechanisms used to control computational flow without a central timing
+reference.</p>
+<h2 id="synchronous-vs-asynchronous-circuits">Synchronous vs.
+Asynchronous Circuits</h2>
+<p>In traditional synchronous digital circuits, an oscillator generates
+a continuous clock signal that dictates when logic gates read inputs and
+update outputs. Every flip-flop and register in the system updates
+simultaneously on a clock edge, ensuring that data is stable before
+being processed.</p>
+<p>In contrast, asynchronous circuits—often called clockless or
+self-timed circuits—do not have a master clock. Instead, processing
+elements operate at their own natural speeds. A component begins an
+operation as soon as its input data arrives and signals downstream
+components as soon as it finishes.</p>
+<h2 id="coordinating-binary-computation-without-a-clock">Coordinating
+Binary Computation Without a Clock</h2>
+<p>To perform binary arithmetic and logic without a clock signal, an
+asynchronous circuit must solve a fundamental challenge: determining
+exactly when binary data (represented by high and low voltage states) is
+valid and ready to be read. Two primary design paradigms address
+this:</p>
+<h3 id="1-bundled-data-handshaking">1. Bundled-Data Handshaking</h3>
+<p>The bundled-data model separates data transmission from control
+signaling. Standard binary lines carry the actual data (using
+conventional binary voltages for logic 0 and logic 1), while dedicated
+control lines negotiate the transaction using a handshaking
+protocol:</p>
+<ul>
+<li><strong>Request (Req):</strong> The sending unit asserts a Request
+signal when binary data on the bus is valid and ready.</li>
+<li><strong>Acknowledge (Ack):</strong> The receiving unit reads the
+binary data and asserts an Acknowledge signal back to the sender.</li>
+</ul>
+<p>To ensure stability, a matched delay element is placed along the
+Request line. This delay mimics the worst-case propagation delay of the
+logic gates, guaranteeing that the binary outputs have settled before
+the Request signal reaches the receiver.</p>
+<h3 id="2-dual-rail-and-delay-insensitive-encoding">2. Dual-Rail and
+Delay-Insensitive Encoding</h3>
+<p>In delay-insensitive designs, timing information is embedded directly
+into the binary data lines rather than routed through separate control
+wires.</p>
+<p>The most common approach is <strong>dual-rail encoding</strong>,
+which uses two physical wires to transmit a single binary bit (<span
+class="math inline">\(B\)</span>):</p>
+<ul>
+<li><strong>Logic 0:</strong> Wire A is high (1), Wire B is low
+(0).</li>
+<li><strong>Logic 1:</strong> Wire A is low (0), Wire B is high
+(1).</li>
+<li><strong>Spacer / Null State:</strong> Both Wire A and Wire B are low
+(0, 0).</li>
+<li><strong>Invalid State:</strong> Both wires high (1, 1) is never
+permitted.</li>
+</ul>
+<p>Between consecutive data bits, the lines reset to the spacer state. A
+logic gate detects the arrival of valid data simply by sensing when a
+wire switches away from the spacer state. This removes the need for
+matched delays or external timers, making the computation entirely
+robust to wire delays and variations in component speed.</p>
+<h2 id="synchronization-and-flow-control">Synchronization and Flow
+Control</h2>
+<p>Asynchronous networks rely on basic building blocks like the
+<strong>Muller C-element</strong> to combine and synchronize multiple
+asynchronous branches. A C-element output only switches to a high state
+when all its inputs become high, and only returns to low when all inputs
+become low. This acts as a localized barrier synchronization, ensuring
+that parallel binary operations finish completely before the next stage
+of computation begins.</p>
+<h2 id="key-characteristics-of-asynchronous-logic">Key Characteristics
+of Asynchronous Logic</h2>
+<ul>
+<li><strong>Lower Idle Power Consumption:</strong> Components consume
+dynamic power only when active computations are taking place,
+eliminating continuous clock-distribution power dissipation.</li>
+<li><strong>Average-Case Performance:</strong> Synchronous systems must
+set clock periods based on worst-case timing delays. Asynchronous
+circuits proceed as soon as localized logic transitions complete,
+allowing execution at average-case speeds.</li>
+<li><strong>Absence of Clock Skew:</strong> Because there is no global
+clock network, designers do not need to manage the spatial variations in
+clock signal arrival times across large silicon dies.</li>
+<li><strong>Design Complexity:</strong> Designing asynchronous logic
+requires careful management of race conditions, hazards, and deadlocks,
+often demanding specialized hardware description languages and
+verification tools.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

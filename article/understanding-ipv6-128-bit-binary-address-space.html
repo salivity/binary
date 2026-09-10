@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding IPv6 128-Bit Binary Address Space - binary</title>
+    <meta name="description" content="This article explains how Internet Protocol version 6 (IPv6) solves network address exhaustion by expanding address architecture into a 128-bit sequence. It details the underlying binary mathematics that allow this expansion, breaks down how 128 individu">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/understanding-ipv6-128-bit-binary-address-space">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Understanding IPv6 128-Bit Binary Address Space - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/understanding-ipv6-128-bit-binary-address-space" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explains how Internet Protocol version 6 (IPv6) solves network address exhaustion by expanding address architecture into a 128-bit sequence. It details the underlying binary mathematics that allow this expansion, breaks down how 128 individu" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="understanding-ipv6-128-bit-binary-address-space">Understanding
+IPv6 128-Bit Binary Address Space</h1>
+<p>This article explains how Internet Protocol version 6 (IPv6) solves
+network address exhaustion by expanding address architecture into a
+128-bit sequence. It details the underlying binary mathematics that
+allow this expansion, breaks down how 128 individual binary digits form
+a functional address, and explores the relationship between binary bits
+and human-readable hexadecimal notation.</p>
+<h2 id="the-mathematics-of-the-128-bit-binary-system">The Mathematics of
+the 128-Bit Binary System</h2>
+<p>At the fundamental computing level, digital network addressing
+operates entirely on the base-2 binary number system, where each place
+value (bit) holds a value of either <code>0</code> or <code>1</code>.
+The total number of unique combinations possible in an <span
+class="math inline">\(n\)</span>-bit sequence is expressed
+mathematically as <span class="math inline">\(2^n\)</span>.</p>
+<ul>
+<li><strong>IPv4 (32-bit):</strong> Uses an address space of <span
+class="math inline">\(2^{32}\)</span> combinations, yielding
+approximately 4.29 billion (<span
+class="math inline">\(4,294,967,296\)</span>) unique addresses.</li>
+<li><strong>IPv6 (128-bit):</strong> Expands the sequence length to 128
+bits, providing <span class="math inline">\(2^{128}\)</span> possible
+unique combinations.</li>
+</ul>
+<p>Calculating <span class="math inline">\(2^{128}\)</span> results in
+<span
+class="math inline">\(340,282,366,920,938,463,463,374,607,431,768,211,456\)</span>
+possible addresses (roughly <span class="math inline">\(3.4 \times
+10^{38}\)</span>, or 340 undecillion). By quadrupling the bit count from
+32 to 128, the available address space does not simply quadruple; it
+scales exponentially by a factor of <span
+class="math inline">\(2^{96}\)</span> (approximately <span
+class="math inline">\(7.9 \times 10^{28}\)</span> times larger than
+IPv4).</p>
+<h2 id="how-the-128-bit-sequence-is-structured">How the 128-Bit Sequence
+is Structured</h2>
+<p>In raw form, an IPv6 address consists of a continuous stream of 128
+binary digits:</p>
+<p><code>00100000000000010000110110111000...</code> (extending to 128
+bits)</p>
+<p>To make this sequence manageable for routing and configuration, it is
+systematically partitioned:</p>
+<ol type="1">
+<li><strong>Eight 16-Bit Segments:</strong> The 128 bits are divided
+into eight equal segments called "hextets" (or quartets), with each
+segment containing 16 binary bits (<span class="math inline">\(8 \times
+16 = 128\)</span>).</li>
+<li><strong>Binary to Hexadecimal Conversion:</strong> Because writing
+128 ones and zeros is inefficient, the binary values are converted into
+base-16 (hexadecimal) notation. Each hexadecimal character represents
+exactly 4 binary bits (a nibble):
+<ul>
+<li><code>0000</code> in binary equals <code>0</code> in hex</li>
+<li><code>1111</code> in binary equals <code>F</code> in hex</li>
+</ul></li>
+<li><strong>Hexadecimal Notation:</strong> A 16-bit block requires 4
+hexadecimal digits (<span class="math inline">\(16 \div 4 = 4\)</span>).
+Consequently, the 128-bit binary sequence is represented as 8 groups of
+4 hexadecimal characters, separated by colons:
+<ul>
+<li><code>2001:0db8:85a3:0000:0000:8a2e:0370:7334</code></li>
+</ul></li>
+</ol>
+<h2 id="functional-division-of-the-128-bits">Functional Division of the
+128 Bits</h2>
+<p>Under standard global routing rules, the 128-bit binary sequence is
+typically split into two equal 64-bit halves:</p>
+<ul>
+<li><strong>Network Prefix (Bits 0–63):</strong> The first 64 bits
+define the network routing path. This includes the global routing prefix
+assigned by Internet registries and the subnet identifier defined by
+local network administrators.</li>
+<li><strong>Interface Identifier (Bits 64–127):</strong> The final 64
+bits uniquely identify the specific device interface on that subnet.
+This portion provides <span class="math inline">\(2^{64}\)</span> (over
+18 quintillion) unique host addresses within a single subnet.</li>
+</ul>
+<p>Through this exponential scaling of the binary sequence, IPv6
+guarantees an essentially inexhaustible pool of unique network
+identifiers across global and local network infrastructures.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

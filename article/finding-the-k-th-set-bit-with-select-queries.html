@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finding the K-th Set Bit With Select Queries - binary</title>
+    <meta name="description" content="The select query is a fundamental operation in succinct data structures that returns the exact index of the $k$-th occurrence of a set bit (1) within a bitvector. While a straightforward linear scan requires linear time, advanced implementations achieve">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/finding-the-k-th-set-bit-with-select-queries">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Finding the K-th Set Bit With Select Queries - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/finding-the-k-th-set-bit-with-select-queries" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The select query is a fundamental operation in succinct data structures that returns the exact index of the $k$-th occurrence of a set bit (1) within a bitvector. While a straightforward linear scan requires linear time, advanced implementations achieve" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="finding-the-k-th-set-bit-with-select-queries">Finding the K-th
+Set Bit With Select Queries</h1>
+<p>The <code>select</code> query is a fundamental operation in succinct
+data structures that returns the exact index of the <span
+class="math inline">\(k\)</span>-th occurrence of a set bit
+(<code>1</code>) within a bitvector. While a straightforward linear scan
+requires linear time, advanced implementations achieve constant time
+<span class="math inline">\(O(1)\)</span> by utilizing auxiliary index
+structures and word-level bit manipulation algorithms. This article
+details the mechanics of the <code>select</code> operation, comparing
+basic search strategies, two-level succinct indexing frameworks, and
+hardware-accelerated word-level techniques.</p>
+<h3 id="the-problem-definition">The Problem Definition</h3>
+<p>Given a bitvector <span class="math inline">\(B\)</span> of length
+<span class="math inline">\(n\)</span> containing binary values indexed
+from <span class="math inline">\(0\)</span> to <span
+class="math inline">\(n-1\)</span>, the query <span
+class="math inline">\(\text{select}_1(B, k)\)</span> finds the index
+<span class="math inline">\(i\)</span> such that <span
+class="math inline">\(B[i] = 1\)</span> and the total number of ones in
+the prefix <span class="math inline">\(B[0 \dots i]\)</span> is exactly
+<span class="math inline">\(k\)</span>.</p>
+<p>For example, in the bitvector <code>01001101</code>, the set bits
+appear at indices 1, 4, 5, and 7. Executing <span
+class="math inline">\(\text{select}_1(B, 3)\)</span> returns index 5,
+corresponding to the third set bit.</p>
+<h3 id="binary-search-over-rank-structures">Binary Search over Rank
+Structures</h3>
+<p>The most direct way to locate the <span
+class="math inline">\(k\)</span>-th bit without a linear scan is to
+leverage the dual operation: <span
+class="math inline">\(\text{rank}_1(B, i)\)</span>, which counts the
+number of ones up to index <span class="math inline">\(i\)</span>.</p>
+<p>Because the prefix sum of set bits is monotonically non-decreasing,
+standard binary search can locate the index <span
+class="math inline">\(i\)</span> where <span
+class="math inline">\(\text{rank}_1(B, i) = k\)</span> and <span
+class="math inline">\(B[i] = 1\)</span>. By precomputing prefix sums for
+blocks of the bitvector, a binary search yields the position in <span
+class="math inline">\(O(\log n)\)</span> time. However, achieving
+optimal query throughput requires constant <span
+class="math inline">\(O(1)\)</span> time.</p>
+<h3 id="succinct-two-level-directory-scheme">Succinct Two-Level
+Directory Scheme</h3>
+<p>To achieve <span class="math inline">\(O(1)\)</span> time complexity
+while adding minimal memory overhead—specifically <span
+class="math inline">\(o(n)\)</span> sub-linear auxiliary bits—practical
+implementations use hierarchical directories (often referred to as
+Clark's select structure).</p>
+<ol type="1">
+<li><p><strong>Superblocks (Primary Directory):</strong> The set bits
+are partitioned into groups of a fixed size <span
+class="math inline">\(S = \lfloor (\log n)^2 \rfloor\)</span>. An array
+stores the absolute index of every <span
+class="math inline">\(S\)</span>-th set bit. This divides the bitvector
+into variable-length spans containing exactly <span
+class="math inline">\(S\)</span> ones.</p></li>
+<li><p><strong>Handling Sparse Spans (Long Spans):</strong> If the bit
+distance between the <span class="math inline">\(j\)</span>-th and <span
+class="math inline">\((j+1)\)</span>-th sample is large (specifically
+<span class="math inline">\(\ge (\log n)^4\)</span>), storing all
+absolute positions of the ones within that span explicitly in an array
+takes negligible space relative to the span's large length. In these
+sparse regions, <span class="math inline">\(\text{select}\)</span>
+resolves in <span class="math inline">\(O(1)\)</span> time via a direct
+lookup.</p></li>
+<li><p><strong>Handling Dense Spans (Short Spans):</strong> If the bit
+distance is small (<span class="math inline">\(&lt; (\log
+n)^4\)</span>), the ones are packed tightly. A second-level directory is
+created by sampling every <span class="math inline">\(s&#39; = \lfloor
+\log n \rfloor\)</span>-th set bit within the span. Because the offset
+values are bounded by the span size, they can be stored using smaller
+bit-width integers, keeping auxiliary space bounded within <span
+class="math inline">\(o(n)\)</span>.</p></li>
+<li><p><strong>Leaf Blocks:</strong> Between second-level samples, the
+search space narrows to a single machine word (e.g., 64 bits), where
+word-level primitives compute the final exact index.</p></li>
+</ol>
+<h3 id="word-level-select-operations">Word-Level Select Operations</h3>
+<p>When the search narrows down to a 64-bit machine integer, modern
+architectures and algorithmic techniques resolve the internal bit
+position in constant instructions:</p>
+<ul>
+<li><strong>Hardware Instructions:</strong> Modern x86 processors
+support the <code>PDEP</code> (Parallel Bit Deposit) instruction
+alongside <code>TZCNT</code> (Trailing Zero Count). Placing the value
+<code>1ULL &lt;&lt; (k - 1)</code> as the source and the target 64-bit
+word as the mask isolates the <span class="math inline">\(k\)</span>-th
+bit. Counting the trailing zeros of the result immediately yields the
+local bit position.</li>
+<li><strong>Broadword (SWAR) Algorithms:</strong> On processors lacking
+dedicated bit-manipulation instructions, SIMD-within-a-register (SWAR)
+arithmetic uses bitwise parallel masking and population count
+(<code>POPCNT</code>) steps to locate the target bit in <span
+class="math inline">\(O(1)\)</span> clock cycles.</li>
+<li><strong>Lookup Tables:</strong> Small segments (e.g., 8 to 16 bits)
+can be evaluated instantly via precomputed tables indexed by the segment
+value and <span class="math inline">\(k\)</span>.</li>
+</ul>
+<p>By combining multi-level directory sampling with hardware-level word
+scans, the <code>select</code> query translates the theoretical binary
+search into an instantaneous <span class="math inline">\(O(1)\)</span>
+memory lookup and bit-twiddling operation.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

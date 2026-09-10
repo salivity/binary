@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How HyperLogLog Estimates Cardinality with Hashes - binary</title>
+    <meta name="description" content="HyperLogLog (HLL) is an algorithm designed to estimate the cardinality—the number of unique elements—of massive datasets using a fraction of the memory required by traditional counting methods. This article explains the mechanics of HyperLogLog, focu">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-hyperloglog-estimates-cardinality-with-hashes">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How HyperLogLog Estimates Cardinality with Hashes - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-hyperloglog-estimates-cardinality-with-hashes" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="HyperLogLog (HLL) is an algorithm designed to estimate the cardinality—the number of unique elements—of massive datasets using a fraction of the memory required by traditional counting methods. This article explains the mechanics of HyperLogLog, focu" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-hyperloglog-estimates-cardinality-with-hashes">How
+HyperLogLog Estimates Cardinality with Hashes</h1>
+<p>HyperLogLog (HLL) is an algorithm designed to estimate the
+cardinality—the number of unique elements—of massive datasets using a
+fraction of the memory required by traditional counting methods. This
+article explains the mechanics of HyperLogLog, focusing on how it
+transforms input data into uniform binary hash values, tracks leading
+zeros as a measure of probability, distributes observations across
+multiple registers to reduce variance, and combines these measurements
+via a harmonic mean to deliver accurate estimates for billions of items
+using only a few kilobytes of memory.</p>
+<h2 id="the-foundation-binary-hashes-and-probability">The Foundation:
+Binary Hashes and Probability</h2>
+<p>To count distinct items without storing every raw value, HyperLogLog
+first passes each input item through a uniform, collision-resistant hash
+function. This function maps any data type (such as user IDs, URLs, or
+IP addresses) to a uniformly distributed binary number, typically 64
+bits in length.</p>
+<p>In a uniformly distributed binary sequence, each bit has an
+independent 50% probability of being either a <code>0</code> or a
+<code>1</code>, mirroring a series of fair coin flips where
+<code>0</code> represents heads and <code>1</code> represents tails.</p>
+<p>When observing the sequence of bits from left to right:</p>
+<ul>
+<li>The probability of a hash starting with one leading zero
+(<code>0...</code>) is <span class="math inline">\(1/2\)</span> (<span
+class="math inline">\(2^{-1}\)</span>).</li>
+<li>The probability of two leading zeros (<code>00...</code>) is <span
+class="math inline">\(1/4\)</span> (<span
+class="math inline">\(2^{-2}\)</span>).</li>
+<li>The probability of <span class="math inline">\(k\)</span> leading
+zeros (<code>00...01</code>) is <span
+class="math inline">\(1/2^k\)</span> (<span
+class="math inline">\(2^{-k}\)</span>).</li>
+</ul>
+<p>Because observing a sequence with <span
+class="math inline">\(k\)</span> consecutive leading zeros is an event
+that occurs once every <span class="math inline">\(2^k\)</span> random
+trials, observing a maximum run of <span
+class="math inline">\(k\)</span> leading zeros suggests that roughly
+<span class="math inline">\(2^k\)</span> distinct items have been
+processed.</p>
+<h2 id="mitigating-variance-register-bucketing">Mitigating Variance:
+Register Bucketing</h2>
+<p>Relying on a single hash observation produces high variance; an
+unlikely sequence with many leading zeros could appear on the very first
+item, skewing the estimate entirely. HyperLogLog resolves this through a
+technique called stochastic averaging.</p>
+<p>Instead of evaluating all hashes globally, HLL splits the hash into
+two distinct segments:</p>
+<ol type="1">
+<li><strong>The Register Index:</strong> The first <span
+class="math inline">\(p\)</span> bits of the hash select one of <span
+class="math inline">\(m = 2^p\)</span> sub-streams, known as registers
+or buckets.</li>
+<li><strong>The Run Length:</strong> The remaining <span
+class="math inline">\((64 - p)\)</span> bits are evaluated to count the
+number of leading zeros plus one (the position of the first
+<code>1</code> bit).</li>
+</ol>
+<p>Each register only stores the maximum number of leading zeros it has
+observed from the items routed to it. By dividing the dataset across
+thousands of registers (for example, <span class="math inline">\(p =
+14\)</span> yields <span class="math inline">\(16,384\)</span>
+registers), the algorithm distributes the workload and dampens the
+impact of individual statistical anomalies.</p>
+<h2 id="aggregation-via-the-harmonic-mean">Aggregation via the Harmonic
+Mean</h2>
+<p>Once data has been streamed through the registers, the algorithm
+aggregates the maximum values recorded in each register to compute the
+final cardinality estimate.</p>
+<p>Rather than using an arithmetic mean—which remains vulnerable to
+large outlier values—HyperLogLog uses the harmonic mean of the estimates
+across all registers:</p>
+<p><span class="math display">\[E = \alpha_m \cdot m^2 \cdot \left(
+\sum_{j=1}^{m} 2^{-M[j]} \right)^{-1}\]</span></p>
+<ul>
+<li><span class="math inline">\(m\)</span> represents the total number
+of registers.</li>
+<li><span class="math inline">\(M[j]\)</span> represents the maximum run
+length recorded in register <span class="math inline">\(j\)</span>.</li>
+<li><span class="math inline">\(\alpha_m\)</span> is a mathematically
+derived constant used to correct systematic multiplicative bias.</li>
+</ul>
+<p>The harmonic mean heavily penalizes extreme outliers, producing a
+stable, robust measurement across the entire collection of buckets.</p>
+<h2 id="memory-efficiency-at-scale">Memory Efficiency at Scale</h2>
+<p>Because each register only needs to store the maximum position of a
+leading zero rather than the raw data itself, each register requires
+very little memory. In a 64-bit hash space, the maximum possible run of
+zeros is 64, which fits into a 6-bit integer (<span
+class="math inline">\(2^6 = 64\)</span>).</p>
+<p>With <span class="math inline">\(16,384\)</span> registers of 6 bits
+each: <span class="math display">\[\text{Total Memory} = 16,384 \times 6
+\text{ bits} = 98,304 \text{ bits} = 12 \text{ KB}\]</span></p>
+<p>With only 12 KB of memory, HyperLogLog can estimate the cardinality
+of datasets containing billions of distinct elements with a typical
+standard error rate of roughly <span class="math inline">\(1.04 /
+\sqrt{m}\)</span> (approximately 0.81% for 16,384 registers). For
+smaller datasets where registers might remain empty, HLL incorporates
+bias corrections like Linear Counting to maintain accuracy across the
+entire range of dataset sizes.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

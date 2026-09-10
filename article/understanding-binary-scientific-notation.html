@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Binary Scientific Notation - binary</title>
+    <meta name="description" content="Binary scientific notation is a method used in computer systems to represent very large or very small real numbers efficiently using powers of two. Similar to decimal scientific notation, this format separates a number into a sign, a significand (also kn">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/understanding-binary-scientific-notation">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Understanding Binary Scientific Notation - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/understanding-binary-scientific-notation" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Binary scientific notation is a method used in computer systems to represent very large or very small real numbers efficiently using powers of two. Similar to decimal scientific notation, this format separates a number into a sign, a significand (also kn" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="understanding-binary-scientific-notation">Understanding Binary
+Scientific Notation</h1>
+<p>Binary scientific notation is a method used in computer systems to
+represent very large or very small real numbers efficiently using powers
+of two. Similar to decimal scientific notation, this format separates a
+number into a sign, a significand (also known as the mantissa), and an
+exponent. In the binary system, normalizing these numbers ensures that
+every non-zero significand begins with a leading digit of one, which
+standardizes representation and optimizes memory storage in modern
+computing standards like IEEE 754.</p>
+<h3 id="the-structure-of-binary-scientific-notation">The Structure of
+Binary Scientific Notation</h3>
+<p>In traditional base-10 scientific notation, a number is written
+as:</p>
+<p><span class="math display">\[\pm M \times 10^E\]</span></p>
+<p>where <span class="math inline">\(M\)</span> is the significand and
+<span class="math inline">\(E\)</span> is the integer exponent. In
+decimal normalization, the significand <span
+class="math inline">\(M\)</span> is adjusted so that exactly one
+non-zero digit (<span class="math inline">\(1\)</span> through <span
+class="math inline">\(9\)</span>) appears to the left of the decimal
+point (<span class="math inline">\(1 \le M &lt; 10\)</span>).</p>
+<p>Binary scientific notation functions identically, but operates in
+base-2:</p>
+<p><span class="math display">\[\pm M \times 2^E\]</span></p>
+<p>Here, the base is <span class="math inline">\(2\)</span>, and the
+significand <span class="math inline">\(M\)</span> represents a binary
+fraction scaled by an integer power of two.</p>
+<h3 id="how-normalization-forces-a-leading-one">How Normalization Forces
+a Leading One</h3>
+<p>In the binary numeral system, there are only two possible digits:
+<code>0</code> and <code>1</code>.</p>
+<p>When normalizing a number in any base, the rule requires shifting the
+radix point (the decimal or binary point) until there is exactly one
+non-zero digit to its left. Because <code>0</code> is excluded from
+being the leading non-zero digit, <code>1</code> is the only remaining
+option in base-2.</p>
+<p>Consequently, any non-zero normalized binary number must take the
+following form:</p>
+<p><span class="math display">\[1.b_1b_2b_3\dots \times 2^E\]</span></p>
+<p>where each <span class="math inline">\(b_n\)</span> is a binary digit
+(<code>0</code> or <code>1</code>).</p>
+<p>For example, consider converting the decimal value <span
+class="math inline">\(6.5\)</span> into normalized binary scientific
+notation:</p>
+<ol type="1">
+<li>Convert <span class="math inline">\(6.5\)</span> to standard binary:
+<span class="math inline">\(110.1_2\)</span></li>
+<li>Shift the binary point two places to the left to leave a single
+non-zero digit on the left: <span
+class="math inline">\(1.101_2\)</span></li>
+<li>Compensate for the shift by multiplying by <span
+class="math inline">\(2^2\)</span>: <span class="math inline">\(1.101_2
+\times 2^2\)</span></li>
+</ol>
+<h3 id="the-hidden-bit-advantage">The Hidden Bit Advantage</h3>
+<p>Because every normalized non-zero binary significand is guaranteed to
+start with <code>1.</code>, hardware designers can optimize storage
+efficiency.</p>
+<p>In floating-point representations such as the IEEE 754 standard:</p>
+<ul>
+<li>The leading <code>1</code> before the binary point is made
+<strong>implicit</strong> (often called the "hidden bit" or "implicit
+bit").</li>
+<li>Memory fields store only the fractional bits that follow the binary
+point (<span class="math inline">\(b_1b_2b_3\dots\)</span>).</li>
+<li>When performing arithmetic calculations, the processor hardware
+automatically assumes and restores the leading <code>1</code>.</li>
+</ul>
+<p>This normalization technique effectively grants the system an extra
+bit of precision for free, allowing 32-bit single-precision and 64-bit
+double-precision floating-point formats to store greater detail within
+fixed hardware constraints.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

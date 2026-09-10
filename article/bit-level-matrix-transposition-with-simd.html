@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bit-Level Matrix Transposition with SIMD - binary</title>
+    <meta name="description" content="This article provides a technical overview of bit-level matrix transposition algorithms and their optimization using Single Instruction, Multiple Data (SIMD) architectures. It covers the mathematical formulation of transposing single-bit elements within">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/bit-level-matrix-transposition-with-simd">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Bit-Level Matrix Transposition with SIMD - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/bit-level-matrix-transposition-with-simd" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article provides a technical overview of bit-level matrix transposition algorithms and their optimization using Single Instruction, Multiple Data (SIMD) architectures. It covers the mathematical formulation of transposing single-bit elements within" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="bit-level-matrix-transposition-with-simd">Bit-Level Matrix
+Transposition with SIMD</h1>
+<p>This article provides a technical overview of bit-level matrix
+transposition algorithms and their optimization using Single
+Instruction, Multiple Data (SIMD) architectures. It covers the
+mathematical formulation of transposing single-bit elements within
+binary matrices, details the recursive divide-and-conquer strategy, and
+demonstrates how hardware-level vector instructions—such as unpack,
+shuffle, and bitwise shift-mask operations—achieve high-throughput
+transposition.</p>
+<hr />
+<h3 id="what-is-bit-level-matrix-transposition">What is Bit-Level Matrix
+Transposition?</h3>
+<p>Bit-level matrix transposition is the process of reflecting a square
+or rectangular matrix of binary digits (<span
+class="math inline">\(0\)</span>s and <span
+class="math inline">\(1\)</span>s) across its main diagonal, converting
+row vectors into column vectors at the individual bit scale. For
+example, an <span class="math inline">\(8 \times 8\)</span> bit matrix
+stored inside a single 64-bit unsigned integer (<span
+class="math inline">\(U\)</span>) where each 8-bit byte represents a row
+must be transformed such that bit <span class="math inline">\(j\)</span>
+of row <span class="math inline">\(i\)</span> moves to bit <span
+class="math inline">\(i\)</span> of row <span
+class="math inline">\(j\)</span>.</p>
+<p>In standard scalar computation, transposing an <span
+class="math inline">\(N \times N\)</span> bit matrix by extracting and
+shifting individual bits requires <span
+class="math inline">\(O(N^2)\)</span> bitwise operations. Bit-level
+transposition algorithms reduce this complexity to <span
+class="math inline">\(O(N \log_2 N)\)</span> operations by operating on
+blocks of bits simultaneously using binary masks and shifts.</p>
+<hr />
+<h3 id="the-binary-divide-and-conquer-principle">The Binary
+Divide-and-Conquer Principle</h3>
+<p>The foundation of modern bit transposition relies on a
+divide-and-conquer approach. An <span class="math inline">\(N \times
+N\)</span> matrix is recursively divided into four <span
+class="math inline">\((N/2) \times (N/2)\)</span> submatrices:</p>
+<p><span class="math display">\[
+M = \begin{bmatrix} A &amp; B \\ C &amp; D \end{bmatrix} \implies M^T =
+\begin{bmatrix} A^T &amp; C^T \\ B^T &amp; D^T \end{bmatrix}
+\]</span></p>
+<p>Transposition proceeds in <span
+class="math inline">\(\log_2(N)\)</span> stages by swapping off-diagonal
+blocks of decreasing sizes (<span class="math inline">\(N/2, N/4, \dots,
+1\)</span>):</p>
+<ol type="1">
+<li><strong>Macro Swaps:</strong> Swap the top-right block (<span
+class="math inline">\(B\)</span>) with the bottom-left block (<span
+class="math inline">\(C\)</span>).</li>
+<li><strong>Sub-block Swaps:</strong> Subdivide each quadrant into four
+smaller sub-blocks and swap their respective off-diagonal elements.</li>
+<li><strong>Micro Swaps:</strong> Repeat down to individual bits.</li>
+</ol>
+<p>In pure binary logic, each swap step uses bitwise masks and
+shifts:</p>
+<p><span class="math display">\[\text{Temp} = (X \oplus (X \gg k)) \
+\&amp; \ \text{Mask}\]</span> <span class="math display">\[X = X \oplus
+\text{Temp} \oplus (\text{Temp} \ll k)\]</span></p>
+<p>Where <span class="math inline">\(k\)</span> represents the stride
+distance for that stage, and <span
+class="math inline">\(\text{Mask}\)</span> isolates the targeted
+alternating bitfields.</p>
+<hr />
+<h3 id="simd-acceleration-unpack-and-shuffle-operations">SIMD
+Acceleration: Unpack and Shuffle Operations</h3>
+<p>SIMD instructions parallelize this binary algorithm across 128-bit
+(SSE/NEON), 256-bit (AVX2), or 512-bit (AVX-512) vector registers by
+replacing scalar shifts and masks with hardware-level byte and word
+permutations.</p>
+<h4 id="1-interleaving-with-unpack-operations">1. Interleaving with
+Unpack Operations</h4>
+<p>SIMD architectures provide "unpack" (or zip/interleave) instructions,
+such as x86's <code>PUNPCKLBW</code> (Unpack Low Data from Bytes) and
+<code>PUNPCKHBW</code> (Unpack High Data from Bytes).</p>
+<ul>
+<li><strong>Mechanism:</strong> Given two vector registers, an unpack
+operation interleaves their lower or upper elements into a new
+vector.</li>
+<li><strong>Application:</strong> When transposing a set of vectors
+where each register represents rows of bytes, unpacking pairs of
+registers automatically performs the transposition at the byte or
+multi-bit level, effectively handling the higher <span
+class="math inline">\(\log_2(N)\)</span> stages of the algorithm in
+single-cycle operations.</li>
+</ul>
+<h4 id="2-byte-permutation-with-shuffle-operations">2. Byte Permutation
+with Shuffle Operations</h4>
+<p>Vector shuffle operations, such as <code>PSHUFB</code> (Packed
+Shuffle Bytes), accept a control mask to arbitrarily rearrange bytes
+within a 128-bit lane.</p>
+<ul>
+<li><strong>Mechanism:</strong> Instead of applying sequential
+multi-step shift-mask sequences to rearrange byte positions, a single
+shuffle instruction permutes an entire vector of bytes into the required
+layout.</li>
+<li><strong>Application:</strong> Shuffle operations pre-align matrix
+rows so that subsequent bit-level unpack and shift instructions operate
+uniformly across all vector lanes.</li>
+</ul>
+<h4 id="3-resolving-the-sub-byte-level">3. Resolving the Sub-Byte
+Level</h4>
+<p>Because standard SIMD instruction sets do not natively unpack
+individual bits (operating at byte granularity minimum), the sub-byte
+transposition (from 8-bit blocks down to 1-bit elements) combines SIMD
+byte operations with parallel bitwise operations:</p>
+<ol type="1">
+<li><strong>Shift and Mask:</strong> SIMD logical shift instructions
+(<code>VPSLLW</code>, <code>VPSRLW</code>) and bitwise ANDs
+(<code>VPAND</code>) isolate even and odd bit pairs simultaneously
+across all lanes.</li>
+<li><strong>Bit-Matrix Multiplication:</strong> On architectures
+supporting Advanced Vector Extensions (such as AVX-512 with VBMI2/GFNI
+extensions), instructions like <code>VGF2P8AFFINEQB</code> (Galois Field
+Affine Transformation) or <code>VPERMB</code> can transpose an <span
+class="math inline">\(8 \times 8\)</span> bit matrix within each byte in
+a single instruction using an identity-matrix affine
+transformation.</li>
+</ol>
+<hr />
+<h3 id="execution-pipeline">Execution Pipeline</h3>
+<p>For a typical <span class="math inline">\(64 \times 64\)</span> bit
+matrix (represented by eight 64-bit integers or four 128-bit vector
+registers), the execution pipeline operates as follows:</p>
+<ol type="1">
+<li><strong>Stage 1 (64-bit to 32-bit blocks):</strong> Unpack low and
+high 32-bit doublewords between vector pairs.</li>
+<li><strong>Stage 2 (32-bit to 16-bit blocks):</strong> Unpack low and
+high 16-bit words across the resulting registers.</li>
+<li><strong>Stage 3 (16-bit to 8-bit blocks):</strong> Unpack low and
+high 8-bit bytes to place elements into isolated byte lanes.</li>
+<li><strong>Stage 4 (8-bit to 1-bit elements):</strong> Apply parallel
+shift-and-mask sequences or Galois Field affine operations across all
+registers to finalize the bit-level reflection.</li>
+</ol>
+<p>By offloading spatial rearrangements to hardware unpack and shuffle
+units, bit-level matrix transposition executes in tens of cycles rather
+than thousands, making it viable for high-throughput cryptography, image
+compression, and binary neural networks.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

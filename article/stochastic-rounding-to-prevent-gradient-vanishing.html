@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stochastic Rounding to Prevent Gradient Vanishing - binary</title>
+    <meta name="description" content="This article explains how stochastic rounding addresses the gradient vanishing problem in low-precision neural network training. In constrained binary formats—such as 8-bit or 16-bit floating-point and fixed-point representations—standard determinist">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/stochastic-rounding-to-prevent-gradient-vanishing">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Stochastic Rounding to Prevent Gradient Vanishing - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/stochastic-rounding-to-prevent-gradient-vanishing" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explains how stochastic rounding addresses the gradient vanishing problem in low-precision neural network training. In constrained binary formats—such as 8-bit or 16-bit floating-point and fixed-point representations—standard determinist" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="stochastic-rounding-to-prevent-gradient-vanishing">Stochastic
+Rounding to Prevent Gradient Vanishing</h1>
+<p>This article explains how stochastic rounding addresses the gradient
+vanishing problem in low-precision neural network training. In
+constrained binary formats—such as 8-bit or 16-bit floating-point and
+fixed-point representations—standard deterministic rounding algorithms
+routinely discard small weight updates by rounding them down to zero.
+Stochastic rounding replaces deterministic truncation with a
+probabilistic mechanism, maintaining the expected value of gradients and
+enabling networks to learn even when updates are smaller than the
+precision limit of the hardware.</p>
+<h2 id="the-underflow-problem-in-low-precision-formats">The Underflow
+Problem in Low-Precision Formats</h2>
+<p>In low-precision arithmetic (such as FP8, INT8, or custom fixed-point
+binary formats), numbers are represented using a limited number of bits.
+The gap between two consecutive representable numbers is defined by the
+Least Significant Bit (LSB), denoted as <span
+class="math inline">\(\epsilon\)</span>.</p>
+<p>During backpropagation, calculated gradient updates (<span
+class="math inline">\(\Delta w = -\eta \nabla L\)</span>) often become
+extremely small, particularly in deep architectures or when using small
+learning rates <span class="math inline">\(\eta\)</span>. When standard
+deterministic rounding—such as Round-to-Nearest (RN)—is applied:</p>
+<p><span class="math display">\[\text{RN}(x) = \begin{cases} \lfloor x
+\rfloor &amp; \text{if } x - \lfloor x \rfloor &lt; \frac{\epsilon}{2}
+\\ \lfloor x \rfloor + \epsilon &amp; \text{if } x - \lfloor x \rfloor
+\ge \frac{\epsilon}{2} \end{cases}\]</span></p>
+<p>If the gradient update <span class="math inline">\(|\Delta
+w|\)</span> is smaller than <span
+class="math inline">\(\frac{\epsilon}{2}\)</span>, the update rounds
+down to zero every single step:</p>
+<p><span class="math display">\[w_{t+1} = \text{RN}(w_t + \Delta w) =
+w_t\]</span></p>
+<p>Because the deterministic function discards updates below this
+threshold, the model's weights remain completely frozen. This manifests
+mathematically as gradient vanishing, entirely stalling the optimization
+process.</p>
+<h2 id="how-stochastic-rounding-works">How Stochastic Rounding
+Works</h2>
+<p>Stochastic Rounding (SR) introduces a probabilistic threshold based
+on the exact fractional distance between the two closest representable
+binary numbers. For a real value <span class="math inline">\(x\)</span>
+lying between adjacent representable values <span
+class="math inline">\(\lfloor x \rfloor\)</span> and <span
+class="math inline">\(\lfloor x \rfloor + \epsilon\)</span>:</p>
+<p><span class="math display">\[\text{SR}(x) = \begin{cases} \lfloor x
+\rfloor + \epsilon &amp; \text{with probability } p = \frac{x - \lfloor
+x \rfloor}{\epsilon} \\ \lfloor x \rfloor &amp; \text{with probability }
+1 - p \end{cases}\]</span></p>
+<p>Instead of always discarding a sub-LSB value, the binary
+representation has a non-zero probability of rounding up to the next
+representable state proportional to its magnitude.</p>
+<h2 id="preserving-gradient-energy-via-unbiased-expectation">Preserving
+Gradient Energy via Unbiased Expectation</h2>
+<p>The critical property of stochastic rounding is that it is an
+<strong>unbiased estimator</strong> of the true real-valued
+calculation:</p>
+<p><span class="math display">\[\mathbb{E}[\text{SR}(x)] = (\lfloor x
+\rfloor + \epsilon) \cdot \left(\frac{x - \lfloor x
+\rfloor}{\epsilon}\right) + \lfloor x \rfloor \cdot \left(1 - \frac{x -
+\lfloor x \rfloor}{\epsilon}\right) = x\]</span></p>
+<p>Because the expected value equals the exact continuous value, updates
+that are substantially smaller than the LSB are not permanently lost.
+While any single update may round to zero, over <span
+class="math inline">\(N\)</span> iterations the accumulation of
+probabilistic bit-flips converges to the true gradient sum:</p>
+<p><span class="math display">\[\lim_{N \to \infty} \frac{1}{N}
+\sum_{i=1}^N \text{SR}(\Delta w_i) = \frac{1}{N} \sum_{i=1}^N \Delta
+w_i\]</span></p>
+<h2 id="impact-on-binary-and-low-bit-network-training">Impact on Binary
+and Low-Bit Network Training</h2>
+<ol type="1">
+<li><strong>Elimination of Gradient Stagnation:</strong> Gradients that
+would otherwise underflow in binary arithmetic still carry statistical
+weight, preventing early layers from decoupling from the loss
+signal.</li>
+<li><strong>Elimination of High-Precision Master Weights:</strong>
+Traditional low-precision training often requires maintaining a
+continuous 32-bit floating-point (FP32) copy of weights to accumulate
+small gradients. Stochastic rounding allows weights to be stored and
+updated directly in low-bit representations.</li>
+<li><strong>Regularization via Gradient Noise:</strong> The inherent
+variance introduced by probabilistic rounding acts as benign noise
+during optimization, often helping the network escape sharp local minima
+without destabilizing convergence.</li>
+</ol></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

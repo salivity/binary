@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Binary Addition Works Compared to Decimal - binary</title>
+    <meta name="description" content="This article explores how binary addition functions in comparison to everyday decimal addition. While both systems rely on positional notation and the concept of carrying values to higher-value columns, they operate on different numerical bases. By under">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-binary-addition-works-compared-to-decimal">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Binary Addition Works Compared to Decimal - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-binary-addition-works-compared-to-decimal" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores how binary addition functions in comparison to everyday decimal addition. While both systems rely on positional notation and the concept of carrying values to higher-value columns, they operate on different numerical bases. By under" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-binary-addition-works-compared-to-decimal">How Binary
+Addition Works Compared to Decimal</h1>
+<p>This article explores how binary addition functions in comparison to
+everyday decimal addition. While both systems rely on positional
+notation and the concept of carrying values to higher-value columns,
+they operate on different numerical bases. By understanding the core
+rules of base-2 arithmetic alongside the familiar base-10 system, you
+will see how computers perform fundamental calculations using only zeros
+and ones.</p>
+<h2 id="the-decimal-system-base-10-basics">The Decimal System (Base-10)
+Basics</h2>
+<p>The decimal system is built on a base of 10, utilizing ten distinct
+digits: 0 through 9. Each position in a decimal number represents an
+increasing power of 10 (units, tens, hundreds, thousands).</p>
+<p>When adding numbers in decimal:</p>
+<ol type="1">
+<li>You add digits in the same place-value column starting from the
+right.</li>
+<li>If the sum of a column is between 0 and 9, you write the result
+below that column.</li>
+<li>If the sum reaches 10 or greater, you write down the units digit and
+"carry" the tens digit over to the next column on the left.</li>
+</ol>
+<p>For example, in <span class="math inline">\(7 + 5 = 12\)</span>, the
+sum exceeds 9, so you write down 2 and carry 1 to the tens place.</p>
+<h2 id="the-binary-system-base-2-rules">The Binary System (Base-2)
+Rules</h2>
+<p>The binary system operates on a base of 2, using only two digits: 0
+and 1. Each position in a binary number represents an increasing power
+of 2 (1s, 2s, 4s, 8s, 16s, and so on).</p>
+<p>Because there are only two digits, binary addition follows four
+simple rules:</p>
+<ul>
+<li><strong>0 + 0 = 0</strong></li>
+<li><strong>0 + 1 = 1</strong></li>
+<li><strong>1 + 0 = 1</strong></li>
+<li><strong>1 + 1 = 10</strong> (Write down 0, carry 1 to the next
+column)</li>
+</ul>
+<p>When including a carried-in 1:</p>
+<ul>
+<li><strong>1 + 1 + 1 = 11</strong> (Write down 1, carry 1 to the next
+column)</li>
+</ul>
+<p>In binary, the number <span class="math inline">\(2\)</span> is
+represented as <code>10</code> (one 2 and zero 1s), and the number <span
+class="math inline">\(3\)</span> is represented as <code>11</code> (one
+2 and one 1).</p>
+<h2 id="side-by-side-comparison-an-example">Side-by-Side Comparison: An
+Example</h2>
+<p>Consider adding the decimal numbers <strong>5</strong> and
+<strong>3</strong>, which equals <strong>8</strong>.</p>
+<p>In binary:</p>
+<ul>
+<li><strong>5</strong> in decimal is <strong>101</strong> (<span
+class="math inline">\(1\times4 + 0\times2 + 1\times1\)</span>)</li>
+<li><strong>3</strong> in decimal is <strong>011</strong> (<span
+class="math inline">\(0\times4 + 1\times2 + 1\times1\)</span>)</li>
+</ul>
+<p>Carrying out the column addition from right to left:</p>
+<pre class="text"><code>  Carry:  1 1 1
+          0 1 0 1  (5 in decimal)
+        + 0 0 1 1  (3 in decimal)
+        ---------
+          1 0 0 0  (8 in decimal)</code></pre>
+<ol type="1">
+<li><strong>Rightmost column (1s place):</strong> <span
+class="math inline">\(1 + 1 = 0\)</span>, carry <span
+class="math inline">\(1\)</span>.</li>
+<li><strong>Middle column (2s place):</strong> <span
+class="math inline">\(0 + 1 + 1 \text{ (carry)} = 0\)</span>, carry
+<span class="math inline">\(1\)</span>.</li>
+<li><strong>Third column (4s place):</strong> <span
+class="math inline">\(1 + 0 + 1 \text{ (carry)} = 0\)</span>, carry
+<span class="math inline">\(1\)</span>.</li>
+<li><strong>Fourth column (8s place):</strong> <span
+class="math inline">\(0 + 0 + 1 \text{ (carry)} = 1\)</span>.</li>
+</ol>
+<p>The result is <code>1000</code> in binary, which corresponds to <span
+class="math inline">\(1\times8 + 0\times4 + 0\times2 + 0\times1 =
+8\)</span> in decimal.</p>
+<h2 id="key-differences">Key Differences</h2>
+<ul>
+<li><strong>Carry Frequency:</strong> Binary carries happen much more
+frequently because the maximum single-digit value is 1. Any addition of
+<span class="math inline">\(1 + 1\)</span> immediately triggers a
+carry.</li>
+<li><strong>Hardware Implementation:</strong> Decimal arithmetic
+requires complex circuitry to represent ten distinct voltage states or
+codes. Binary arithmetic maps directly to digital logic gates: an
+<strong>XOR</strong> gate calculates the sum bit, and an
+<strong>AND</strong> gate determines whether to generate a carry
+bit.</li>
+<li><strong>Simplicity vs. Length:</strong> Binary addition rules are
+simpler and fewer in number than decimal addition tables, but binary
+representations require significantly more digits to represent large
+numbers.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

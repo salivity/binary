@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Stein's Binary GCD Algorithm Works - binary</title>
+    <meta name="description" content="Stein's algorithm, also known as the binary GCD algorithm, computes the greatest common divisor (GCD) of two non-negative integers by replacing traditional division and modulo operations with bitwise right shifts, parity checks, and subtractions. While t">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-stein-s-binary-gcd-algorithm-works">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Stein's Binary GCD Algorithm Works - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-stein-s-binary-gcd-algorithm-works" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Stein's algorithm, also known as the binary GCD algorithm, computes the greatest common divisor (GCD) of two non-negative integers by replacing traditional division and modulo operations with bitwise right shifts, parity checks, and subtractions. While t" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-steins-binary-gcd-algorithm-works">How Stein's Binary GCD
+Algorithm Works</h1>
+<p>Stein's algorithm, also known as the binary GCD algorithm, computes
+the greatest common divisor (GCD) of two non-negative integers by
+replacing traditional division and modulo operations with bitwise right
+shifts, parity checks, and subtractions. While the classical Euclidean
+algorithm relies on integer division—an operation that requires multiple
+clock cycles on modern computer architectures—Stein’s algorithm operates
+natively in the binary number system. By using low-cost binary shifts
+(division by two) and subtraction, it significantly improves execution
+speed on digital processors.</p>
+<h3 id="the-problem-with-euclidean-division">The Problem with Euclidean
+Division</h3>
+<p>The standard Euclidean algorithm calculates the GCD using repeated
+division:</p>
+<p><span class="math display">\[\gcd(a, b) = \gcd(b, a \pmod
+b)\]</span></p>
+<p>In binary hardware, calculating <span class="math inline">\(a \pmod
+b\)</span> requires integer division circuitry, which is complex and
+slow compared to basic logic operations. Stein’s algorithm avoids
+division entirely by exploiting the algebraic properties of greatest
+common divisors in base-2 representation.</p>
+<h3 id="the-algebraic-rules-of-steins-algorithm">The Algebraic Rules of
+Stein's Algorithm</h3>
+<p>Stein’s algorithm calculates <span class="math inline">\(\gcd(u,
+v)\)</span> iteratively or recursively based on the parity (even or odd
+state) of the two integers:</p>
+<ol type="1">
+<li><p><strong>Both numbers are even (<span
+class="math inline">\(u\)</span> is even, <span
+class="math inline">\(v\)</span> is even):</strong> If both <span
+class="math inline">\(u\)</span> and <span
+class="math inline">\(v\)</span> are divisible by 2, then 2 is a common
+factor. <span class="math display">\[\gcd(u, v) = 2 \cdot \gcd(u / 2, v
+/ 2)\]</span> In binary, <span class="math inline">\(u / 2\)</span> and
+<span class="math inline">\(v / 2\)</span> are calculated instantly
+using an arithmetic right shift: <code>u &gt;&gt; 1</code> and
+<code>v &gt;&gt; 1</code>. The common factor of 2 is stored to multiply
+the final result later.</p></li>
+<li><p><strong>One number is even, one is odd (<span
+class="math inline">\(u\)</span> is even, <span
+class="math inline">\(v\)</span> is odd):</strong> Because <span
+class="math inline">\(v\)</span> is odd, 2 cannot be a common divisor of
+both numbers. The factor of 2 in <span class="math inline">\(u\)</span>
+can be discarded without changing the GCD: <span
+class="math display">\[\gcd(u, v) = \gcd(u / 2, v)\]</span> The
+algorithm applies an arithmetic right shift to the even number:
+<code>u = u &gt;&gt; 1</code>.</p></li>
+<li><p><strong>Both numbers are odd (<span
+class="math inline">\(u\)</span> is odd, <span
+class="math inline">\(v\)</span> is odd):</strong> When neither number
+has a factor of 2, the algorithm subtracts the smaller number from the
+larger number (assume <span class="math inline">\(u \ge v\)</span>):
+<span class="math display">\[\gcd(u, v) = \gcd(u - v, v)\]</span> Since
+the difference between any two odd numbers is always an even number,
+<span class="math inline">\((u - v)\)</span> is guaranteed to be even.
+In the very next iteration, this new even value can be reduced using
+arithmetic right shifts.</p></li>
+</ol>
+<h3 id="step-by-step-execution-model">Step-by-Step Execution Model</h3>
+<p>To compute the GCD of <span class="math inline">\(u\)</span> and
+<span class="math inline">\(v\)</span>:</p>
+<ol type="1">
+<li><strong>Extract Common Factors of Two:</strong> Count how many times
+both <span class="math inline">\(u\)</span> and <span
+class="math inline">\(v\)</span> can be simultaneously right-shifted.
+Let this count be <span class="math inline">\(k\)</span>. Shift both
+numbers right until at least one is odd.</li>
+<li><strong>Remove Remaining Factors of Two:</strong> Shift whichever
+number is even to the right until both <span
+class="math inline">\(u\)</span> and <span
+class="math inline">\(v\)</span> are odd.</li>
+<li><strong>Subtract and Shift Loop:</strong>
+<ul>
+<li>Ensure <span class="math inline">\(u \ge v\)</span> (swap if
+necessary).</li>
+<li>Set <span class="math inline">\(u = u - v\)</span>.</li>
+<li>If <span class="math inline">\(u = 0\)</span>, the algorithm
+terminates, returning <span class="math inline">\(v \cdot 2^k\)</span>
+(which is <span class="math inline">\(v \text{ \textless\textless }
+k\)</span>).</li>
+<li>Since <span class="math inline">\(u\)</span> is now even, apply
+arithmetic right shifts (<code>u = u &gt;&gt; 1</code>) until <span
+class="math inline">\(u\)</span> becomes odd again.</li>
+<li>Repeat the loop.</li>
+</ul></li>
+</ol>
+<h3 id="why-this-approach-is-faster-in-binary-hardware">Why This
+Approach Is Faster in Binary Hardware</h3>
+<ul>
+<li><strong>Parity Detection:</strong> Checking if a number is even or
+odd requires checking only the least significant bit
+(<code>x &amp; 1</code>).</li>
+<li><strong>Division by Two:</strong> Dividing by two is a single-cycle
+bitwise operation (<code>x &gt;&gt; 1</code>).</li>
+<li><strong>Trailing Zeros:</strong> Modern processors include dedicated
+instructions (such as <code>CTZ</code> or <code>CLZ</code>—Count
+Trailing/Leading Zeros) that allow multiple right shifts to occur in a
+single instruction cycle, stripping all powers of two from an odd number
+instantly.</li>
+<li><strong>ALU Efficiency:</strong> Subtraction (<code>u - v</code>) is
+executed by the standard Arithmetic Logic Unit (ALU) much faster than
+integer division instructions.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

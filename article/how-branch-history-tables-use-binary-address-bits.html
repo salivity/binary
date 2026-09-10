@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Branch History Tables Use Binary Address Bits - binary</title>
+    <meta name="description" content="Modern microprocessors use dynamic branch prediction to guess the outcome of conditional branches before they execute, preventing costly pipeline stalls. This hardware relies on Branch History Tables (BHT) and Pattern History Tables (PHT) indexed using s">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-branch-history-tables-use-binary-address-bits">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Branch History Tables Use Binary Address Bits - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-branch-history-tables-use-binary-address-bits" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Modern microprocessors use dynamic branch prediction to guess the outcome of conditional branches before they execute, preventing costly pipeline stalls. This hardware relies on Branch History Tables (BHT) and Pattern History Tables (PHT) indexed using s" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-branch-history-tables-use-binary-address-bits">How Branch
+History Tables Use Binary Address Bits</h1>
+<p>Modern microprocessors use dynamic branch prediction to guess the
+outcome of conditional branches before they execute, preventing costly
+pipeline stalls. This hardware relies on Branch History Tables (BHT) and
+Pattern History Tables (PHT) indexed using specific binary bits
+extracted from the branch instruction's memory address. This article
+explains the mechanics of address extraction, bit selection, table
+indexing, outcome tracking via saturating counters, and advanced
+XOR-based indexing schemes.</p>
+<h3
+id="extracting-the-binary-index-from-the-instruction-address">Extracting
+the Binary Index from the Instruction Address</h3>
+<p>Every instruction in a program resides at a unique memory address
+tracked by the Program Counter (PC). When a processor encounters a
+branch instruction, it uses the binary representation of this address to
+locate the prediction entry in hardware tables.</p>
+<p>In modern computer architectures, instructions are aligned in memory
+(typically to 32-bit/4-byte boundaries). Because of this alignment, the
+lowest bits of the PC are always zero:</p>
+<ul>
+<li>For 32-bit aligned architectures, the least significant 2 bits
+(<code>[1:0]</code>) are always <code>00</code>.</li>
+<li>For 64-bit aligned instructions, the lowest 3 bits
+(<code>[2:0]</code>) are always <code>000</code>.</li>
+</ul>
+<p>Hardware ignores these fixed trailing zeros. To index a table with
+<span class="math inline">\(2^k\)</span> entries, the branch prediction
+hardware extracts a <span class="math inline">\(k\)</span>-bit slice
+directly above the ignored alignment bits (for example, bits
+<code>[k+1:2]</code>).</p>
+<pre><code>Example: 32-bit PC with a 1024-entry (10-bit index) table
++------------------------------------+--------------------+--------+
+| Unused Tag / Higher Bits (20 bits) | Index Bits (10 bits)| Fixed0 |
+| PC[31:12]                          | PC[11:2]           | PC[1:0]|
++------------------------------------+--------------------+--------+</code></pre>
+<h3 id="accessing-saturating-counters-in-history-tables">Accessing
+Saturating Counters in History Tables</h3>
+<p>The selected <span class="math inline">\(k\)</span>-bit binary number
+serves as a direct memory index into the table. Each entry in a standard
+Branch History Table contains a state machine, most commonly a 2-bit
+saturating counter:</p>
+<ul>
+<li><strong>00 (Strongly Not Taken):</strong> Predicts Not Taken.</li>
+<li><strong>01 (Weakly Not Taken):</strong> Predicts Not Taken.</li>
+<li><strong>10 (Weakly Taken):</strong> Predicts Taken.</li>
+<li><strong>11 (Strongly Taken):</strong> Predicts Taken.</li>
+</ul>
+<p>When a branch instruction is fetched:</p>
+<ol type="1">
+<li>The hardware extracts the index bits from the PC.</li>
+<li>It retrieves the 2-bit value at that specific index.</li>
+<li>The most significant bit of the counter determines the prediction (0
+= Not Taken, 1 = Taken).</li>
+<li>Once the actual outcome is resolved during execution, the hardware
+increments the counter (up to 11) if the branch was taken, or decrements
+it (down to 00) if the branch was not taken.</li>
+</ol>
+<h3 id="handling-branch-aliasing">Handling Branch Aliasing</h3>
+<p>Because the table has a finite number of entries, two completely
+different branch instructions with different high-order address bits can
+share the exact same low-order index bits. This condition is called
+<strong>branch aliasing</strong> or <strong>interference</strong>.</p>
+<ul>
+<li><strong>Constructive Aliasing:</strong> Two branches share an entry
+and naturally have the same outcome bias, reinforcing accurate
+predictions.</li>
+<li><strong>Destructive Aliasing:</strong> Two branches share an entry
+but have opposing behaviors (one mostly taken, one mostly not taken),
+causing frequent mispredictions.</li>
+</ul>
+<h3 id="correlating-predictions-the-gshare-indexing-scheme">Correlating
+Predictions: The Gshare Indexing Scheme</h3>
+<p>To reduce aliasing and account for surrounding program flow, modern
+processors combine address bits with dynamic branch history rather than
+using address bits alone.</p>
+<p>In a <strong>Gshare predictor</strong>, the hardware maintains a
+Global History Register (GHR)—a shift register where each bit represents
+the outcome of the most recent branches across the entire program. The
+hardware calculates the table index using a bitwise XOR operation
+between the binary PC bits and the GHR bits:</p>
+<p><span class="math display">\[\text{Index} = \text{PC}[k+1:2] \oplus
+\text{GHR}[k-1:0]\]</span></p>
+<p>This binary hashing mechanism ensures that the same branch address
+produces different table indices depending on the path taken through the
+program, significantly reducing destructive aliasing and improving
+overall branch prediction accuracy.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

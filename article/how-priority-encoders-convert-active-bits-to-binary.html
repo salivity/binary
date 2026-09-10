@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Priority Encoders Convert Active Bits to Binary - binary</title>
+    <meta name="description" content="A priority encoder is a combinational digital circuit that monitors multiple input lines, identifies the highest-order asserted input, and translates its position into a corresponding binary output code. Unlike standard encoders, which produce erroneous">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-priority-encoders-convert-active-bits-to-binary">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Priority Encoders Convert Active Bits to Binary - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-priority-encoders-convert-active-bits-to-binary" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A priority encoder is a combinational digital circuit that monitors multiple input lines, identifies the highest-order asserted input, and translates its position into a corresponding binary output code. Unlike standard encoders, which produce erroneous" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-priority-encoders-convert-active-bits-to-binary">How
+Priority Encoders Convert Active Bits to Binary</h1>
+<p>A priority encoder is a combinational digital circuit that monitors
+multiple input lines, identifies the highest-order asserted input, and
+translates its position into a corresponding binary output code. Unlike
+standard encoders, which produce erroneous outputs if multiple inputs
+are simultaneously active, a priority encoder relies on built-in
+precedence logic to ignore all lower-priority active lines. This article
+breaks down the internal logic gating, the truth table mechanics, and
+the Boolean expressions that allow priority encoders to resolve
+conflicting inputs and output an accurate binary representation.</p>
+<h2 id="the-principle-of-priority-resolution">The Principle of Priority
+Resolution</h2>
+<p>In standard digital logic, a regular <span
+class="math inline">\(2^n\)</span>-to-<span
+class="math inline">\(n\)</span> encoder expects exactly one input line
+to be high at any given time. In real-world systems, multiple request
+lines often become active concurrently. A priority encoder resolves this
+contention by assigning fixed precedence to each input line, typically
+ranking higher-indexed lines over lower-indexed lines (e.g., <span
+class="math inline">\(D_3 &gt; D_2 &gt; D_1 &gt; D_0\)</span>).</p>
+<p>When multiple lines are driven high, internal logic gates inhibit the
+signals of the lower-order inputs. The encoder achieves this by
+evaluating inputs in descending order of significance. If the
+highest-order line is active (<span class="math inline">\(1\)</span>),
+it forces the internal logic to ignore the state of all lines below it,
+treating them as "don't care" conditions (<span
+class="math inline">\(X\)</span>).</p>
+<h2 id="truth-table-and-logic-mapping">Truth Table and Logic
+Mapping</h2>
+<p>To understand how active lines map to binary numbers, consider a
+classic 4-to-2 active-high priority encoder with inputs <span
+class="math inline">\(D_0, D_1, D_2, D_3\)</span> and binary outputs
+<span class="math inline">\(Y_1, Y_0\)</span>, where <span
+class="math inline">\(D_3\)</span> holds the highest priority.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><span
+class="math inline">\(D_3\)</span></th>
+<th style="text-align: center;"><span
+class="math inline">\(D_2\)</span></th>
+<th style="text-align: center;"><span
+class="math inline">\(D_1\)</span></th>
+<th style="text-align: center;"><span
+class="math inline">\(D_0\)</span></th>
+<th style="text-align: center;"><span
+class="math inline">\(Y_1\)</span></th>
+<th style="text-align: center;"><span
+class="math inline">\(Y_0\)</span></th>
+<th style="text-align: center;">Valid (<span
+class="math inline">\(V\)</span>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">X</td>
+<td style="text-align: center;">X</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">X</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">X</td>
+<td style="text-align: center;">X</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">X</td>
+<td style="text-align: center;">X</td>
+<td style="text-align: center;">X</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Zero Active Inputs:</strong> When no lines are asserted, the
+binary outputs are undefined, but a designated <strong>Valid bit (<span
+class="math inline">\(V\)</span>)</strong> drops to <code>0</code> to
+signal an idle state.</li>
+<li><strong>Single or Multiple Active Inputs:</strong> If <span
+class="math inline">\(D_3\)</span> is <code>1</code>, the output is
+immediately mapped to binary <code>11</code> (<span
+class="math inline">\(3_{10}\)</span>), regardless of whether <span
+class="math inline">\(D_2, D_1,\)</span> or <span
+class="math inline">\(D_0\)</span> are active. If <span
+class="math inline">\(D_3\)</span> is <code>0</code> and <span
+class="math inline">\(D_2\)</span> is <code>1</code>, the output maps to
+binary <code>10</code> (<span class="math inline">\(2_{10}\)</span>),
+ignoring <span class="math inline">\(D_1\)</span> and <span
+class="math inline">\(D_0\)</span>.</li>
+</ul>
+<h2 id="boolean-logic-implementation">Boolean Logic Implementation</h2>
+<p>The translation from individual bit lines into binary code is
+governed by minimized Boolean equations derived via Karnaugh mapping
+(K-maps).</p>
+<p>For the 4-to-2 encoder, the output equations are:</p>
+<ul>
+<li><strong><span class="math inline">\(Y_1 = D_3 +
+D_2\)</span></strong> The most significant binary bit (<span
+class="math inline">\(Y_1\)</span>) becomes <code>1</code> whenever
+either <span class="math inline">\(D_3\)</span> or <span
+class="math inline">\(D_2\)</span> is high, as both represent values
+<span class="math inline">\(\ge 2\)</span>.</li>
+<li><strong><span class="math inline">\(Y_0 = D_3 + (\overline{D_2}
+\cdot D_1)\)</span></strong> The least significant binary bit (<span
+class="math inline">\(Y_0\)</span>) becomes <code>1</code> if <span
+class="math inline">\(D_3\)</span> is active, or if <span
+class="math inline">\(D_1\)</span> is active while <span
+class="math inline">\(D_2\)</span> is inactive. This explicitly
+implements priority by using the inverted term <span
+class="math inline">\(\overline{D_2}\)</span> to mask out <span
+class="math inline">\(D_1\)</span> whenever <span
+class="math inline">\(D_2\)</span> is asserted.</li>
+<li><strong><span class="math inline">\(V = D_3 + D_2 + D_1 +
+D_0\)</span></strong> The Valid output is an OR operation across all
+inputs, indicating whether any active request exists.</li>
+</ul>
+<h2 id="hardware-scaling-and-applications">Hardware Scaling and
+Applications</h2>
+<p>To expand to larger bit-widths, such as an 8-to-3 or 16-to-4 priority
+encoder (e.g., standard ICs like the 74HC148), circuits use cascaded
+priority trees with Enable Input (<span
+class="math inline">\(EI\)</span>) and Enable Output (<span
+class="math inline">\(EO\)</span>) pins. These cascading signals
+propagate the detection of higher-order active bits down the chain to
+disable lower-stage sub-circuits.</p>
+<p>This capability is essential in computer architecture for:</p>
+<ul>
+<li><strong>Interrupt Controllers (PICs):</strong> Identifying and
+routing the highest-priority hardware interrupt request to the CPU.</li>
+<li><strong>Flash Analog-to-Digital Converters (ADCs):</strong>
+Converting the parallel outputs of multiple voltage comparators into a
+single binary value.</li>
+<li><strong>Branch Prediction and Memory Allocation:</strong> Locating
+the first free block or most critical branch in arithmetic and logic
+units.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

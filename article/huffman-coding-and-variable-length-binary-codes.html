@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huffman Coding and Variable-Length Binary Codes - binary</title>
+    <meta name="description" content="Huffman coding is a foundational lossless data compression algorithm that reduces file sizes by assigning variable-length binary codes to characters based on their frequency of occurrence. Instead of using standard, fixed-length representations like 8-bi">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/huffman-coding-and-variable-length-binary-codes">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Huffman Coding and Variable-Length Binary Codes - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/huffman-coding-and-variable-length-binary-codes" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Huffman coding is a foundational lossless data compression algorithm that reduces file sizes by assigning variable-length binary codes to characters based on their frequency of occurrence. Instead of using standard, fixed-length representations like 8-bi" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="huffman-coding-and-variable-length-binary-codes">Huffman Coding
+and Variable-Length Binary Codes</h1>
+<p>Huffman coding is a foundational lossless data compression algorithm
+that reduces file sizes by assigning variable-length binary codes to
+characters based on their frequency of occurrence. Instead of using
+standard, fixed-length representations like 8-bit ASCII, it assigns
+shorter bit sequences to frequently occurring characters and longer
+sequences to rarer ones. This article explains how Huffman coding
+constructs these variable-length codes using binary trees and how the
+binary number system enables unambiguous decoding.</p>
+<h2 id="the-limitation-of-fixed-length-binary-encoding">The Limitation
+of Fixed-Length Binary Encoding</h2>
+<p>Standard computing systems traditionally store textual data using
+fixed-length binary formats, such as ASCII (8 bits per character) or
+UTF-32 (32 bits per character). In an 8-bit system, the letter "e" and
+the letter "z" both consume 8 bits of memory, regardless of how often
+they appear in a text.</p>
+<p>Fixed-length encoding simplifies data parsing because the processor
+reads a predefined number of bits to extract each character. However,
+this structure is inefficient when character distribution is skewed.
+Variable-length encoding solves this inefficiency by allowing the
+bit-length of each symbol to fluctuate based on statistical
+probability.</p>
+<h2 id="the-binary-number-system-and-the-prefix-property">The Binary
+Number System and the Prefix Property</h2>
+<p>In binary representation, values consist entirely of two states:
+<code>0</code> and <code>1</code>. When using variable-length codes, a
+significant challenge arises: determining where one character ends and
+the next begins without using special delimiter characters, which would
+increase file size.</p>
+<p>To prevent ambiguity, variable-length binary systems must satisfy the
+<strong>prefix property</strong>. A code system is prefix-free if no
+binary code assigned to a character is the starting prefix of another
+character's code.</p>
+<p>For example:</p>
+<ul>
+<li><strong>Ambiguous (Invalid):</strong> If <code>A = 0</code>,
+<code>B = 1</code>, and <code>C = 01</code>, the sequence
+<code>01</code> could be decoded as <code>AB</code> or
+<code>C</code>.</li>
+<li><strong>Prefix-Free (Valid):</strong> If <code>A = 0</code>,
+<code>B = 10</code>, and <code>C = 11</code>, the sequence
+<code>011</code> can only be interpreted as <code>AC</code>.</li>
+</ul>
+<h2 id="how-huffman-coding-generates-binary-codes">How Huffman Coding
+Generates Binary Codes</h2>
+<p>Huffman coding generates optimal prefix-free codes using a bottom-up
+binary tree construction based on character weights. The process follows
+a systematic algorithm:</p>
+<ol type="1">
+<li><strong>Frequency Analysis:</strong> The input data is scanned to
+calculate the frequency of every unique character.</li>
+<li><strong>Leaf Node Initialization:</strong> Each character is placed
+into an individual leaf node containing its character value and
+frequency weight.</li>
+<li><strong>Queue Sorting:</strong> All nodes are placed into a priority
+queue sorted in ascending order of frequency.</li>
+<li><strong>Tree Construction:</strong>
+<ul>
+<li>The two nodes with the lowest frequencies are removed from the
+queue.</li>
+<li>A new internal node is created with these two nodes as children. The
+internal node's weight equals the sum of the two children's
+weights.</li>
+<li>The new internal node is inserted back into the priority queue.</li>
+<li>This process repeats until only one root node remains, completing
+the Huffman Tree.</li>
+</ul></li>
+<li><strong>Binary Path Assignment:</strong> Binary values are assigned
+to the tree's branches. Conventionally, traversing left represents a
+binary <code>0</code>, while traversing right represents a binary
+<code>1</code>.</li>
+</ol>
+<p>The code for any character is the exact sequence of <code>0</code>s
+and <code>1</code>s encountered on the path from the root node to that
+character's leaf node. Because frequent characters merge near the top of
+the tree, their paths are short. Infrequent characters remain deeper in
+the tree, receiving longer binary paths.</p>
+<h2 id="decoding-variable-length-binary-streams">Decoding
+Variable-Length Binary Streams</h2>
+<p>Decoding a compressed binary stream is direct and deterministic. The
+decoder starts at the root of the Huffman tree and reads the incoming
+compressed bitstream one bit at a time:</p>
+<ul>
+<li>If the bit is <code>0</code>, the decoder moves down the left
+branch.</li>
+<li>If the bit is <code>1</code>, the decoder moves down the right
+branch.</li>
+<li>Upon reaching a leaf node, the decoder outputs the corresponding
+character, resets to the root of the tree, and continues reading the
+next bit.</li>
+</ul>
+<p>Because the binary paths are inherently prefix-free, the decoder
+never requires lookahead buffers or separators, allowing the stream to
+be processed continuously from left to right.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

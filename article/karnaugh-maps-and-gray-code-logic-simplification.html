@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karnaugh Maps and Gray Code Logic Simplification - binary</title>
+    <meta name="description" content="A Karnaugh map, commonly known as a K-map, is a graphical method used in digital electronics to simplify Boolean algebra expressions without relying on complex algebraic theorems. By organizing truth table values into a specialized multidimensional grid,">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/karnaugh-maps-and-gray-code-logic-simplification">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Karnaugh Maps and Gray Code Logic Simplification - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/karnaugh-maps-and-gray-code-logic-simplification" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A Karnaugh map, commonly known as a K-map, is a graphical method used in digital electronics to simplify Boolean algebra expressions without relying on complex algebraic theorems. By organizing truth table values into a specialized multidimensional grid," />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="karnaugh-maps-and-gray-code-logic-simplification">Karnaugh Maps
+and Gray Code Logic Simplification</h1>
+<p>A Karnaugh map, commonly known as a K-map, is a graphical method used
+in digital electronics to simplify Boolean algebra expressions without
+relying on complex algebraic theorems. By organizing truth table values
+into a specialized multidimensional grid, K-maps allow engineers and
+computer scientists to visually identify patterns, group adjacent terms,
+and deduce the simplest possible form of a logic circuit. The
+foundational mechanism making this simplification possible is the
+arrangement of the map's rows and columns using Gray code ordering,
+which ensures that adjacent cells differ by only a single binary
+digit.</p>
+<h2 id="what-is-a-karnaugh-map">What is a Karnaugh Map?</h2>
+<p>A Karnaugh map is a structured grid representation of a Boolean
+function's truth table. For a function with <span
+class="math inline">\(n\)</span> input variables, the K-map contains
+<span class="math inline">\(2^n\)</span> individual cells. Each cell
+corresponds to a specific combination of inputs (a minterm or maxterm)
+and holds a binary value of <code>1</code> or <code>0</code>
+representing the output of the function for those inputs.</p>
+<p>Instead of applying lengthy Boolean identities—such as De Morgan's
+laws or distributive laws—algebraically, a K-map transforms the
+simplification process into a visual grouping problem.</p>
+<h2 id="the-role-of-gray-code-ordering">The Role of Gray Code
+Ordering</h2>
+<p>Standard binary counting sequences (such as <code>00</code>,
+<code>01</code>, <code>10</code>, <code>11</code>) change multiple bits
+at once between certain transitions. For example, moving from
+<code>01</code> (1) to <code>10</code> (2) involves toggling two bits
+simultaneously.</p>
+<p>To make visual logic simplification work, K-maps label their
+coordinate headers using <strong>Gray code</strong> (also known as
+reflected binary code). The Gray code sequence for two variables is:</p>
+<p><code>00</code> → <code>01</code> → <code>11</code> →
+<code>10</code></p>
+<h3 id="why-gray-code-is-essential">Why Gray Code is Essential</h3>
+<p>Gray code ensures that between any two physically adjacent cells,
+exactly one variable changes its state (from <code>0</code> to
+<code>1</code> or <code>1</code> to <code>0</code>), while all other
+variables remain constant. This single-bit change property also applies
+continuously around the edges of the map, meaning the leftmost and
+rightmost columns are adjacent, as are the top and bottom rows (toroidal
+wrap-around).</p>
+<p>Because only one variable changes between neighboring cells, adjacent
+cells satisfy the Boolean identity:</p>
+<p><span class="math display">\[A \cdot B + A \cdot \overline{B} = A(B +
+\overline{B}) = A(1) = A\]</span></p>
+<p>This mathematical cancellation forms the basis of the entire
+minimization process.</p>
+<h2 id="how-k-map-logic-simplification-works">How K-Map Logic
+Simplification Works</h2>
+<p>To simplify a Boolean expression using a K-map, follow this
+systematic procedure:</p>
+<h3 id="1-populate-the-grid">1. Populate the Grid</h3>
+<p>Transfer the output values from the truth table into the
+corresponding cells of the K-map. For Sum of Products (SOP)
+simplification, focus on the cells containing <code>1</code>.</p>
+<h3 id="2-group-adjacent-cells">2. Group Adjacent Cells</h3>
+<p>Group the <code>1</code>s into rectangular blocks following strict
+rules:</p>
+<ul>
+<li>Every group must contain a number of cells that is a power of two
+(<span class="math inline">\(1, 2, 4, 8, 16\)</span>, etc.).</li>
+<li>Groups can be horizontal, vertical, or wrap around the borders of
+the grid.</li>
+<li>Groups should be made as large as possible to eliminate the maximum
+number of variables.</li>
+<li>Groups may overlap to ensure all <code>1</code>s are covered.</li>
+</ul>
+<h3 id="3-eliminate-changing-variables">3. Eliminate Changing
+Variables</h3>
+<p>Examine the binary row and column coordinates for each group:</p>
+<ul>
+<li>If a variable remains constant across all cells in the group (e.g.,
+it stays <code>1</code> or stays <code>0</code>), it is retained in the
+term.</li>
+<li>If a variable changes state within the group (e.g., both
+<code>0</code> and <code>1</code> are present), the Gray code adjacency
+cancels it out, and it is eliminated.</li>
+</ul>
+<h3 id="4-construct-the-minimal-boolean-expression">4. Construct the
+Minimal Boolean Expression</h3>
+<p>Write the resulting product terms for each group and combine them
+using the OR (<span class="math inline">\(+\)</span>) operation to
+obtain the minimized Sum of Products expression.</p>
+<p>Through the use of Gray code, the K-map automates the reduction of
+binary logic, minimizing gate count, propagation delay, and hardware
+costs in digital circuit design.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

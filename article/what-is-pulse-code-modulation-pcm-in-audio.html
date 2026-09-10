@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is Pulse Code Modulation (PCM) in Audio? - binary</title>
+    <meta name="description" content="Pulse Code Modulation (PCM) is the foundational method used to digitally represent analog audio signals. This article explains how PCM transforms continuous, real-world sound waves into discrete binary code—the language of computers and digital media">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-pulse-code-modulation-pcm-in-audio">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is Pulse Code Modulation (PCM) in Audio? - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-pulse-code-modulation-pcm-in-audio" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Pulse Code Modulation (PCM) is the foundational method used to digitally represent analog audio signals. This article explains how PCM transforms continuous, real-world sound waves into discrete binary code—the language of computers and digital media" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-pulse-code-modulation-pcm-in-audio">What Is Pulse Code
+Modulation (PCM) in Audio?</h1>
+<p>Pulse Code Modulation (PCM) is the foundational method used to
+digitally represent analog audio signals. This article explains how PCM
+transforms continuous, real-world sound waves into discrete binary
+code—the language of computers and digital media—through a three-step
+process: sampling, quantization, and binary encoding.</p>
+<p>Analog sound travels as continuous acoustic waves, creating infinite
+variations in amplitude (loudness) and frequency (pitch) over time.
+Because digital systems cannot store infinite states, they must convert
+these continuous waveforms into finite numbers. PCM achieves this
+conversion through the following technical stages:</p>
+<h3 id="1-sampling">1. Sampling</h3>
+<p>Sampling captures the amplitude of an analog wave at precise,
+regularly spaced intervals in time. The frequency of these measurements
+is known as the <strong>sample rate</strong>, measured in Hertz (Hz).
+According to the Nyquist-Shannon sampling theorem, the sample rate must
+be at least twice the highest frequency intended to be recorded to
+accurately reconstruct the signal. For example, standard CD audio uses a
+sample rate of 44.1 kHz, meaning the sound wave is measured 44,100 times
+per second to capture audible frequencies up to roughly 22 kHz.</p>
+<h3 id="2-quantization">2. Quantization</h3>
+<p>While sampling divides the continuous wave across the horizontal axis
+(time), quantization divides it across the vertical axis (amplitude).
+Each sampled point is measured and assigned to the nearest available
+step on a fixed numerical scale. The precision of this scale is
+determined by the <strong>bit depth</strong>. A higher bit depth
+provides more quantization levels, allowing for more accurate
+measurements and a lower noise floor. For instance:</p>
+<ul>
+<li>An <strong>8-bit</strong> system offers <span
+class="math inline">\(2^8 = 256\)</span> discrete amplitude levels.</li>
+<li>A <strong>16-bit</strong> system offers <span
+class="math inline">\(2^{16} = 65,536\)</span> discrete amplitude
+levels.</li>
+<li>A <strong>24-bit</strong> system offers <span
+class="math inline">\(2^{24} = 16,777,216\)</span> discrete amplitude
+levels.</li>
+</ul>
+<p>Any difference between the actual analog voltage and the assigned
+quantization step is called quantization error, which manifests as
+low-level noise.</p>
+<h3 id="3-binary-encoding">3. Binary Encoding</h3>
+<p>Once each sample is mapped to a discrete integer value, that number
+is translated directly into binary format (strings of <code>0</code>s
+and <code>1</code>s). In a 16-bit PCM system, every single sample is
+converted into a 16-digit binary word. These binary words are arranged
+sequentially into a serial digital bitstream.</p>
+<h3 id="the-output">The Output</h3>
+<p>The resulting binary stream represents the original sound wave purely
+in numeric form without any data compression. This uncompressed PCM data
+serves as the standard standard for high-fidelity digital audio, forming
+the baseline data format used in CDs, digital telephony, standard WAV
+files, and AIFF files, as well as the uncompressed source data for
+compressed formats like MP3 and AAC.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

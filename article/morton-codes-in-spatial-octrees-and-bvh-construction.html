@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morton Codes in Spatial Octrees and BVH Construction - binary</title>
+    <meta name="description" content="Spatial indexing algorithms translate multi-dimensional coordinate data into one-dimensional keys using Morton codes (also known as the Z-order curve), allowing complex spatial structures like octrees and Bounding Volume Hierarchies (BVHs) to be built wi">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/morton-codes-in-spatial-octrees-and-bvh-construction">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Morton Codes in Spatial Octrees and BVH Construction - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/morton-codes-in-spatial-octrees-and-bvh-construction" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Spatial indexing algorithms translate multi-dimensional coordinate data into one-dimensional keys using Morton codes (also known as the Z-order curve), allowing complex spatial structures like octrees and Bounding Volume Hierarchies (BVHs) to be built wi" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="morton-codes-in-spatial-octrees-and-bvh-construction">Morton
+Codes in Spatial Octrees and BVH Construction</h1>
+<p>Spatial indexing algorithms translate multi-dimensional coordinate
+data into one-dimensional keys using Morton codes (also known as the
+Z-order curve), allowing complex spatial structures like octrees and
+Bounding Volume Hierarchies (BVHs) to be built with high efficiency. By
+interleaving the binary bits of spatial coordinates, Morton codes
+preserve spatial locality within a 1D sequence. This article explains
+the binary mechanics behind Morton encoding and demonstrates how modern
+algorithms use these binary representations to construct linear octrees
+and GPU-accelerated BVHs via sorting and bitwise prefix matching.</p>
+<h3 id="binary-mechanics-of-morton-codes">Binary Mechanics of Morton
+Codes</h3>
+<p>A Morton code maps a multi-dimensional point into a single integer by
+interleaving the binary representations of its coordinate components.
+For a 3D coordinate <span class="math inline">\((X, Y, Z)\)</span> where
+each axis is normalized to a fixed-width integer (such as an unsigned
+10-bit or 21-bit integer):</p>
+<ol type="1">
+<li><strong>Coordinate Quantization:</strong> Floating-point coordinates
+are mapped to a discrete integer grid within a normalized bounding
+box.</li>
+<li><strong>Bit Interleaving:</strong> The bits of each coordinate are
+interleaved sequentially. If <span class="math inline">\(X =
+x_2x_1x_0\)</span>, <span class="math inline">\(Y = y_2y_1y_0\)</span>,
+and <span class="math inline">\(Z = z_2z_1z_0\)</span>, the resulting
+9-bit Morton code is: <span class="math display">\[\text{Code} =
+z_2y_2x_2 \ z_1y_1x_1 \ z_0y_0x_0\]</span></li>
+</ol>
+<p>In the binary number system, this operation can be computed
+efficiently using bitwise shift and mask operations or dedicated
+hardware instructions (such as the <code>PEXT</code>/<code>PDEP</code>
+instructions in the x86 BMI2 instruction set).</p>
+<h3 id="building-linear-octrees-using-morton-codes">Building Linear
+Octrees Using Morton Codes</h3>
+<p>An octree recursively subdivides 3D space into eight octants. In
+binary, each subdivision level corresponds exactly to 3 bits of a Morton
+code (representing the choices across the <span
+class="math inline">\(X\)</span>, <span
+class="math inline">\(Y\)</span>, and <span
+class="math inline">\(Z\)</span> axes).</p>
+<ul>
+<li><strong>Direct Octant Addressing:</strong> The most significant
+3-bit group determines which of the 8 root-level octants contains the
+point. The subsequent 3-bit groups determine the child octants at
+descending depth levels.</li>
+<li><strong>Prefix Matching for Hierarchy:</strong> Two points share an
+ancestor node at depth <span class="math inline">\(d\)</span> if and
+only if their Morton codes share the same initial <span
+class="math inline">\(3 \times d\)</span> prefix bits.</li>
+<li><strong>Linear Octree Generation:</strong> Instead of inserting
+elements recursively from the top down, spatial indexing algorithms sort
+all data points by their Morton codes. In a sorted array of Morton
+codes, points belonging to the same spatial region form contiguous
+memory blocks. An entire linear octree can be constructed in a single
+pass by identifying where the bit prefixes change between adjacent
+sorted elements.</li>
+</ul>
+<h3 id="constructing-bounding-volume-hierarchies-lbvh">Constructing
+Bounding Volume Hierarchies (LBVH)</h3>
+<p>Linear Bounding Volume Hierarchy (LBVH) algorithms, widely used in
+real-time ray tracing and physics simulations, rely on Morton codes to
+build balanced binary bounding volume trees in parallel on the GPU.</p>
+<ol type="1">
+<li><strong>Centroid Encoding:</strong> For each primitive (such as a
+triangle or mesh), the algorithm computes its bounding box centroid,
+quantizes it, and calculates its 64-bit or 32-bit Morton code.</li>
+<li><strong>Radix Sorting:</strong> Primitives are sorted globally in
+ascending order of their Morton codes using parallel radix sort, placing
+spatially adjacent primitives next to each other in memory.</li>
+<li><strong>Determining Hierarchy via Longest Common Prefix
+(LCP):</strong> To split an interval of primitives <span
+class="math inline">\([i, j]\)</span> into left and right child nodes,
+the algorithm finds the split position where the directional path
+diverges. This divergence is found by computing the Most Significant Bit
+(MSB) of the XOR difference between adjacent keys: <span
+class="math display">\[\delta(i, j) = \text{CLZ}(\text{MortonCode}_i
+\oplus \text{MortonCode}_j)\]</span> where <span
+class="math inline">\(\text{CLZ}\)</span> denotes the Count Leading
+Zeros instruction.</li>
+<li><strong>Independent Node Allocation:</strong> Because the
+parent-child relationships depend strictly on the common binary prefixes
+of sorted keys, each internal node in the BVH can compute its bounding
+box and child pointers independently and concurrently without global
+tree synchronization.</li>
+</ol>
+<h3 id="advantages-of-the-binary-approach">Advantages of the Binary
+Approach</h3>
+<p>Utilizing Morton codes reduces geometric tree construction to sorting
+and basic bitwise logic (<span
+class="math inline">\(\text{AND}\)</span>, <span
+class="math inline">\(\text{XOR}\)</span>, <span
+class="math inline">\(\text{SHIFTS}\)</span>, <span
+class="math inline">\(\text{CLZ}\)</span>). This eliminates expensive
+geometric intersection tests during hierarchy generation, maximizes
+CPU/GPU cache locality through contiguous array layouts, and guarantees
+predictable <span class="math inline">\(O(N \log N)\)</span> sorting
+with <span class="math inline">\(O(N)\)</span> tree construction
+times.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

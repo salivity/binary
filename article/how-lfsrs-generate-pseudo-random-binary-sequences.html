@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How LFSRs Generate Pseudo-Random Binary Sequences - binary</title>
+    <meta name="description" content="Linear Feedback Shift Registers (LFSRs) are foundational mechanisms in digital computing used to produce deterministic, statistically random binary sequences known as Pseudo-Random Binary Sequences (PRBS). This article examines the core architecture of L">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-lfsrs-generate-pseudo-random-binary-sequences">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How LFSRs Generate Pseudo-Random Binary Sequences - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-lfsrs-generate-pseudo-random-binary-sequences" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Linear Feedback Shift Registers (LFSRs) are foundational mechanisms in digital computing used to produce deterministic, statistically random binary sequences known as Pseudo-Random Binary Sequences (PRBS). This article examines the core architecture of L" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-lfsrs-generate-pseudo-random-binary-sequences">How LFSRs
+Generate Pseudo-Random Binary Sequences</h1>
+<p>Linear Feedback Shift Registers (LFSRs) are foundational mechanisms
+in digital computing used to produce deterministic, statistically random
+binary sequences known as Pseudo-Random Binary Sequences (PRBS). This
+article examines the core architecture of LFSRs, the role of binary
+arithmetic and feedback polynomials in their operation, how they achieve
+maximal-length sequences with near-ideal randomness properties, and
+their widespread applications across cryptography, telecommunications,
+and digital circuit testing.</p>
+<h3 id="what-is-a-linear-feedback-shift-register">What is a Linear
+Feedback Shift Register?</h3>
+<p>An LFSR is a shift register whose input bit is driven by a linear
+function of its previous states. In digital electronics, a shift
+register consists of a cascade of flip-flops, each holding a single
+binary digit (<span class="math inline">\(0\)</span> or <span
+class="math inline">\(1\)</span>). With every clock cycle, the bits
+shift sequentially down the register by one position. The vacated
+position at the input is populated by a new bit computed via the
+feedback function.</p>
+<p>Because the only linear operations over single bits in binary logic
+are XOR (exclusive OR) and XNOR (exclusive NOR), the feedback bit is
+calculated by XORing specific register stages known as "taps."</p>
+<h3 id="operation-in-the-binary-system">Operation in the Binary
+System</h3>
+<p>The binary operation of an LFSR is governed by finite field
+arithmetic over Galois Field 2, or <span
+class="math inline">\(GF(2)\)</span>. In <span
+class="math inline">\(GF(2)\)</span>, addition corresponds to the
+bitwise XOR operation, and multiplication corresponds to bitwise
+AND.</p>
+<ol type="1">
+<li><strong>State Initialization (Seed):</strong> The register is
+initialized with a non-zero binary vector known as the seed. An all-zero
+state must be avoided in XOR-based LFSRs because XORing zeros
+continuously produces zero, trapping the register in a permanent
+deadlock.</li>
+<li><strong>Shifting:</strong> Upon a clock pulse, the bit at stage
+<span class="math inline">\(n\)</span> is output, the bit at stage <span
+class="math inline">\(n-1\)</span> moves to stage <span
+class="math inline">\(n\)</span>, and this pattern continues across all
+stages.</li>
+<li><strong>Feedback Calculation:</strong> Predefined tap positions are
+XORed together to generate a single binary value, which feeds into the
+first register stage.</li>
+</ol>
+<p>Mathematically, the configuration of taps is represented by a
+characteristic feedback polynomial:</p>
+<p><span class="math display">\[P(x) = c_n x^n + c_{n-1} x^{n-1} + \dots
++ c_1 x + 1\]</span></p>
+<p>where each coefficient <span class="math inline">\(c_i \in \{0,
+1\}\)</span> dictates whether the output of the <span
+class="math inline">\(i\)</span>-th register stage contributes to the
+feedback calculation.</p>
+<h3 id="producing-maximal-length-sequences-m-sequences">Producing
+Maximal-Length Sequences (m-sequences)</h3>
+<p>An <span class="math inline">\(n\)</span>-bit register can represent
+a maximum of <span class="math inline">\(2^n\)</span> unique states.
+Excluding the all-zero state, the longest possible sequence an LFSR can
+cycle through before repeating is <span class="math inline">\(2^n -
+1\)</span> states. A sequence achieving this maximum cycle is called a
+<strong>maximal-length sequence</strong> or
+<strong>m-sequence</strong>.</p>
+<p>To generate an m-sequence, the feedback polynomial must be a
+<strong>primitive polynomial</strong> modulo 2. Primitive polynomials
+guarantee that the register traverses every possible non-zero binary
+combination before repeating, maximizing the period of the pseudo-random
+output.</p>
+<h3 id="pseudo-random-properties-of-lfsr-output">Pseudo-Random
+Properties of LFSR Output</h3>
+<p>Although the sequence generated by an LFSR is completely
+deterministic, m-sequences exhibit statistical properties that closely
+mirror true random noise. These properties, formalized by Solomon
+Golomb, include:</p>
+<ul>
+<li><strong>Balance Property:</strong> Over a full period of <span
+class="math inline">\(2^n - 1\)</span>, the number of binary ones
+exceeds the number of binary zeros by exactly one (there are <span
+class="math inline">\(2^{n-1}\)</span> ones and <span
+class="math inline">\(2^{n-1} - 1\)</span> zeros).</li>
+<li><strong>Run Property:</strong> A "run" is a consecutive sequence of
+identical bits. Across a full period, half of all runs are of length 1,
+a quarter are of length 2, an eighth are of length 3, and so on,
+matching the expected probability distribution of independent coin
+flips.</li>
+<li><strong>Ideal Autocorrelation:</strong> The discrete autocorrelation
+function of an m-sequence has a high peak at zero shift and a constant,
+minimal value for all non-zero shifts, meaning the sequence shows
+virtually no correlation with time-shifted versions of itself.</li>
+</ul>
+<h3 id="key-applications">Key Applications</h3>
+<ul>
+<li><strong>Telecommunications and Spread Spectrum:</strong> LFSRs
+generate spreading codes in Code Division Multiple Access (CDMA), GPS
+signaling, and Wi-Fi standards. Gold codes and Kasami codes, constructed
+by combining the outputs of multiple LFSRs, minimize interference
+between simultaneous transmissions.</li>
+<li><strong>Built-In Self-Test (BIST):</strong> In semiconductor
+manufacturing, LFSRs act as pseudo-random pattern generators to feed
+millions of test inputs into complex logic circuits, allowing rapid
+detection of manufacturing defects without external automated test
+equipment.</li>
+<li><strong>Scramblers and Whitening Filters:</strong> In protocols like
+Ethernet, PCIe, and SATA, LFSRs scramble data to eliminate long runs of
+identical bits, preventing DC bias on transmission lines and aiding
+clock recovery.</li>
+<li><strong>Stream Ciphers:</strong> LFSRs provide fast keystream
+generation in lightweight cryptographic algorithms (such as A5/1 used in
+GSM). However, because an LFSR's linear structure can be fully deduced
+from a short segment of output using the Berlekamp-Massey algorithm,
+cryptographic designs combine multiple LFSRs with non-linear filter
+functions to ensure security.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

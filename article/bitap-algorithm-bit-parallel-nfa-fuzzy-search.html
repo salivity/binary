@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitap Algorithm: Bit-Parallel NFA Fuzzy Search - binary</title>
+    <meta name="description" content="The Bitap algorithm—also known as the Shift-Or, Shift-And, or Baeza-Yates–Gonnet algorithm—is an approximate string matching technique that simulates a Non-deterministic Finite Automaton (NFA) using bitwise operations. By encoding the states of an">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/bitap-algorithm-bit-parallel-nfa-fuzzy-search">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Bitap Algorithm: Bit-Parallel NFA Fuzzy Search - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/bitap-algorithm-bit-parallel-nfa-fuzzy-search" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Bitap algorithm—also known as the Shift-Or, Shift-And, or Baeza-Yates–Gonnet algorithm—is an approximate string matching technique that simulates a Non-deterministic Finite Automaton (NFA) using bitwise operations. By encoding the states of an" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="bitap-algorithm-bit-parallel-nfa-fuzzy-search">Bitap Algorithm:
+Bit-Parallel NFA Fuzzy Search</h1>
+<p>The Bitap algorithm—also known as the Shift-Or, Shift-And, or
+Baeza-Yates–Gonnet algorithm—is an approximate string matching technique
+that simulates a Non-deterministic Finite Automaton (NFA) using bitwise
+operations. By encoding the states of an NFA as individual bits within
+standard binary computer words, the algorithm evaluates multiple
+potential match states simultaneously. This article explains how
+bit-parallel NFA simulation operates at the binary level to perform
+fast, efficient fuzzy text searches capable of handling substitutions,
+insertions, and deletions.</p>
+<h3 id="the-nfa-model-for-approximate-matching">The NFA Model for
+Approximate Matching</h3>
+<p>In string searching, an NFA can be designed to recognize a pattern of
+length <span class="math inline">\(m\)</span> along with up to <span
+class="math inline">\(k\)</span> allowable errors (Levenshtein
+distance). The automaton contains a grid of states:</p>
+<ul>
+<li><strong>Horizontal axis (<span
+class="math inline">\(m\)</span>):</strong> Represents matching
+successive characters of the target pattern.</li>
+<li><strong>Vertical axis (<span
+class="math inline">\(k\)</span>):</strong> Represents the number of
+accumulated edit errors (0 errors, 1 error, ..., up to <span
+class="math inline">\(k\)</span> errors).</li>
+</ul>
+<p>Transitioning across states depends on the next input character (an
+exact match), while moving diagonally or vertically models an error:</p>
+<ul>
+<li><strong>Substitution:</strong> Advances the pattern and increases
+the error count by 1.</li>
+<li><strong>Insertion:</strong> Consumes a character from the text,
+remains at the current pattern position, and increments the error
+count.</li>
+<li><strong>Deletion:</strong> Advances the pattern position without
+consuming a text character, incrementing the error count.</li>
+</ul>
+<h3 id="the-bit-parallel-concept">The Bit-Parallel Concept</h3>
+<p>Standard NFA simulations can be computationally expensive because
+maintaining sets of active states requires tracking many pointers or
+graph nodes. The Bitap algorithm eliminates this overhead using
+<strong>bit-parallelism</strong>.</p>
+<p>Instead of tracking states with complex data structures, a state
+vector of length <span class="math inline">\(m\)</span> is packed
+directly into an integer (a binary word, such as a 32-bit or 64-bit
+integer). Each bit position corresponds to an active or inactive state
+in the NFA:</p>
+<ul>
+<li>A <code>0</code> (or <code>1</code>, depending on whether the
+implementation uses Shift-Or or Shift-And) indicates that the state is
+active.</li>
+<li>Transitioning all active states simultaneously across the entire
+pattern requires only a few native CPU bitwise instructions: shifts
+(<code>&lt;&lt;</code>), bitwise OR (<code>|</code>), bitwise AND
+(<code>&amp;</code>), and bitwise NOT (<code>~</code>).</li>
+</ul>
+<h3 id="how-the-algorithm-executes-in-the-binary-number-system">How the
+Algorithm Executes in the Binary Number System</h3>
+<ol type="1">
+<li><p><strong>Precomputing Pattern Masks:</strong> Before scanning the
+text, a bitmask table <span class="math inline">\(B[c]\)</span> is
+created for every unique character <span
+class="math inline">\(c\)</span> in the alphabet. Each bitmask is an
+<span class="math inline">\(m\)</span>-bit binary word where the <span
+class="math inline">\(i\)</span>-th bit indicates whether character
+<span class="math inline">\(c\)</span> matches the <span
+class="math inline">\(i\)</span>-th character of the pattern.</p></li>
+<li><p><strong>Exact Matching State Transitions (0 Errors):</strong> For
+an exact match search (Shift-And variation), a single binary word <span
+class="math inline">\(R\)</span> tracks the active states. For each
+incoming character <span class="math inline">\(T[j]\)</span> from the
+text: <span class="math display">\[R = ((R \ll 1) \mid 1) \ \&amp; \
+B[T[j]]\]</span></p>
+<ul>
+<li><code>(R &lt;&lt; 1) | 1</code>: Propagates active states forward by
+one position and sets the initial state active.</li>
+<li><code>&amp; B[T[j]]</code>: Filters out any states where the current
+pattern character does not match the incoming text character.</li>
+<li>A match is found when the <span class="math inline">\(m\)</span>-th
+bit of <span class="math inline">\(R\)</span> becomes active.</li>
+</ul></li>
+<li><p><strong>Handling Errors (<span class="math inline">\(k &gt;
+0\)</span>):</strong> To support fuzzy search up to <span
+class="math inline">\(k\)</span> errors, the algorithm maintains an
+array of <span class="math inline">\(k + 1\)</span> binary state
+vectors: <span class="math inline">\(R_0, R_1, \dots, R_k\)</span>.</p>
+<ul>
+<li><span class="math inline">\(R_0\)</span> tracks matches with 0
+errors.</li>
+<li><span class="math inline">\(R_d\)</span> tracks matches with <span
+class="math inline">\(d\)</span> errors.</li>
+</ul>
+<p>For each text character <span class="math inline">\(T[j]\)</span>,
+the states update using bitwise logic that combines exact transitions
+with all possible edit operations: <span class="math display">\[R_d&#39;
+= \underbrace{((R_d \ll 1) \ \&amp; \ B[T[j]])}_{\text{Exact Match}} \
+\mid \ \underbrace{(R_{d-1} \ll 1)}_{\text{Substitution}} \ \mid \
+\underbrace{R_{d-1}&#39;}_{\text{Insertion}} \ \mid \
+\underbrace{(R_{d-1}&#39; \ll 1)}_{\text{Deletion}}\]</span></p>
+<p>Because these operations occur directly on binary words, all possible
+branches of the non-deterministic search tree for up to <span
+class="math inline">\(k\)</span> errors are evaluated in parallel in
+constant time <span class="math inline">\(O(1)\)</span> per
+character.</p></li>
+</ol>
+<h3 id="performance-and-trade-offs">Performance and Trade-Offs</h3>
+<ul>
+<li><strong>Speed:</strong> Processing time is <span
+class="math inline">\(O(k \cdot n)\)</span> where <span
+class="math inline">\(n\)</span> is the length of the text, running
+directly on hardware arithmetic logic units (ALUs).</li>
+<li><strong>Word Size Limitation:</strong> The standard implementation
+requires the pattern length <span class="math inline">\(m\)</span> to be
+less than or equal to the machine word size (typically 64 bits). For
+longer patterns, multi-word bit vectors or alternative algorithms (such
+as Myers' bit-parallel algorithm) are used.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

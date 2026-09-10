@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Algebra Over GF(2) for Binary Operations - binary</title>
+    <meta name="description" content="This article explores how vector spaces defined over the Galois Field of two elements, $\text{GF}(2)$, provide a rigorous algebraic framework for standard binary operations. By viewing bit strings as coordinate vectors and fundamental logic gates as alge">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/linear-algebra-over-gf-2-for-binary-operations">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Linear Algebra Over GF(2) for Binary Operations - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/linear-algebra-over-gf-2-for-binary-operations" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores how vector spaces defined over the Galois Field of two elements, $\text{GF}(2)$, provide a rigorous algebraic framework for standard binary operations. By viewing bit strings as coordinate vectors and fundamental logic gates as alge" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="linear-algebra-over-gf2-for-binary-operations">Linear Algebra
+Over GF(2) for Binary Operations</h1>
+<p>This article explores how vector spaces defined over the Galois Field
+of two elements, <span class="math inline">\(\text{GF}(2)\)</span>,
+provide a rigorous algebraic framework for standard binary operations.
+By viewing bit strings as coordinate vectors and fundamental logic gates
+as algebraic field operations, abstract linear algebra formalizes
+concepts such as bitwise manipulations, matrix transformations, and
+error correction. This mathematical structure underpins modern digital
+systems, cryptography, and coding theory by turning low-level boolean
+algorithms into tractable matrix equations.</p>
+<h3 id="the-foundation-the-field-textgf2">The Foundation: The Field
+<span class="math inline">\(\text{GF}(2)\)</span></h3>
+<p>At the core of binary mathematics is <span
+class="math inline">\(\text{GF}(2)\)</span> (also denoted as <span
+class="math inline">\(\mathbb{F}_2\)</span>), the smallest finite field.
+It consists of the set <span class="math inline">\(\{0, 1\}\)</span>
+equipped with two basic operations: addition and multiplication
+performed modulo 2.</p>
+<ul>
+<li><strong>Addition (<span class="math inline">\(+\)</span>):</strong>
+Corresponds directly to the logical <strong>XOR</strong> (exclusive OR)
+operation (<span class="math inline">\(0+0=0\)</span>, <span
+class="math inline">\(0+1=1\)</span>, <span
+class="math inline">\(1+0=1\)</span>, <span
+class="math inline">\(1+1=0\)</span>). Under this operation, every
+element is its own additive inverse (<span class="math inline">\(-x =
+x\)</span>).</li>
+<li><strong>Multiplication (<span
+class="math inline">\(\cdot\)</span>):</strong> Corresponds directly to
+the logical <strong>AND</strong> operation (<span
+class="math inline">\(0\cdot0=0\)</span>, <span
+class="math inline">\(0\cdot1=0\)</span>, <span
+class="math inline">\(1\cdot0=0\)</span>, <span
+class="math inline">\(1\cdot1=1\)</span>).</li>
+</ul>
+<p>Because <span class="math inline">\(\text{GF}(2)\)</span> satisfies
+all field axioms—associativity, commutativity, distributivity, and the
+existence of identities and inverses—it serves as a valid scalar field
+for linear algebra.</p>
+<h3 id="the-vector-space-textgf2n">The Vector Space <span
+class="math inline">\(\text{GF}(2)^n\)</span></h3>
+<p>When binary data is grouped into <span
+class="math inline">\(n\)</span>-bit words, bytes, or registers, these
+sequences can be modeled as vectors in the vector space <span
+class="math inline">\(V = \text{GF}(2)^n\)</span>. An <span
+class="math inline">\(n\)</span>-bit register <span
+class="math inline">\((b_1, b_2, \dots, b_n)\)</span> represents a
+vector where each component <span class="math inline">\(b_i \in \{0,
+1\}\)</span>.</p>
+<ol type="1">
+<li><strong>Vector Addition:</strong> Adding two vectors <span
+class="math inline">\(\mathbf{u}, \mathbf{v} \in \text{GF}(2)^n\)</span>
+corresponds to the bitwise XOR operation: <span
+class="math display">\[\mathbf{u} + \mathbf{v} = (u_1 \oplus v_1, u_2
+\oplus v_2, \dots, u_n \oplus v_n)\]</span></li>
+<li><strong>Scalar Multiplication:</strong> Multiplying a vector <span
+class="math inline">\(\mathbf{v}\)</span> by a scalar <span
+class="math inline">\(c \in \{0, 1\}\)</span> evaluates to either the
+zero vector (if <span class="math inline">\(c = 0\)</span>) or the
+vector <span class="math inline">\(\mathbf{v}\)</span> itself (if <span
+class="math inline">\(c = 1\)</span>).</li>
+<li><strong>Standard Basis:</strong> The canonical basis consists of
+unit vectors <span class="math inline">\(e_i\)</span> containing a
+single 1 at index <span class="math inline">\(i\)</span> and 0
+elsewhere, matching standard bitmasking primitives.</li>
+</ol>
+<h3 id="linear-transformations-and-matrices">Linear Transformations and
+Matrices</h3>
+<p>Operations on binary words that distribute over XOR are linear
+transformations over <span
+class="math inline">\(\text{GF}(2)^n\)</span>. These can be represented
+as binary matrices acting on binary vectors via matrix multiplication
+modulo 2.</p>
+<ul>
+<li><strong>Matrix-Vector Multiplication:</strong> If <span
+class="math inline">\(A\)</span> is an <span class="math inline">\(m
+\times n\)</span> binary matrix and <span
+class="math inline">\(\mathbf{x} \in \text{GF}(2)^n\)</span>, the
+product <span class="math inline">\(\mathbf{y} = A\mathbf{x} \pmod
+2\)</span> produces an <span class="math inline">\(m\)</span>-bit output
+where each bit is a linear combination (parity sum) of the input
+bits.</li>
+<li><strong>Permutations and Shifts:</strong> Circular shifts, bit
+reversals, and register shuffling are expressed through permutation
+matrices.</li>
+<li><strong>Linear Feedback Shift Registers (LFSRs):</strong> LFSR state
+updates, widely used in pseudo-random number generators and stream
+ciphers, are simply iterations of a companion matrix over <span
+class="math inline">\(\text{GF}(2)\)</span>.</li>
+</ul>
+<h3 id="geometric-properties-and-the-hamming-metric">Geometric
+Properties and the Hamming Metric</h3>
+<p>The vector space structure over <span
+class="math inline">\(\text{GF}(2)\)</span> also introduces a geometric
+interpretation of binary words:</p>
+<ul>
+<li><strong>Hamming Weight:</strong> The number of non-zero coordinates
+in a vector <span class="math inline">\(\mathbf{v}\)</span>, acting as
+the <span class="math inline">\(L_1\)</span> norm in this space.</li>
+<li><strong>Hamming Distance:</strong> The metric <span
+class="math inline">\(d(\mathbf{u}, \mathbf{v}) = \text{wt}(\mathbf{u} -
+\mathbf{v}) = \text{wt}(\mathbf{u} + \mathbf{v})\)</span>, measuring the
+number of bit positions in which two binary vectors differ.</li>
+<li><strong>Hypercube Geometry:</strong> The space <span
+class="math inline">\(\text{GF}(2)^n\)</span> corresponds to the
+vertices of an <span class="math inline">\(n\)</span>-dimensional unit
+hypercube, where linear subspaces correspond to sub-cubes.</li>
+</ul>
+<h3 id="practical-implications">Practical Implications</h3>
+<p>Formalizing binary arithmetic as a vector space over <span
+class="math inline">\(\text{GF}(2)\)</span> enables high-level
+mathematical tools to solve low-level computing problems:</p>
+<ul>
+<li><strong>Linear Error-Correcting Codes:</strong> Codes such as
+Hamming, BCH, and Reed-Muller codes define valid codewords as subspaces
+of <span class="math inline">\(\text{GF}(2)^n\)</span>. Parity checks
+become null-space computations (<span
+class="math inline">\(H\mathbf{x}^T = \mathbf{0}\)</span>).</li>
+<li><strong>Cryptography:</strong> Linear cryptanalysis uses linear
+approximations over <span class="math inline">\(\text{GF}(2)\)</span> to
+find weaknesses in block ciphers like DES and AES.</li>
+<li><strong>Parallel Bit Manipulation:</strong> Matrix representations
+allow hardware and compilers to optimize complex bitwise logic using
+standard linear systems algorithms, such as Gaussian elimination over
+<span class="math inline">\(\text{GF}(2)\)</span>.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

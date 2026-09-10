@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Elias Delta Coding Compresses Large Integers - binary</title>
+    <meta name="description" content="Elias delta coding is a universal compression algorithm designed to encode positive integers into variable-length bitstreams without requiring predefined boundaries. By applying Elias gamma coding directly to the bit-length of a target number rather than">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-elias-delta-coding-compresses-large-integers">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Elias Delta Coding Compresses Large Integers - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-elias-delta-coding-compresses-large-integers" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Elias delta coding is a universal compression algorithm designed to encode positive integers into variable-length bitstreams without requiring predefined boundaries. By applying Elias gamma coding directly to the bit-length of a target number rather than" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-elias-delta-coding-compresses-large-integers">How Elias
+Delta Coding Compresses Large Integers</h1>
+<p>Elias delta coding is a universal compression algorithm designed to
+encode positive integers into variable-length bitstreams without
+requiring predefined boundaries. By applying Elias gamma coding directly
+to the bit-length of a target number rather than encoding that length in
+raw unary, Elias delta drastically reduces prefix overhead. This
+double-logarithmic approach provides significantly higher compression
+density for very large integers compared to standard binary or Elias
+gamma coding.</p>
+<h3 id="the-limitation-of-elias-gamma-on-large-integers">The Limitation
+of Elias Gamma on Large Integers</h3>
+<p>To store arbitrary-sized integers in standard binary without
+predefined byte boundaries, a decoder needs to know where each number
+ends. Elias gamma coding solves this by representing a positive integer
+<span class="math inline">\(x\)</span> in two parts:</p>
+<ol type="1">
+<li>A prefix representing the number of bits in binary, encoded in unary
+(zeros followed by a single one).</li>
+<li>A suffix containing the binary digits of <span
+class="math inline">\(x\)</span> (omitting the leading most-significant
+bit, which is always 1).</li>
+</ol>
+<p>The total bit length for Elias gamma is: <span
+class="math display">\[\text{Bits}_{\gamma} = 2\lfloor\log_2 x\rfloor +
+1\]</span></p>
+<p>While Elias gamma is efficient for small numbers, its unary prefix
+grows linearly with the number of bits required by <span
+class="math inline">\(x\)</span>. For massive integers, dedicating <span
+class="math inline">\(\lfloor\log_2 x\rfloor\)</span> bits purely to
+indicate length wastes considerable storage space.</p>
+<h3 id="the-elias-delta-mechanism">The Elias Delta Mechanism</h3>
+<p>Elias delta coding improves efficiency by compressing the length
+descriptor itself. Instead of encoding the length of the binary string
+in unary, it recursively encodes the length using Elias gamma
+coding.</p>
+<p>The encoding process follows three steps for an integer <span
+class="math inline">\(x\)</span>:</p>
+<ol type="1">
+<li><strong>Calculate the Binary Length:</strong> Determine <span
+class="math inline">\(L = \lfloor\log_2 x\rfloor + 1\)</span>, which is
+the number of bits needed to represent <span
+class="math inline">\(x\)</span> in standard binary.</li>
+<li><strong>Gamma-Encode the Length:</strong> Encode <span
+class="math inline">\(L\)</span> using standard Elias gamma coding. This
+takes <span class="math inline">\(2\lfloor\log_2 L\rfloor + 1\)</span>
+bits.</li>
+<li><strong>Append the Value Payload:</strong> Append the remaining
+<span class="math inline">\(\lfloor\log_2 x\rfloor\)</span> bits of
+<span class="math inline">\(x\)</span> (the standard binary
+representation of <span class="math inline">\(x\)</span> excluding its
+leading 1).</li>
+</ol>
+<h3 id="mathematical-efficiency-and-density-gains">Mathematical
+Efficiency and Density Gains</h3>
+<p>The total number of bits required to store an integer <span
+class="math inline">\(x\)</span> under Elias delta coding is:</p>
+<p><span class="math display">\[\text{Bits}_{\delta} = \lfloor\log_2
+x\rfloor + 2\lfloor\log_2(\lfloor\log_2 x\rfloor + 1)\rfloor +
+1\]</span></p>
+<p>This introduces an asymptotic overhead of <span
+class="math inline">\(O(\log_2 \log_2 x)\)</span>, compared to the <span
+class="math inline">\(O(\log_2 x)\)</span> overhead of Elias gamma
+coding.</p>
+<ul>
+<li>For <span class="math inline">\(x = 17\)</span> (binary
+<code>10001</code>): <span class="math inline">\(L = 5\)</span>. Gamma
+uses 9 bits; Delta uses 9 bits (no gain at small scales).</li>
+<li>For <span class="math inline">\(x = 1{,}000{,}000\)</span> (approx.
+<span class="math inline">\(2^{20}\)</span>): Gamma requires 39 bits
+(<span class="math inline">\(19 \text{ prefix} + 1 + 19 \text{
+payload}\)</span>), whereas Delta requires only 28 bits (<span
+class="math inline">\(8 \text{ gamma-length} + 19 \text{ payload} +
+1\)</span>).</li>
+<li>For <span class="math inline">\(x \approx 2^{1024}\)</span>: Gamma
+requires 2,047 bits, while Delta requires only 1,045 bits—nearly cutting
+the bit representation in half.</li>
+</ul>
+<h3 id="summary-of-compression-advantages">Summary of Compression
+Advantages</h3>
+<p>Elias delta coding achieves superior compression density for large
+integers by replacing the linear growth of the length prefix with a
+logarithmic growth rate. As integer values scale into millions and
+beyond, the overhead of the structural metadata becomes negligible
+relative to the actual payload, approaching the theoretical
+information-entropy limit of raw binary while remaining fully
+self-delimiting.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

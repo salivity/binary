@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How LDPC Codes Achieve Near-Shannon-Limit Performance - binary</title>
+    <meta name="description" content="Low-Density Parity-Check (LDPC) codes are a class of high-performance forward error correction codes capable of transmitting data across noisy channels at rates remarkably close to the theoretical maximum, known as the Shannon limit. This article explain">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-ldpc-codes-achieve-near-shannon-limit-performance">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How LDPC Codes Achieve Near-Shannon-Limit Performance - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-ldpc-codes-achieve-near-shannon-limit-performance" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Low-Density Parity-Check (LDPC) codes are a class of high-performance forward error correction codes capable of transmitting data across noisy channels at rates remarkably close to the theoretical maximum, known as the Shannon limit. This article explain" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-ldpc-codes-achieve-near-shannon-limit-performance">How LDPC
+Codes Achieve Near-Shannon-Limit Performance</h1>
+<p>Low-Density Parity-Check (LDPC) codes are a class of high-performance
+forward error correction codes capable of transmitting data across noisy
+channels at rates remarkably close to the theoretical maximum, known as
+the Shannon limit. This article explains how binary LDPC codes achieve
+this near-optimal efficiency. We examine the sparse mathematical
+structure of their parity-check matrices, their representation using
+bipartite Tanner graphs, the iterative belief propagation decoding
+process, and the optimization techniques that allow practical binary
+systems to operate within a fraction of a decibel of theoretical channel
+capacity.</p>
+<h3 id="the-foundation-sparse-parity-check-matrices">The Foundation:
+Sparse Parity-Check Matrices</h3>
+<p>The foundation of an LDPC code is its parity-check matrix, denoted as
+<span class="math inline">\(H\)</span>. In a binary LDPC code, this
+matrix consists entirely of 0s and 1s, where each row represents a
+parity-check equation and each column represents a transmitted bit (or
+code symbol).</p>
+<p>The defining characteristic of an LDPC code is that <span
+class="math inline">\(H\)</span> is <strong>sparse</strong>—meaning the
+density of 1s in the matrix is very low compared to the number of
+0s.</p>
+<ul>
+<li><strong>Variable Nodes:</strong> Each column corresponds to a bit in
+the codeword.</li>
+<li><strong>Check Nodes:</strong> Each row corresponds to a parity
+constraint that must sum to zero (modulo 2).</li>
+</ul>
+<p>Because the matrix is sparse, each parity check only involves a small
+number of code bits, and each code bit only participates in a small
+number of parity checks. This sparsity keeps decoding complexity
+manageable while maintaining strong global error-correcting
+capabilities.</p>
+<h3 id="graphical-representation-via-tanner-graphs">Graphical
+Representation via Tanner Graphs</h3>
+<p>Binary LDPC codes are visualized and processed using bipartite graphs
+called <strong>Tanner graphs</strong>. A Tanner graph divides the code
+into two distinct sets of vertices:</p>
+<ol type="1">
+<li><strong>Variable Nodes (VNs):</strong> Represent the codeword
+bits.</li>
+<li><strong>Check Nodes (CNs):</strong> Represent the parity-check
+equations.</li>
+</ol>
+<p>An edge connects a Variable Node to a Check Node if and only if a 1
+exists at the corresponding intersection in the <span
+class="math inline">\(H\)</span> matrix. Because the graph is bipartite,
+connections only exist between variable nodes and check nodes, never
+between nodes of the same type. This structure allows localized
+computations during the decoding process.</p>
+<h3 id="iterative-belief-propagation-decoding">Iterative Belief
+Propagation Decoding</h3>
+<p>Claude Shannon proved in 1948 that random codes of infinite length
+can achieve channel capacity; however, decoding an unstructured random
+code requires exhaustive maximum-likelihood decoding, which is
+computationally impossible for large blocks. LDPC codes solve this
+problem using <strong>Belief Propagation (BP)</strong>, also known as
+the <strong>Sum-Product Algorithm</strong>.</p>
+<p>Instead of making hard binary decisions (0 or 1) immediately, the
+decoder uses soft information represented as Log-Likelihood Ratios
+(LLRs):</p>
+<ol type="1">
+<li><strong>Initialization:</strong> The receiver assigns an initial
+probability to each bit based on the received analog voltage from the
+channel.</li>
+<li><strong>Variable-to-Check Update:</strong> Variable nodes send their
+current belief about their bit value along the edges to the connected
+check nodes.</li>
+<li><strong>Check-to-Variable Update:</strong> Check nodes evaluate
+whether the incoming beliefs satisfy the parity constraint (even parity)
+and send updated probabilistic feedback back to the variable nodes.</li>
+<li><strong>Iteration:</strong> Steps 2 and 3 repeat iteratively. With
+each cycle, information propagates further across the graph, resolving
+ambiguities and correcting channel errors.</li>
+<li><strong>Termination:</strong> The process stops either when all
+parity equations are satisfied (a valid codeword is found) or when a
+maximum iteration threshold is reached.</li>
+</ol>
+<p>This message-passing approach provides performance comparable to
+optimal maximum-likelihood decoding while scaling linearly with block
+length, making real-time computation feasible.</p>
+<h3 id="optimization-via-irregular-graph-structures">Optimization via
+Irregular Graph Structures</h3>
+<p>Early regular LDPC codes maintained a constant number of connections
+per node. Modern LDPC codes achieve performance even closer to the
+Shannon limit by using <strong>irregular structures</strong>, where
+different nodes have different numbers of connections (degrees).</p>
+<ul>
+<li><strong>High-degree variable nodes</strong> gather information
+rapidly from many checks, converging quickly to the correct value.</li>
+<li><strong>Low-degree variable nodes</strong> prevent early incorrect
+decisions from propagating through the network.</li>
+</ul>
+<p>Engineers optimize these degree distributions using a mathematical
+technique called <strong>Density Evolution</strong>. Density evolution
+tracks the probability distribution of messages passing through the
+graph over time, allowing designers to mathematically tune the code to
+operate within 0.0045 dB of the Shannon limit on an Additive White
+Gaussian Noise (AWGN) channel.</p>
+<h3 id="emulating-random-codes-with-long-block-lengths">Emulating Random
+Codes with Long Block Lengths</h3>
+<p>By combining sparse structure, irregular degree distributions, and
+pseudo-random edge interconnections over long block lengths (thousands
+of bits), binary LDPC codes closely emulate Shannon's ideal random
+codes. Because the graph sparsity prevents exponential computational
+scaling, binary LDPC codes deliver near-capacity error correction in
+modern real-world technologies, including 5G NR, Wi-Fi 6, and satellite
+communications.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

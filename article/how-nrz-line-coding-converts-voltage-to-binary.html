@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How NRZ Line Coding Converts Voltage to Binary - binary</title>
+    <meta name="description" content="Non-Return-to-Zero (NRZ) line coding is a fundamental digital data transmission method that maps binary digits directly to distinct electrical voltage levels. Unlike coding schemes that return to a neutral or zero-voltage state between consecutive bits,">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-nrz-line-coding-converts-voltage-to-binary">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How NRZ Line Coding Converts Voltage to Binary - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-nrz-line-coding-converts-voltage-to-binary" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Non-Return-to-Zero (NRZ) line coding is a fundamental digital data transmission method that maps binary digits directly to distinct electrical voltage levels. Unlike coding schemes that return to a neutral or zero-voltage state between consecutive bits," />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-nrz-line-coding-converts-voltage-to-binary">How NRZ Line
+Coding Converts Voltage to Binary</h1>
+<p>Non-Return-to-Zero (NRZ) line coding is a fundamental digital data
+transmission method that maps binary digits directly to distinct
+electrical voltage levels. Unlike coding schemes that return to a
+neutral or zero-voltage state between consecutive bits, NRZ maintains a
+continuous, constant voltage throughout the entire duration of a bit
+interval. This article explains the mechanisms behind NRZ encoding, how
+electrical signals represent binary data, the primary variants of NRZ,
+and how receiving hardware decodes these voltages back into digital ones
+and zeros.</p>
+<h3 id="the-mechanism-of-voltage-to-binary-mapping">The Mechanism of
+Voltage-to-Binary Mapping</h3>
+<p>In digital communication, hardware interfaces transmit data over
+physical mediums using electrical potentials (voltages). NRZ encoding
+establishes a direct relationship between a discrete bit time—the clock
+period allocated to a single bit—and a specific voltage state.</p>
+<p>NRZ line coding operates on two primary voltage configurations:</p>
+<ul>
+<li><strong>Unipolar NRZ:</strong> Uses a positive voltage (such as
+<span class="math inline">\(+5\text{V}\)</span> or <span
+class="math inline">\(+3.3\text{V}\)</span>) to represent one binary
+state and zero volts (<span class="math inline">\(0\text{V}\)</span>) to
+represent the other.</li>
+<li><strong>Bipolar (Polar) NRZ:</strong> Uses two symmetrical, non-zero
+voltages around a ground reference, typically positive voltage (<span
+class="math inline">\(+V\)</span>) for one binary state and negative
+voltage (<span class="math inline">\(-V\)</span>) for the other.</li>
+</ul>
+<p>Because the signal level does not drop to zero in the middle of a bit
+period, the signal utilizes the available bandwidth efficiently compared
+to Return-to-Zero (RZ) schemes.</p>
+<h3 id="major-nrz-variants">Major NRZ Variants</h3>
+<p>NRZ translates binary data into voltages using two main mapping
+strategies:</p>
+<h4 id="1-nrz-level-nrz-l">1. NRZ-Level (NRZ-L)</h4>
+<p>In NRZ-L, the physical voltage level itself defines the binary
+value:</p>
+<ul>
+<li><strong>Binary 0:</strong> Represented by a specific voltage level
+(e.g., positive voltage in polar NRZ).</li>
+<li><strong>Binary 1:</strong> Represented by the opposite voltage level
+(e.g., negative voltage in polar NRZ).</li>
+</ul>
+<p>The receiver reads the absolute state of the voltage during the clock
+cycle. If the line holds a high voltage, it interprets it as one
+predetermined bit; if it drops to a low voltage, it interprets it as the
+opposite bit.</p>
+<h4 id="2-nrz-inverted-nrz-i">2. NRZ-Inverted (NRZ-I)</h4>
+<p>In NRZ-I, the translation depends on voltage transitions rather than
+static levels:</p>
+<ul>
+<li><strong>Binary 1:</strong> Signaled by a transition (change from
+high-to-low or low-to-high) at the beginning of the bit interval.</li>
+<li><strong>Binary 0:</strong> Signaled by the absence of a transition;
+the voltage remains at whatever level it was during the previous
+bit.</li>
+</ul>
+<p>NRZ-I reduces errors caused by polarity reversal in physical wiring,
+as the system detects state changes rather than absolute voltage
+levels.</p>
+<h3 id="how-receivers-decode-the-signal">How Receivers Decode the
+Signal</h3>
+<p>The receiving hardware reconstructs the original binary stream
+through the following process:</p>
+<ol type="1">
+<li><strong>Clock Synchronization:</strong> The receiver uses an
+internal clock synchronized with the transmitter to sample the incoming
+signal at regular bit intervals (<span
+class="math inline">\(T_b\)</span>).</li>
+<li><strong>Voltage Thresholding:</strong> The signal passes through a
+comparator circuit configured with a threshold voltage (<span
+class="math inline">\(V_{th}\)</span>). For bipolar signals, the
+threshold is typically <span
+class="math inline">\(0\text{V}\)</span>.</li>
+<li><strong>Sampling and Decision:</strong> At the midpoint of each bit
+interval, the comparator evaluates the incoming voltage:
+<ul>
+<li>If <span class="math inline">\(V_{in} &gt; V_{th}\)</span>, the
+decision circuit outputs a logic state (e.g., binary 0 or 1 depending on
+the standard).</li>
+<li>If <span class="math inline">\(V_{in} &lt; V_{th}\)</span>, the
+decision circuit outputs the alternate logic state.</li>
+</ul></li>
+<li><strong>Bitstream Reconstruction:</strong> The sequential outputs
+from each clock cycle are fed into a register, successfully translating
+the continuous physical waveform back into discrete binary data.</li>
+</ol>
+<h3 id="advantages-and-limitations">Advantages and Limitations</h3>
+<p>NRZ is simple to implement and minimizes bandwidth requirements
+because it requires at most one signal transition per bit. However, long
+sequences of identical bits (such as consecutive zeros or ones) result
+in a flat DC signal without transitions. This can cause baseline wander
+and make it difficult for the receiver's clock to maintain
+synchronization without additional encoding techniques such as bit
+stuffing or scramblers.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

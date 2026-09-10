@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculating Hamming Distance Using XOR and Popcount - binary</title>
+    <meta name="description" content="Hamming distance measures the number of bit positions in which two binary sequences of equal length differ. In computer science and digital communications, this metric is calculated with optimal efficiency by chaining two fundamental operations: a bitwis">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/calculating-hamming-distance-using-xor-and-popcount">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Calculating Hamming Distance Using XOR and Popcount - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/calculating-hamming-distance-using-xor-and-popcount" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Hamming distance measures the number of bit positions in which two binary sequences of equal length differ. In computer science and digital communications, this metric is calculated with optimal efficiency by chaining two fundamental operations: a bitwis" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="calculating-hamming-distance-using-xor-and-popcount">Calculating
+Hamming Distance Using XOR and Popcount</h1>
+<p>Hamming distance measures the number of bit positions in which two
+binary sequences of equal length differ. In computer science and digital
+communications, this metric is calculated with optimal efficiency by
+chaining two fundamental operations: a bitwise Exclusive OR (XOR)
+followed by a population count (<code>popcount</code>). The XOR
+operation isolates differing bits by marking them with a binary
+<code>1</code>, while <code>popcount</code> tallies these set bits to
+produce the exact distance value.</p>
+<h3 id="the-role-of-the-xor-operation">The Role of the XOR
+Operation</h3>
+<p>The bitwise XOR operation evaluates two binary inputs bit by bit
+according to standard boolean logic:</p>
+<ul>
+<li><span class="math inline">\(0 \oplus 0 = 0\)</span> (identical bits
+result in 0)</li>
+<li><span class="math inline">\(1 \oplus 1 = 0\)</span> (identical bits
+result in 0)</li>
+<li><span class="math inline">\(0 \oplus 1 = 1\)</span> (differing bits
+result in 1)</li>
+<li><span class="math inline">\(1 \oplus 0 = 1\)</span> (differing bits
+result in 1)</li>
+</ul>
+<p>When you compute <span class="math inline">\(C = A \oplus B\)</span>
+for two binary words <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>, every bit position where <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> share the same value outputs
+<code>0</code>. Conversely, every bit position where <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> differ outputs <code>1</code>. The
+resulting word <span class="math inline">\(C\)</span> serves as a
+bitmask indicating the exact locations of all discrepancies between the
+two inputs.</p>
+<h3 id="the-role-of-popcount">The Role of Popcount</h3>
+<p>The population count function, commonly denoted as
+<code>popcount</code> or Hamming weight, counts the total number of set
+bits (<code>1</code>s) present in a binary word.</p>
+<p>Because the XOR step transforms every difference into a
+<code>1</code> and every match into a <code>0</code>, the problem of
+counting differences reduces to counting the number of <code>1</code>s
+in the XOR product:</p>
+<p><span class="math display">\[\text{Hamming Distance}(A, B) =
+\text{popcount}(A \oplus B)\]</span></p>
+<h3 id="step-by-step-example">Step-by-Step Example</h3>
+<p>Consider two 8-bit binary words, <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>:</p>
+<ul>
+<li><strong>Word A:</strong> <code>1 1 0 1 0 0 1 0</code></li>
+<li><strong>Word B:</strong> <code>1 0 0 1 1 0 1 1</code></li>
+</ul>
+<ol type="1">
+<li><strong>Apply Bitwise XOR:</strong>
+<pre class="text"><code>  1 1 0 1 0 0 1 0  (A)
+^ 1 0 0 1 1 0 1 1  (B)
+------------------
+  0 1 0 0 1 0 0 1  (A ^ B)</code></pre></li>
+<li><strong>Apply Popcount:</strong> Count the number of <code>1</code>s
+in <code>01001001</code>: <span
+class="math display">\[\text{popcount}(01001001) = 3\]</span></li>
+</ol>
+<p>The Hamming distance between word <span
+class="math inline">\(A\)</span> and word <span
+class="math inline">\(B\)</span> is 3.</p>
+<h3 id="computational-efficiency">Computational Efficiency</h3>
+<p>Modern CPU architectures (such as x86 via SSE4.2/ABM and ARM via
+NEON) provide dedicated hardware instructions for both
+operations—specifically <code>XOR</code> and <code>POPCNT</code> (or
+<code>VCNT</code>). Combining these native instructions allows systems
+to compute the Hamming distance in constant time, <span
+class="math inline">\(O(1)\)</span>, making this technique essential for
+cryptography, error-correcting codes, DNA sequence alignment, and
+high-dimensional vector search.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catastrophic Cancellation in Binary Floating-Point Math - binary</title>
+    <meta name="description" content="Catastrophic cancellation occurs in binary floating-point arithmetic when subtracting two nearly equal numbers, leading to an extreme loss of relative precision. Because floating-point systems allocate a fixed number of bits to store the significand (man">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/catastrophic-cancellation-in-binary-floating-point-math">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Catastrophic Cancellation in Binary Floating-Point Math - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/catastrophic-cancellation-in-binary-floating-point-math" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Catastrophic cancellation occurs in binary floating-point arithmetic when subtracting two nearly equal numbers, leading to an extreme loss of relative precision. Because floating-point systems allocate a fixed number of bits to store the significand (man" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1
+id="catastrophic-cancellation-in-binary-floating-point-math">Catastrophic
+Cancellation in Binary Floating-Point Math</h1>
+<p>Catastrophic cancellation occurs in binary floating-point arithmetic
+when subtracting two nearly equal numbers, leading to an extreme loss of
+relative precision. Because floating-point systems allocate a fixed
+number of bits to store the significand (mantissa), rounding errors
+inherent in representing real numbers become drastically magnified when
+the leading, correct digits cancel out. This article explains the
+architectural limitations of the IEEE 754 standard that drive this
+phenomenon, demonstrates the mechanics of precision loss, and outlines
+strategies to mitigate it.</p>
+<h2 id="the-ieee-754-floating-point-representation">The IEEE 754
+Floating-Point Representation</h2>
+<p>To understand catastrophic cancellation, one must look at how digital
+computers represent real numbers using the IEEE 754 standard. A binary
+floating-point number is stored in three distinct components:</p>
+<ol type="1">
+<li><strong>Sign bit (<span class="math inline">\(s\)</span>):</strong>
+Determines whether the number is positive or negative.</li>
+<li><strong>Exponent (<span class="math inline">\(e\)</span>):</strong>
+Scales the number by powers of two.</li>
+<li><strong>Significand or Mantissa (<span
+class="math inline">\(m\)</span>):</strong> Stores the significant
+binary digits (bits) of the number.</li>
+</ol>
+<p>In single precision (32-bit), the significand holds 24 bits of
+precision (23 stored plus 1 implicit leading bit). In double precision
+(64-bit), the significand holds 53 bits (52 stored plus 1 implicit
+leading bit).</p>
+<p>Because the significand has a strictly limited bit-width, most real
+numbers cannot be represented exactly in binary form. They are instead
+rounded to the nearest representable floating-point number, introducing
+a tiny initial discrepancy known as machine epsilon (<span
+class="math inline">\(\epsilon\)</span>).</p>
+<h2 id="the-mechanism-of-catastrophic-cancellation">The Mechanism of
+Catastrophic Cancellation</h2>
+<p>Catastrophic cancellation occurs during the subtraction of two
+values, <span class="math inline">\(x\)</span> and <span
+class="math inline">\(y\)</span>, that are very close in magnitude
+(<span class="math inline">\(x \approx y\)</span>).</p>
+<p>When two nearly equal numbers are subtracted:</p>
+<ol type="1">
+<li><strong>Alignment:</strong> The exponents are matched, aligning the
+significands.</li>
+<li><strong>Subtraction:</strong> The most significant bits (the shared
+leading digits that contain the most accurate information) cancel each
+other out to yield zeros.</li>
+<li><strong>Normalization:</strong> The floating-point unit shifts the
+remaining bits to the left so that the result begins with a leading
+<code>1</code>, adjusting the exponent accordingly.</li>
+</ol>
+<p>During this left-shift normalization, the least significant
+bits—which originally held rounding errors, noise, or omitted
+precision—are shifted into the primary significant positions. The
+absolute error of the operation remains small, but the relative error
+increases exponentially, destroying the trustworthiness of the remaining
+digits.</p>
+<h3 id="example-in-base-10">Example in Base 10</h3>
+<p>Consider a system limited to 5 decimal digits of precision attempting
+to compute <span class="math inline">\(x - y\)</span>:</p>
+<ul>
+<li><span class="math inline">\(x = 1.23456 \rightarrow \text{rounded to
+} 1.2346\)</span></li>
+<li><span class="math inline">\(y = 1.23451 \rightarrow \text{rounded to
+} 1.2345\)</span></li>
+</ul>
+<p>Performing the subtraction: <span class="math display">\[x - y =
+1.2346 - 1.2345 = 0.0001 = 1.0000 \times 10^{-4}\]</span></p>
+<p>The exact mathematical difference should be: <span
+class="math display">\[1.23456 - 1.23451 = 0.00005 = 5.0000 \times
+10^{-5}\]</span></p>
+<p>The computed result (<span class="math inline">\(1.0000 \times
+10^{-4}\)</span>) is off by a factor of two (a 100% relative error)
+because four digits of precision were canceled, leaving only one
+significant digit, which was contaminated by initial rounding.</p>
+<h2 id="key-hardware-and-precision-limitations">Key Hardware and
+Precision Limitations</h2>
+<p>Several architectural factors make this issue unavoidable in standard
+binary hardware:</p>
+<ul>
+<li><strong>Fixed Mantissa Width:</strong> Binary registers cannot
+expand dynamically to keep track of trailing digits lost during previous
+operations.</li>
+<li><strong>Non-Representable Fractions:</strong> Simple decimal values
+like <span class="math inline">\(0.1\)</span> or <span
+class="math inline">\(0.2\)</span> are repeating fractions in binary
+(<span class="math inline">\(0.000110011..._2\)</span>). These are
+inherently rounded upon storage, seeding the calculation with error
+before arithmetic even begins.</li>
+<li><strong>Benign vs. Catastrophic Cancellation:</strong> When
+subtracting two exact values whose difference can be fully represented,
+the cancellation is exact (Sterbenz's Lemma). The cancellation becomes
+catastrophic only when the input values are already approximations of
+true mathematical values.</li>
+</ul>
+<h2 id="mitigation-strategies">Mitigation Strategies</h2>
+<p>Numerical instability caused by cancellation can be prevented through
+algorithmic refactoring:</p>
+<h3 id="algebraic-reformulation">Algebraic Reformulation</h3>
+<p>Equations can often be rewritten to eliminate subtraction between
+close values. For example, computing <span class="math inline">\(\sqrt{x
++ 1} - \sqrt{x}\)</span> for large values of <span
+class="math inline">\(x\)</span> causes severe cancellation. Multiplying
+by the conjugate yields:</p>
+<p><span class="math display">\[\sqrt{x + 1} - \sqrt{x} = \frac{(\sqrt{x
++ 1} - \sqrt{x})(\sqrt{x + 1} + \sqrt{x})}{\sqrt{x + 1} + \sqrt{x}} =
+\frac{1}{\sqrt{x + 1} + \sqrt{x}}\]</span></p>
+<p>This replaces an unstable subtraction with a stable addition.</p>
+<h3 id="series-expansions">Series Expansions</h3>
+<p>For functions evaluated near critical points (such as calculating
+<span class="math inline">\(1 - \cos(x)\)</span> when <span
+class="math inline">\(x \approx 0\)</span>), using a Taylor or Maclaurin
+series expansion provides high accuracy without triggering
+cancellation.</p>
+<h3 id="higher-or-arbitrary-precision">Higher or Arbitrary
+Precision</h3>
+<p>When algebraic rewriting is impractical, critical sections of code
+can be evaluated using extended precision (such as 80-bit or 128-bit
+floating-point types) or software-based arbitrary-precision libraries to
+preserve meaningful digits throughout the computation.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

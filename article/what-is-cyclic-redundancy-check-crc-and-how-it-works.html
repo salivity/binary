@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is Cyclic Redundancy Check (CRC) and How It Works - binary</title>
+    <meta name="description" content="A Cyclic Redundancy Check (CRC) is a widely used error-detecting code designed to detect accidental changes to raw digital data in storage devices and communication networks. At its core, a CRC treats binary data strings as algebraic polynomials and perf">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-cyclic-redundancy-check-crc-and-how-it-works">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is Cyclic Redundancy Check (CRC) and How It Works - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-cyclic-redundancy-check-crc-and-how-it-works" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A Cyclic Redundancy Check (CRC) is a widely used error-detecting code designed to detect accidental changes to raw digital data in storage devices and communication networks. At its core, a CRC treats binary data strings as algebraic polynomials and perf" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-cyclic-redundancy-check-crc-and-how-it-works">What Is
+Cyclic Redundancy Check (CRC) and How It Works</h1>
+<p>A Cyclic Redundancy Check (CRC) is a widely used error-detecting code
+designed to detect accidental changes to raw digital data in storage
+devices and communication networks. At its core, a CRC treats binary
+data strings as algebraic polynomials and performs division using
+modulo-2 arithmetic. By dividing the data polynomial by a predefined
+generator polynomial, the mathematical remainder produced serves as the
+checksum; upon reception, repeating this division confirms whether data
+corrupted during transmission.</p>
+<hr />
+<h3 id="what-is-a-cyclic-redundancy-check">What Is a Cyclic Redundancy
+Check?</h3>
+<p>A Cyclic Redundancy Check is a non-cryptographic hash function used
+to verify data integrity. When data is transmitted over a network or
+written to a disk, interference, noise, or hardware faults can flip bits
+from <code>0</code> to <code>1</code> or vice versa.</p>
+<p>To catch these errors:</p>
+<ol type="1">
+<li>The sender calculates a short, fixed-length binary sequence (the CRC
+value) based on the payload data.</li>
+<li>The sender appends this CRC value to the data before
+transmission.</li>
+<li>The receiver recalculates the check on the incoming data using the
+same mathematical parameters.</li>
+<li>If the calculated result matches the transmitted checksum, the data
+is assumed to be uncorrupted.</li>
+</ol>
+<hr />
+<h3 id="representing-binary-data-as-polynomials">Representing Binary
+Data as Polynomials</h3>
+<p>In CRC computation, binary sequences are represented as polynomials
+where each bit corresponds to a coefficient of a specific power of <span
+class="math inline">\(x\)</span>, with values constrained to <span
+class="math inline">\(0\)</span> or <span
+class="math inline">\(1\)</span>.</p>
+<p>For example, a 5-bit binary sequence <code>10110</code> translates
+to: <span class="math display">\[1 \cdot x^4 + 0 \cdot x^3 + 1 \cdot x^2
++ 1 \cdot x^1 + 0 \cdot x^0 = x^4 + x^2 + x\]</span></p>
+<p>The highest power with a non-zero coefficient defines the degree of
+the polynomial.</p>
+<hr />
+<h3 id="the-rules-of-binary-arithmetic-modulo-2">The Rules of Binary
+Arithmetic (Modulo-2)</h3>
+<p>CRC polynomial division operates in the Galois Field <span
+class="math inline">\(GF(2)\)</span>, commonly known as modulo-2
+arithmetic. This simplifies traditional arithmetic in two key ways:</p>
+<ul>
+<li><strong>Addition and Subtraction are Identical:</strong> Both
+operations behave like the bitwise <strong>XOR (Exclusive OR)</strong>
+operation.
+<ul>
+<li><span class="math inline">\(0 \oplus 0 = 0\)</span></li>
+<li><span class="math inline">\(0 \oplus 1 = 1\)</span></li>
+<li><span class="math inline">\(1 \oplus 0 = 1\)</span></li>
+<li><span class="math inline">\(1 \oplus 1 = 0\)</span></li>
+</ul></li>
+<li><strong>No Carries or Borrows:</strong> When adding or subtracting,
+values never carry over to the next higher power, and borrowing never
+occurs.</li>
+</ul>
+<hr />
+<h3 id="how-polynomial-division-generates-the-crc">How Polynomial
+Division Generates the CRC</h3>
+<p>The algorithm relies on an agreed-upon divisor known as the
+<strong>generator polynomial</strong> (or divisor polynomial). The
+generator is fixed and standardized for specific protocols (such as
+CRC-16 or CRC-32).</p>
+<p>The process works through the following sequence:</p>
+<ol type="1">
+<li><strong>Zero-Padding:</strong> If the generator polynomial has a
+degree of <span class="math inline">\(n\)</span>, append <span
+class="math inline">\(n\)</span> zero bits to the end of the original
+message data.</li>
+<li><strong>Modulo-2 Division:</strong> Divide the padded message
+polynomial by the generator polynomial using binary long division:
+<ul>
+<li>Align the generator polynomial with the leftmost <code>1</code> of
+the current remainder/data.</li>
+<li>Apply the XOR operation between the aligned bits.</li>
+<li>Shift right to the next <code>1</code> bit and repeat until all bits
+have been processed.</li>
+</ul></li>
+<li><strong>Extracting the Remainder:</strong> The final remainder will
+always have a length of <span class="math inline">\(n\)</span> bits or
+fewer. This remainder is the <strong>CRC checksum</strong>.</li>
+<li><strong>Constructing the Frame:</strong> Replace the <span
+class="math inline">\(n\)</span> zero bits added in step 1 with the CRC
+remainder. This newly formed sequence is the transmitted message.</li>
+</ol>
+<hr />
+<h3 id="verifying-integrity-at-the-receiver">Verifying Integrity at the
+Receiver</h3>
+<p>When the receiver receives the data frame (original message + CRC),
+it performs the exact same modulo-2 polynomial division using the
+identical generator polynomial.</p>
+<ul>
+<li><strong>If the remainder is zero:</strong> The mathematical
+properties ensure that subtracting the remainder from the padded message
+produces an exact multiple of the generator polynomial. A remainder of
+zero indicates no detectable transmission errors.</li>
+<li><strong>If the remainder is non-zero:</strong> One or more bits
+changed during transit, signaling that the data has been corrupted and
+must be retransmitted or discarded.</li>
+</ul>
+<hr />
+<h3 id="why-crc-is-effective">Why CRC Is Effective</h3>
+<p>Polynomial division gives CRC strong error-detection capabilities.
+Depending on the choice of the generator polynomial, CRCs are
+mathematically guaranteed to detect:</p>
+<ul>
+<li>All single-bit errors.</li>
+<li>All double-bit errors separated by a distance less than the
+polynomial's length.</li>
+<li>Any odd number of bit errors (if the generator contains the factor
+<span class="math inline">\((x + 1)\)</span>).</li>
+<li>Burst errors (clusters of corrupted bits) up to the degree of the
+generator polynomial.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

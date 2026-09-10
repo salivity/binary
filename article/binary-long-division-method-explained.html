@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Long Division Method Explained - binary</title>
+    <meta name="description" content="Binary long division is the standard mathematical procedure used to divide numbers in base-2, operating on the same fundamental principles as decimal long division but with much simpler arithmetic. Because the binary system contains only the digits 0 and">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/binary-long-division-method-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Binary Long Division Method Explained - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/binary-long-division-method-explained" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Binary long division is the standard mathematical procedure used to divide numbers in base-2, operating on the same fundamental principles as decimal long division but with much simpler arithmetic. Because the binary system contains only the digits 0 and" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="binary-long-division-method-explained">Binary Long Division
+Method Explained</h1>
+<p>Binary long division is the standard mathematical procedure used to
+divide numbers in base-2, operating on the same fundamental principles
+as decimal long division but with much simpler arithmetic. Because the
+binary system contains only the digits 0 and 1, determining the quotient
+at each step requires only comparison and subtraction rather than trial
+multiplication. This article outlines the step-by-step pencil-and-paper
+method used for binary division, followed by how this logic translates
+to computer hardware algorithms.</p>
+<h3 id="the-standard-paper-and-pencil-method">The Standard
+Paper-and-Pencil Method</h3>
+<p>The standard method for binary long division involves four repeating
+operations: compare, place quotient bit, subtract, and bring down.</p>
+<ol type="1">
+<li><strong>Setup:</strong> Write the divisor to the left and the
+dividend under the division bracket.</li>
+<li><strong>Compare:</strong> Look at the leftmost bits of the dividend.
+Determine if this segment is greater than or equal to the divisor.</li>
+<li><strong>Determine the Quotient Bit:</strong>
+<ul>
+<li>If the dividend segment is <strong>greater than or equal to</strong>
+the divisor, write a <code>1</code> in the quotient above the current
+column.</li>
+<li>If the dividend segment is <strong>smaller</strong> than the
+divisor, write a <code>0</code> in the quotient.</li>
+</ul></li>
+<li><strong>Subtract:</strong> If the quotient bit is <code>1</code>,
+subtract the divisor from the current dividend segment using binary
+subtraction rules (<span class="math inline">\(1 - 0 = 1\)</span>, <span
+class="math inline">\(1 - 1 = 0\)</span>, and <span
+class="math inline">\(0 - 1 = 1\)</span> with a borrow). If the quotient
+bit is <code>0</code>, skip subtraction.</li>
+<li><strong>Bring Down:</strong> Bring down the next bit of the dividend
+to the right of the current remainder.</li>
+<li><strong>Repeat:</strong> Repeat the process until all bits of the
+dividend have been processed. The final value at the bottom is the
+remainder.</li>
+</ol>
+<hr />
+<h3 id="step-by-step-example">Step-by-Step Example</h3>
+<p><strong>Problem:</strong> Divide <span
+class="math inline">\(1101_2\)</span> (13 in decimal) by <span
+class="math inline">\(11_2\)</span> (3 in decimal).</p>
+<ol type="1">
+<li><p><strong>Compare First Two Bits:</strong> The divisor is two bits
+long (<code>11</code>). Compare it with the first two bits of the
+dividend (<code>11</code>).</p>
+<ul>
+<li>Since <span class="math inline">\(11_2 \ge 11_2\)</span>, the first
+quotient bit is <strong><code>1</code></strong>.</li>
+<li>Subtract: <span class="math inline">\(11_2 - 11_2 = 0\)</span>.</li>
+</ul></li>
+<li><p><strong>Bring Down Next Bit:</strong> Bring down the next digit
+(<code>0</code>), making the current segment <code>00</code>.</p>
+<ul>
+<li>Compare: <span class="math inline">\(00_2 &lt; 11_2\)</span>, so the
+next quotient bit is <strong><code>0</code></strong>.</li>
+</ul></li>
+<li><p><strong>Bring Down Next Bit:</strong> Bring down the final digit
+(<code>1</code>), making the current segment <code>01</code>.</p>
+<ul>
+<li>Compare: <span class="math inline">\(01_2 &lt; 11_2\)</span>, so the
+final quotient bit is <strong><code>0</code></strong>.</li>
+</ul></li>
+</ol>
+<p><strong>Result:</strong></p>
+<ul>
+<li><strong>Quotient:</strong> <span
+class="math inline">\(100_2\)</span> (4 in decimal)</li>
+<li><strong>Remainder:</strong> <span class="math inline">\(1_2\)</span>
+(1 in decimal)</li>
+</ul>
+<p>Checking with decimal values: <span class="math inline">\(13 \div 3 =
+4\)</span> with a remainder of <span
+class="math inline">\(1\)</span>.</p>
+<hr />
+<h3 id="hardware-implementation-methods">Hardware Implementation
+Methods</h3>
+<p>In computer processors, binary long division is automated using
+digital circuits through specialized division algorithms:</p>
+<ul>
+<li><strong>Restoring Division:</strong> The circuit subtracts the
+divisor from the dividend register at each cycle. If the result is
+negative, it sets the quotient bit to <code>0</code> and adds the
+divisor back (restores the original value) before shifting.</li>
+<li><strong>Non-Restoring Division:</strong> Avoids the restoration step
+by leaving the negative result in place and adding the divisor in the
+subsequent cycle instead of subtracting, significantly increasing
+execution speed.</li>
+<li><strong>SRT Division:</strong> A fast hardware method utilizing
+redundant representations and lookup tables to guess multiple quotient
+bits per cycle without performing full subtractions.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

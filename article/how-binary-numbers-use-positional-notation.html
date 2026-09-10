@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Binary Numbers Use Positional Notation - binary</title>
+    <meta name="description" content="The binary number system represents all numerical values using only two digits, 0 and 1, through a method known as positional notation. In this system, the value of a digit is determined by its position within a number, with each position corresponding t">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-binary-numbers-use-positional-notation">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Binary Numbers Use Positional Notation - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-binary-numbers-use-positional-notation" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The binary number system represents all numerical values using only two digits, 0 and 1, through a method known as positional notation. In this system, the value of a digit is determined by its position within a number, with each position corresponding t" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-binary-numbers-use-positional-notation">How Binary Numbers
+Use Positional Notation</h1>
+<p>The binary number system represents all numerical values using only
+two digits, 0 and 1, through a method known as positional notation. In
+this system, the value of a digit is determined by its position within a
+number, with each position corresponding to a specific power of two. By
+assigning increasing powers of two from right to left, binary allows any
+integer to be expressed as a unique sum of these base-2 values.</p>
+<h2 id="understanding-positional-values-in-base-2">Understanding
+Positional Values in Base-2</h2>
+<p>In any positional numbering system, the base defines the multiplier
+for each column. While the standard decimal system uses base-10 (powers
+of 10: 1, 10, 100, 1000), the binary system uses base-2.</p>
+<p>The positions in a binary sequence are calculated moving from right
+to left, starting at an index of zero:</p>
+<ul>
+<li><strong>Position 0 (far right):</strong> <span
+class="math inline">\(2^0 = 1\)</span></li>
+<li><strong>Position 1:</strong> <span class="math inline">\(2^1 =
+2\)</span></li>
+<li><strong>Position 2:</strong> <span class="math inline">\(2^2 =
+4\)</span></li>
+<li><strong>Position 3:</strong> <span class="math inline">\(2^3 =
+8\)</span></li>
+<li><strong>Position 4:</strong> <span class="math inline">\(2^4 =
+16\)</span></li>
+<li><strong>Position 5:</strong> <span class="math inline">\(2^5 =
+32\)</span></li>
+</ul>
+<p>Each step to the left doubles the value of the previous position.</p>
+<h2 id="the-role-of-the-binary-digits-0-and-1">The Role of the Binary
+Digits (0 and 1)</h2>
+<p>The digits 0 and 1 act as binary switches or multipliers for each
+positional weight:</p>
+<ul>
+<li>A <strong>1</strong> indicates that the value of that specific power
+of two is included in the total sum.</li>
+<li>A <strong>0</strong> indicates that the value of that specific power
+of two is excluded (multiplied by zero).</li>
+</ul>
+<p>Because every positive integer can be uniquely represented as a sum
+of distinct powers of two, any numerical quantity can be constructed
+using only these two states.</p>
+<h2 id="step-by-step-conversion-example">Step-by-Step Conversion
+Example</h2>
+<p>To convert a binary number to its standard decimal equivalent,
+multiply each digit by its corresponding power of two and add the
+results together.</p>
+<p>Consider the binary number <strong>1101</strong>:</p>
+<ol type="1">
+<li><p>Identify the positions and corresponding powers of two from right
+to left:</p>
+<ul>
+<li>Far right digit: <span class="math inline">\(1 \times 2^0 = 1 \times
+1 = 1\)</span></li>
+<li>Second digit: <span class="math inline">\(0 \times 2^1 = 0 \times 2
+= 0\)</span></li>
+<li>Third digit: <span class="math inline">\(1 \times 2^2 = 1 \times 4 =
+4\)</span></li>
+<li>Fourth digit: <span class="math inline">\(1 \times 2^3 = 1 \times 8
+= 8\)</span></li>
+</ul></li>
+<li><p>Sum the calculated values: <span class="math display">\[8 + 4 + 0
++ 1 = 13\]</span></p></li>
+</ol>
+<p>Therefore, the binary sequence <strong>1101</strong> represents the
+decimal value <strong>13</strong>.</p>
+<h2 id="efficiency-in-digital-computing">Efficiency in Digital
+Computing</h2>
+<p>Positional notation makes binary ideal for digital electronics.
+Because each position requires only two states—presence (1) or absence
+(0) of a power of two—it maps directly onto physical hardware, such as
+high and low voltage states in transistors.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

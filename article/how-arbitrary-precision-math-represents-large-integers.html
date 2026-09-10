@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Arbitrary-Precision Math Represents Large Integers - binary</title>
+    <meta name="description" content="Arbitrary-precision arithmetic libraries—often called "bignum" or "BigInt" libraries—allow computers to perform calculations on integers of virtually unlimited size, constrained only by available system memory. While standard CPU architectures restri">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-arbitrary-precision-math-represents-large-integers">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Arbitrary-Precision Math Represents Large Integers - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-arbitrary-precision-math-represents-large-integers" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Arbitrary-precision arithmetic libraries—often called "bignum" or "BigInt" libraries—allow computers to perform calculations on integers of virtually unlimited size, constrained only by available system memory. While standard CPU architectures restri" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-arbitrary-precision-math-represents-large-integers">How
+Arbitrary-Precision Math Represents Large Integers</h1>
+<p>Arbitrary-precision arithmetic libraries—often called "bignum" or
+"BigInt" libraries—allow computers to perform calculations on integers
+of virtually unlimited size, constrained only by available system
+memory. While standard CPU architectures restrict native integer
+operations to fixed register sizes (typically 32 or 64 bits),
+arbitrary-precision libraries bypass this hardware limitation by
+decomposing a massive integer into an ordered sequence of machine-sized
+binary words, often referred to as "limbs" or "digits." This article
+explains the data structures, base conversions, and memory strategies
+these libraries use to represent unbounded integers.</p>
+<h2 id="the-concept-of-limbs-and-generalized-radix">The Concept of Limbs
+and Generalized Radix</h2>
+<p>To store a number larger than the CPU's register capacity,
+arbitrary-precision libraries view the large integer as a polynomial
+evaluated at a very large base <span class="math inline">\(B\)</span>.
+In this system, the base is chosen as a power of two, typically matching
+the native word size of the CPU:</p>
+<p><span class="math display">\[B = 2^W\]</span></p>
+<p>where <span class="math inline">\(W\)</span> is the word length
+(usually 32 or 64 bits).</p>
+<p>Any arbitrary integer <span class="math inline">\(N\)</span> is
+represented as:</p>
+<p><span class="math display">\[N = \sum_{i=0}^{n-1} a_i \cdot B^i = a_0
++ a_1 B + a_2 B^2 + \dots + a_{n-1} B^{n-1}\]</span></p>
+<p>Each coefficient <span class="math inline">\(a_i\)</span> is a single
+machine word (a "limb") bounded by <span class="math inline">\(0 \le a_i
+&lt; B\)</span>. Instead of using base 10 (decimal) or base 2 (single
+bits), the computer operates in base <span
+class="math inline">\(2^{32}\)</span> or base <span
+class="math inline">\(2^{64}\)</span>. This maximizes computational
+efficiency by allowing standard CPU arithmetic instructions to process
+entire limbs in a single clock cycle.</p>
+<h2 id="internal-memory-representation">Internal Memory
+Representation</h2>
+<p>At the implementation level (such as in libraries like GMP, OpenSSL's
+BIGNUM, or language runtimes like Python and Rust), a large integer is
+stored as a structured data type containing three primary
+components:</p>
+<ol type="1">
+<li><strong>Limb Array (Pointer/Buffer):</strong> A contiguous array of
+unsigned native integers (e.g., <code>uint32_t</code> or
+<code>uint64_t</code>) containing the coefficients <span
+class="math inline">\(a_0, a_1, \dots, a_{n-1}\)</span>.</li>
+<li><strong>Length/Size Field:</strong> An integer indicating how many
+limbs are currently in use to represent the number.</li>
+<li><strong>Capacity Field:</strong> An integer indicating the total
+allocated memory capacity for the limb array, enabling dynamic resizing
+without constant reallocations.</li>
+</ol>
+<h3 id="endianness-of-limbs">Endianness of Limbs</h3>
+<p>Most arbitrary-precision libraries store limbs in
+<strong>little-endian limb order</strong>, meaning the least significant
+limb (<span class="math inline">\(a_0\)</span>) is located at index 0 of
+the array, and the most significant limb (<span
+class="math inline">\(a_{n-1}\)</span>) is located at the highest
+index.</p>
+<p>This layout simplifies arithmetic operations:</p>
+<ul>
+<li>Addition and subtraction naturally start at index 0 and propagate
+carries upward through increasing indices.</li>
+<li>Scaling the number up (adding higher-order limbs) only requires
+appending elements to the end of the array rather than shifting existing
+memory.</li>
+</ul>
+<h2 id="sign-handling-sign-magnitude-vs-twos-complement">Sign Handling:
+Sign-Magnitude vs. Two's Complement</h2>
+<p>Standard fixed-width CPU integers use two's complement representation
+for negative numbers. However, arbitrary-precision libraries
+predominantly use <strong>sign-magnitude</strong> representation for
+large integers.</p>
+<p>In a sign-magnitude scheme:</p>
+<ul>
+<li>The magnitude (absolute value) is stored purely as an array of
+unsigned binary words.</li>
+<li>The sign is stored separately as a single boolean flag, an enum, or
+the sign of the length field (e.g., a negative length denotes a negative
+number).</li>
+</ul>
+<p>Sign-magnitude is preferred because:</p>
+<ul>
+<li>It eliminates the need for sign-extension across an arbitrary number
+of limbs.</li>
+<li>Multiplication and division algorithms are significantly simpler
+when operating purely on unsigned magnitudes, with the sign computed
+independently using an XOR operation on the operands' signs.</li>
+</ul>
+<h2 id="word-utilization-full-width-vs-unpacked-words">Word Utilization:
+Full-Width vs. Unpacked Words</h2>
+<p>Libraries choose between two main strategies for sizing limbs:</p>
+<ul>
+<li><strong>Full-Width Words (<span class="math inline">\(W =
+64\)</span> on a 64-bit machine):</strong> Maximizes memory density and
+takes full advantage of hardware <code>add-with-carry</code>
+instructions. When multiplying two 64-bit limbs, the 128-bit result is
+handled via specialized CPU instructions (such as <code>MULX</code> on
+x86-64) or double-width types.</li>
+<li><strong>Partial-Width / Unpacked Words (<span
+class="math inline">\(W &lt; 64\)</span>, e.g., 51 or 32 bits):</strong>
+Leaves unused bits at the top of each word. This allows multiple
+additions or multiplications to accumulate into a single limb before a
+carry must be propagated, reducing branch instructions and enabling SIMD
+(vectorized) optimizations.</li>
+</ul>
+<p>Through this combination of large-radix polynomials, contiguous
+memory buffers, and sign-magnitude encoding, arbitrary-precision
+libraries achieve high performance while supporting numbers of
+theoretically infinite magnitude.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

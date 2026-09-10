@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculating Jump and Branch Offsets with Byte Shifts - binary</title>
+    <meta name="description" content="In computer architecture, jump and branch target offsets determine the destination address of an execution redirect relative to the current instruction pointer. This article explains how processors compute these targets in binary using Program Counter (P">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/calculating-jump-and-branch-offsets-with-byte-shifts">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Calculating Jump and Branch Offsets with Byte Shifts - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/calculating-jump-and-branch-offsets-with-byte-shifts" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In computer architecture, jump and branch target offsets determine the destination address of an execution redirect relative to the current instruction pointer. This article explains how processors compute these targets in binary using Program Counter (P" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1
+id="calculating-jump-and-branch-offsets-with-byte-shifts">Calculating
+Jump and Branch Offsets with Byte Shifts</h1>
+<p>In computer architecture, jump and branch target offsets determine
+the destination address of an execution redirect relative to the current
+instruction pointer. This article explains how processors compute these
+targets in binary using Program Counter (PC) relative addressing, two's
+complement signed arithmetic, and binary bit-shifting. You will learn
+the mathematical mechanics of encoding target locations into instruction
+fields and how the CPU decodes and shifts these binary offsets at
+runtime to navigate memory.</p>
+<h3 id="the-principle-of-pc-relative-addressing">The Principle of
+PC-Relative Addressing</h3>
+<p>Modern instruction set architectures (such as ARM, MIPS, x86, and
+RISC-V) typically encode control-flow instructions—like conditional
+branches and short jumps—using PC-relative addressing. Instead of
+storing an absolute 32-bit or 64-bit memory address within the
+instruction, the processor encodes the distance (displacement) between
+the current Program Counter and the target address:</p>
+<p><span class="math display">\[\text{Target Address} = \text{Current
+PC} + \text{Byte Offset}\]</span></p>
+<p><em>(Note: Depending on the architecture, the base PC may be the
+address of the current instruction, or the address of the next
+sequential instruction, such as <span class="math inline">\(\text{PC} +
+4\)</span> in classic ARM and MIPS pipelines.)</em></p>
+<h3 id="twos-complement-for-directionality">Two's Complement for
+Directionality</h3>
+<p>Branching requires moving both forward and backward in memory. To
+support bidirectional offsets within a fixed number of binary bits,
+processors represent the offset as a signed integer using two's
+complement:</p>
+<ul>
+<li><strong>Forward Branches:</strong> The most significant bit (MSB) of
+the immediate field is <code>0</code>, representing a positive
+offset.</li>
+<li><strong>Backward Branches:</strong> The MSB is <code>1</code>,
+representing a negative offset.</li>
+</ul>
+<p>When the CPU decodes an immediate offset, it sign-extends the value
+to match the full bit-width of the register architecture (e.g.,
+expanding a 12-bit signed immediate to 32 or 64 bits) before adding it
+to the PC.</p>
+<h3 id="why-byte-shifts-are-used">Why Byte Shifts Are Used</h3>
+<p>Instruction words in RISC architectures are fixed-size and
+memory-aligned:</p>
+<ul>
+<li>In 32-bit aligned architectures (e.g., standard ARM, MIPS, RISC-V),
+every instruction address is a multiple of 4 bytes. The binary
+representation of any valid instruction address always ends in
+<code>00</code> (<span class="math inline">\(2^0\)</span> and <span
+class="math inline">\(2^1\)</span> bits are always zero).</li>
+<li>In 16-bit aligned architectures (e.g., ARM Thumb, compressed
+RISC-V), addresses are multiples of 2 bytes, always ending in
+<code>0</code>.</li>
+</ul>
+<p>Because the lowest bits are consistently zero, storing them in the
+instruction's binary format is redundant. By omitting these trailing
+zeros, the instruction can encode a larger addressing range using fewer
+bits.</p>
+<p>To convert this encoded instruction-count offset back into a raw byte
+offset, the CPU performs an arithmetic left shift (logical shift left)
+at execution time:</p>
+<ul>
+<li><strong>Left shift by 1 bit (<code>&lt;&lt; 1</code>):</strong>
+Multiplies the immediate value by 2 for 16-bit instruction
+alignment.</li>
+<li><strong>Left shift by 2 bits (<code>&lt;&lt; 2</code>):</strong>
+Multiplies the immediate value by 4 for 32-bit instruction
+alignment.</li>
+</ul>
+<h3 id="step-by-step-encoding-and-decoding-process">Step-by-Step
+Encoding and Decoding Process</h3>
+<h4 id="1-encoding-the-branch-assembler-step">1. Encoding the Branch
+(Assembler Step)</h4>
+<ol type="1">
+<li><strong>Calculate the byte distance:</strong> Subtract the base PC
+from the target label address: <span
+class="math display">\[\Delta\text{Bytes} = \text{Target Address} -
+\text{Base PC}\]</span></li>
+<li><strong>Shift right to discard redundant zeros:</strong> Divide by
+the instruction alignment size: <span
+class="math display">\[\text{Encoded Immediate} = \Delta\text{Bytes} \gg
+2 \quad (\text{for 4-byte alignment})\]</span></li>
+<li><strong>Store in instruction:</strong> Insert the resulting two's
+complement binary value into the immediate field of the machine
+code.</li>
+</ol>
+<h4 id="2-decoding-and-executing-the-branch-cpu-step">2. Decoding and
+Executing the Branch (CPU Step)</h4>
+<ol type="1">
+<li><strong>Extract immediate:</strong> The hardware extracts the
+immediate bits from the binary opcode.</li>
+<li><strong>Sign-extend:</strong> The hardware replicates the sign bit
+across the full processor word length.</li>
+<li><strong>Shift left to byte offset:</strong> The processor shifts the
+sign-extended value left by 2 (or 1), appending the missing zero bits:
+<span class="math display">\[\text{Byte Offset} =
+\text{SignExtended}(\text{Encoded Immediate}) \ll 2\]</span></li>
+<li><strong>Compute final PC:</strong> The hardware adder adds the byte
+offset to the base PC: <span class="math display">\[\text{Next PC} =
+\text{Base PC} + \text{Byte Offset}\]</span></li>
+</ol>
+<h3 id="concrete-binary-example">Concrete Binary Example</h3>
+<p>Consider a 32-bit aligned system where a branch instruction is
+executed:</p>
+<ul>
+<li><strong>Base PC:</strong> <code>0x00001000</code>
+(<code>0001 0000 0000 0000</code> in binary)</li>
+<li><strong>Target Address:</strong> <code>0x00001028</code>
+(<code>0001 0000 0010 1000</code> in binary)</li>
+</ul>
+<ol type="1">
+<li><p><strong>Calculate Byte Difference:</strong> <span
+class="math display">\[\text{0x1028} - \text{0x1000} = +\text{0x28}
+\text{ (40 bytes in decimal, }
+\texttt{0b00101000}\text{)}\]</span></p></li>
+<li><p><strong>Shift Right for Encoding (Divide by 4):</strong> <span
+class="math display">\[\texttt{0b00101000} \gg 2 = \texttt{0b00001010}
+\text{ (10 instructions forward)}\]</span> The assembler places
+<code>0b00001010</code> (decimal <code>10</code>) into the instruction's
+immediate field.</p></li>
+<li><p><strong>Runtime Decoding (Hardware Left Shift):</strong> When the
+branch condition is met, the CPU sign-extends <code>0b00001010</code>
+and shifts it left by 2 bits: <span
+class="math display">\[\texttt{0b00001010} \ll 2 = \texttt{0b00101000}
+\text{ (40 bytes)}\]</span></p></li>
+<li><p><strong>Target Calculation:</strong> <span
+class="math display">\[\text{0x00001000} + \text{0x00000028} =
+\text{0x00001028}\]</span></p></li>
+</ol>
+<p>The Program Counter updates to <code>0x00001028</code>, successfully
+completing the branch redirect.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

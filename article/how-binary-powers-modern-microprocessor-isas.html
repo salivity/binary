@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Binary Powers Modern Microprocessor ISAs - binary</title>
+    <meta name="description" content="This article explores how the binary number system serves as the foundational layer for microprocessor instruction set architectures (ISAs). At the physical level, microprocessors rely on transistors operating in two distinct electrical states, which dir">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-binary-powers-modern-microprocessor-isas">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Binary Powers Modern Microprocessor ISAs - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-binary-powers-modern-microprocessor-isas" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores how the binary number system serves as the foundational layer for microprocessor instruction set architectures (ISAs). At the physical level, microprocessors rely on transistors operating in two distinct electrical states, which dir" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-binary-powers-modern-microprocessor-isas">How Binary Powers
+Modern Microprocessor ISAs</h1>
+<p>This article explores how the binary number system serves as the
+foundational layer for microprocessor instruction set architectures
+(ISAs). At the physical level, microprocessors rely on transistors
+operating in two distinct electrical states, which directly map to
+binary digits (0 and 1). The ISA acts as the formal contract between
+software and this underlying hardware, defining how raw binary bit
+patterns are structured, decoded, and executed to perform complex
+computations.</p>
+<h2 id="the-physical-to-logical-mapping">The Physical-to-Logical
+Mapping</h2>
+<p>Modern microprocessors are built from billions of complementary
+metal-oxide-semiconductor (CMOS) transistors. These components operate
+essentially as on/off switches, representing low-voltage and
+high-voltage states. The binary number system matches this physical
+reality:</p>
+<ul>
+<li><strong>Logic 0:</strong> Low voltage level (typically ground).</li>
+<li><strong>Logic 1:</strong> High voltage level (supply voltage).</li>
+</ul>
+<p>Because binary is inherently base-2, it allows digital logic gates
+(AND, OR, NOT, XOR) to be constructed using minimal transistor
+arrangements. An ISA exploits this direct relationship by defining every
+possible operation as a specific sequence of binary digits known as
+machine code.</p>
+<h2 id="instruction-encoding-opcodes-and-operands">Instruction Encoding:
+Opcodes and Operands</h2>
+<p>An instruction set architecture defines the exact binary layout of
+commands the CPU can execute. Every machine instruction is a binary word
+divided into distinct functional segments called fields:</p>
+<ol type="1">
+<li><strong>Operation Code (Opcode):</strong> A specific binary pattern
+that tells the control unit which operation to perform (e.g.,
+<code>ADD</code>, <code>SUB</code>, <code>LOAD</code>,
+<code>JUMP</code>).</li>
+<li><strong>Register Specifiers:</strong> Binary addresses pointing to
+internal storage locations (registers) within the CPU. For example, a
+processor with 32 general-purpose registers requires a 5-bit binary
+field (<span class="math inline">\(2^5 = 32\)</span>) to address any
+individual register.</li>
+<li><strong>Immediate Values and Offsets:</strong> Numerical constants
+or memory offsets embedded directly into the instruction as binary
+integers (represented using two's complement for signed values).</li>
+</ol>
+<pre><code>+---------------+---------------+---------------+---------------+
+|  Opcode (6b)  |   Rs (5b)     |   Rt (5b)     |   Rd (5b)     | ...
++---------------+---------------+---------------+---------------+</code></pre>
+<h2 id="binary-organization-in-risc-vs-cisc">Binary Organization in RISC
+vs. CISC</h2>
+<p>ISAs handle binary instruction structures differently based on design
+philosophy:</p>
+<ul>
+<li><strong>Reduced Instruction Set Computer (RISC):</strong>
+Architectures like ARM and RISC-V use fixed-length binary instructions
+(typically 32-bit words). This uniform binary width simplifies
+instruction fetching and allows binary decoders to quickly parse fields
+in parallel pipelines.</li>
+<li><strong>Complex Instruction Set Computer (CISC):</strong>
+Architectures like x86 use variable-length binary instructions (ranging
+from 1 to 15 bytes). Here, prefixes and opcodes vary in size, requiring
+sequential binary decoding logic before execution.</li>
+</ul>
+<h2 id="the-instruction-cycle-and-binary-decoding">The Instruction Cycle
+and Binary Decoding</h2>
+<p>The execution of an ISA relies on passing binary patterns through
+combinational logic circuits:</p>
+<ol type="1">
+<li><strong>Fetch:</strong> The program counter (a binary register)
+supplies a binary memory address to retrieve the next instruction.</li>
+<li><strong>Decode:</strong> The binary instruction is routed into
+hardware decoders. These logic circuits read the opcode bits and
+activate specific control lines (e.g., asserting write-enable signals or
+setting the Arithmetic Logic Unit's operation code).</li>
+<li><strong>Execute:</strong> The binary values from source registers
+are fed into the ALU, which performs binary arithmetic (like binary
+addition via carry-lookahead adders) or bitwise operations.</li>
+<li><strong>Writeback:</strong> The resulting binary word is written
+back to the target binary register address or to system memory.</li>
+</ol>
+<h2 id="binary-addressing-and-memory-models">Binary Addressing and
+Memory Models</h2>
+<p>ISAs define memory access entirely through binary representations.
+Memory is organized as an array of byte-sized locations, each assigned a
+unique binary address:</p>
+<ul>
+<li><strong>Address Bus Width:</strong> A CPU with a 64-bit architecture
+uses 64-bit binary values to address up to <span
+class="math inline">\(2^{64}\)</span> distinct bytes of virtual
+memory.</li>
+<li><strong>Bitwise Masks and Alignment:</strong> Binary arithmetic
+enables fast address alignment checks using bitwise operations (e.g.,
+checking if the least significant bits are zero to ensure data is
+aligned to 4-byte or 8-byte boundaries).</li>
+</ul>
+<p>By organizing control signals, registers, and memory addresses into
+predictable binary patterns, modern ISAs provide the necessary structure
+for hardware circuits to execute high-level software instructions
+efficiently.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

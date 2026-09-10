@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diminished Radix and One's Complement Explained - binary</title>
+    <meta name="description" content="This article explores how the mathematical framework of the diminished radix complement establishes the operational mechanics of one's complement in binary arithmetic. It covers the core mathematical definition, explains why bit inversion occurs naturall">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/diminished-radix-and-one-s-complement-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Diminished Radix and One's Complement Explained - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/diminished-radix-and-one-s-complement-explained" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores how the mathematical framework of the diminished radix complement establishes the operational mechanics of one's complement in binary arithmetic. It covers the core mathematical definition, explains why bit inversion occurs naturall" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="diminished-radix-and-ones-complement-explained">Diminished Radix
+and One's Complement Explained</h1>
+<p>This article explores how the mathematical framework of the
+diminished radix complement establishes the operational mechanics of
+one's complement in binary arithmetic. It covers the core mathematical
+definition, explains why bit inversion occurs naturally within the
+binary base, and examines key arithmetic behaviors such as the
+end-around carry and the dual representation of zero.</p>
+<h3
+id="mathematical-definition-of-diminished-radix-complement">Mathematical
+Definition of Diminished Radix Complement</h3>
+<p>In number theory, the diminished radix complement of an <span
+class="math inline">\(n\)</span>-digit integer <span
+class="math inline">\(N\)</span> in a base (radix) <span
+class="math inline">\(r\)</span> is defined by the formula:</p>
+<p><span class="math display">\[\text{Complement}(N) = (r^n - 1) -
+N\]</span></p>
+<p>In the binary system, the base is <span class="math inline">\(r =
+2\)</span>. Consequently, the diminished radix is <span
+class="math inline">\(r - 1 = 2 - 1 = 1\)</span>, which gives the system
+its common name: <strong>one's complement</strong>. For an <span
+class="math inline">\(n\)</span>-bit binary number, the formula
+simplifies to:</p>
+<p><span class="math display">\[\text{One&#39;s Complement}(N) = (2^n -
+1) - N\]</span></p>
+<h3 id="the-origin-of-bit-inversion">The Origin of Bit Inversion</h3>
+<p>The term <span class="math inline">\((2^n - 1)\)</span> represents
+the maximum unsigned value that can be stored in <span
+class="math inline">\(n\)</span> bits, which always equates to a string
+of <span class="math inline">\(n\)</span> ones (<span
+class="math inline">\(111\dots1_2\)</span>).</p>
+<p>When computing <span class="math inline">\((2^n - 1) - N\)</span>,
+each individual bit <span class="math inline">\(b_i\)</span> of <span
+class="math inline">\(N\)</span> is subtracted from <span
+class="math inline">\(1\)</span>:</p>
+<ul>
+<li>If <span class="math inline">\(b_i = 0\)</span>, then <span
+class="math inline">\(1 - 0 = 1\)</span>.</li>
+<li>If <span class="math inline">\(b_i = 1\)</span>, then <span
+class="math inline">\(1 - 1 = 0\)</span>.</li>
+</ul>
+<p>Because there is never a need to borrow across columns, this
+subtraction operates independently on each bit position. As a direct
+consequence of the diminished radix formula, the mathematical complement
+of a binary number is identical to the logical bitwise NOT
+operation.</p>
+<h3 id="end-around-carry-mechanics">End-Around Carry Mechanics</h3>
+<p>The diminished radix framework operates under modulo <span
+class="math inline">\((2^n - 1)\)</span> arithmetic rather than modulo
+<span class="math inline">\(2^n\)</span>. When two numbers are added and
+generate a carry-out from the most significant bit (MSB), that carry
+represents a value of <span class="math inline">\(2^n\)</span>.</p>
+<p>In standard modular arithmetic base <span class="math inline">\((2^n
+- 1)\)</span>:</p>
+<p><span class="math display">\[2^n \equiv 1 \pmod{2^n - 1}\]</span></p>
+<p>Because the carry-out value of <span
+class="math inline">\(2^n\)</span> is congruent to <span
+class="math inline">\(1\)</span>, the discarded overflow bit must be
+added back to the least significant bit (LSB) of the intermediate sum.
+This requirement is known as the <strong>end-around carry</strong>, and
+it ensures that the arithmetic result remains consistent with the
+underlying diminished radix modulus.</p>
+<h3 id="representation-of-negative-numbers-and-dual-zero">Representation
+of Negative Numbers and Dual Zero</h3>
+<p>Using one's complement allows signed numbers to be manipulated using
+standard adder circuits. A positive number begins with a sign bit of
+<code>0</code>, while its negative counterpart is formed by taking its
+diminished radix complement, changing the sign bit to
+<code>1</code>.</p>
+<p>A notable byproduct of the <span class="math inline">\((2^n - 1) -
+N\)</span> formula is the existence of two representations for zero:</p>
+<ul>
+<li><strong>Positive Zero (<span
+class="math inline">\(+0\)</span>):</strong> Represented as all zeros
+(<span class="math inline">\(000\dots0_2\)</span>).</li>
+<li><strong>Negative Zero (<span
+class="math inline">\(-0\)</span>):</strong> Represented as all ones
+(<span class="math inline">\(111\dots1_2\)</span>), which is <span
+class="math inline">\((2^n - 1) - 0\)</span>.</li>
+</ul>
+<p>Both values satisfy the definition of zero within the diminished
+radix structure, reflecting the symmetrical range of <span
+class="math inline">\(- (2^{n-1} - 1)\)</span> to <span
+class="math inline">\(+ (2^{n-1} - 1)\)</span>.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

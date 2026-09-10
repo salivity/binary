@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWAR: Parallel Byte Operations in 64-Bit Registers - binary</title>
+    <meta name="description" content="This article provides an overview of SWAR (SIMD Within A Register), detailing how standard 64-bit integer registers and binary bitwise instructions process eight 8-bit bytes simultaneously. By partitioning integer registers, applying bitmasks, and managi">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/swar-parallel-byte-operations-in-64-bit-registers">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="SWAR: Parallel Byte Operations in 64-Bit Registers - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/swar-parallel-byte-operations-in-64-bit-registers" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article provides an overview of SWAR (SIMD Within A Register), detailing how standard 64-bit integer registers and binary bitwise instructions process eight 8-bit bytes simultaneously. By partitioning integer registers, applying bitmasks, and managi" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="swar-parallel-byte-operations-in-64-bit-registers">SWAR:
+Parallel Byte Operations in 64-Bit Registers</h1>
+<p>This article provides an overview of SWAR (SIMD Within A Register),
+detailing how standard 64-bit integer registers and binary bitwise
+instructions process eight 8-bit bytes simultaneously. By partitioning
+integer registers, applying bitmasks, and managing arithmetic carry
+propagation, developers can achieve data-level parallelism on
+general-purpose processor hardware without relying on dedicated vector
+extensions like AVX or NEON.</p>
+<h2 id="register-layout-and-data-partitioning">Register Layout and Data
+Partitioning</h2>
+<p>In a 64-bit computing architecture, a general-purpose register stores
+a single 64-bit integer spanning bits 0 to 63. Under the SWAR approach,
+this single register is logically partitioned into eight contiguous
+8-bit lanes (bytes):</p>
+<pre class="text"><code>[ Byte 7 ][ Byte 6 ][ Byte 5 ][ Byte 4 ][ Byte 3 ][ Byte 2 ][ Byte 1 ][ Byte 0 ]
+63     56 55     48 47     40 39     32 31     24 23     16 15      8 7       0</code></pre>
+<p>By treating each 8-bit segment as an independent lane, standard
+64-bit ALU operations can manipulate all eight bytes in a single clock
+cycle.</p>
+<h2 id="parallel-bitwise-operations">Parallel Bitwise Operations</h2>
+<p>Bitwise operations—such as <code>AND</code>, <code>OR</code>,
+<code>XOR</code>, and <code>NOT</code>—are inherently parallel. Because
+bitwise operations process each bit position independently with no
+interaction between neighboring bits, performing a 64-bit bitwise
+operation naturally executes the exact operation across all eight 8-bit
+lanes simultaneously:</p>
+<ul>
+<li><strong>Parallel Inversion:</strong> <code>~R</code> inverts all
+eight bytes in parallel.</li>
+<li><strong>Parallel Masking:</strong> <code>R &amp; Mask</code>
+isolates specific bits in all eight bytes.</li>
+<li><strong>Parallel XOR:</strong> <code>A ^ B</code> computes the
+bitwise difference across eight pairs of bytes without any lane
+interference.</li>
+</ul>
+<h2 id="preventing-carry-bleed-in-parallel-addition">Preventing Carry
+Bleed in Parallel Addition</h2>
+<p>The primary challenge in SWAR arithmetic is the carry chain in the
+binary number system. During a standard 64-bit addition
+(<code>A + B</code>), an overflow in bit 7 of Byte 0 will carry into bit
+8 of Byte 1, corrupting the adjacent lane. This unintended interaction
+is known as "carry bleed."</p>
+<p>To prevent carry bleed during 8-bit parallel additions, the
+arithmetic isolates the most significant bit (MSB) of each byte lane
+using predefined 64-bit constants:</p>
+<ul>
+<li><strong>Low-bit Mask (<span
+class="math inline">\(M_L\)</span>):</strong>
+<code>0x7F7F7F7F7F7F7F7F</code> (clears the 7th bit of every byte)</li>
+<li><strong>High-bit Mask (<span
+class="math inline">\(M_H\)</span>):</strong>
+<code>0x8080808080808080</code> (isolates the 7th bit of every
+byte)</li>
+</ul>
+<p>Parallel addition without cross-lane corruption is computed using the
+following binary algorithm:</p>
+<p><span class="math display">\[\text{Result} = ((A \ \&amp; \ M_L) + (B
+\ \&amp; \ M_L)) \oplus ((A \oplus B) \ \&amp; \ M_H)\]</span></p>
+<ol type="1">
+<li><strong>Low-Bit Addition:</strong> Masking out the MSB with <span
+class="math inline">\(M_L\)</span> guarantees that the addition of the
+lower 7 bits cannot overflow past bit 6, preventing any carry into the
+next byte.</li>
+<li><strong>High-Bit Computation:</strong> The MSB for each byte is
+calculated separately using XOR logic and added to the carry generated
+from the lower 7 bits.</li>
+</ol>
+<h2 id="zero-byte-detection-alan-mycrofts-algorithm">Zero-Byte Detection
+(Alan Mycroft's Algorithm)</h2>
+<p>A prominent application of SWAR is identifying whether any of the
+eight bytes in a 64-bit register equal zero (<code>0x00</code>), which
+is critical for operations like string length calculation
+(<code>strlen</code>).</p>
+<p>A zero byte can be identified across all lanes simultaneously using
+the classic SWAR expression:</p>
+<p><span class="math display">\[\text{HasZero} = (V -
+0\text{x}0101010101010101) \ \&amp; \ \sim V \ \&amp; \
+0\text{x}8080808080808080\]</span></p>
+<p>The binary mechanics function as follows:</p>
+<ul>
+<li><strong>Borrow Generation:</strong> Subtracting <code>0x01</code>
+from a byte that contains <code>0x00</code> forces an underflow, setting
+its MSB (bit 7) to <code>1</code>.</li>
+<li><strong>Original State Inversion:</strong> <code>~V</code> ensures
+that bytes that already had their MSB set (values <code>0x80</code> to
+<code>0xFF</code>) are ignored.</li>
+<li><strong>Isolation:</strong> The mask <code>0x8080808080808080</code>
+eliminates all non-MSB bits, leaving only the indicator bits.</li>
+</ul>
+<p>If the resulting 64-bit value is non-zero, at least one of the 8-bit
+lanes contains a null byte. The specific index of the zero byte can then
+be determined using a Count Trailing Zeros (<code>CTZ</code>) or leading
+zero instruction.</p>
+<h2 id="broadcast-and-pattern-matching-operations">Broadcast and Pattern
+Matching Operations</h2>
+<p>SWAR utilizes integer multiplication to broadcast values across
+lanes. Multiplying an 8-bit scalar by the constant
+<code>0x0101010101010101</code> replicates that byte across all eight
+positions in a 64-bit register:</p>
+<p><span class="math display">\[\text{Byte } B \times
+0\text{x}0101010101010101 = [B][B][B][B][B][B][B][B]\]</span></p>
+<p>To search a 64-bit word for a specific target character <span
+class="math inline">\(C\)</span>:</p>
+<ol type="1">
+<li>Broadcast <span class="math inline">\(C\)</span> across a register:
+<span class="math inline">\(T = C \times
+0\text{x}0101010101010101\)</span>.</li>
+<li>XOR the target register with the input data: <span
+class="math inline">\(X = \text{Data} \oplus T\)</span>.</li>
+<li>Perform zero-byte detection on <span
+class="math inline">\(X\)</span>. Matches in the original data turn into
+<code>0x00</code> after the XOR, allowing the zero-detection algorithm
+to flag the exact byte positions matching character <span
+class="math inline">\(C\)</span>.</li>
+</ol></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integer Division Truncation Toward Zero in Binary - binary</title>
+    <meta name="description" content="Integer division that truncates toward zero discards the fractional part of a quotient, moving the result toward zero on the number line. In modern binary systems using two's complement representation, this operation produces an asymmetry between positiv">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/integer-division-truncation-toward-zero-in-binary">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Integer Division Truncation Toward Zero in Binary - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/integer-division-truncation-toward-zero-in-binary" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Integer division that truncates toward zero discards the fractional part of a quotient, moving the result toward zero on the number line. In modern binary systems using two's complement representation, this operation produces an asymmetry between positiv" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="integer-division-truncation-toward-zero-in-binary">Integer
+Division Truncation Toward Zero in Binary</h1>
+<p>Integer division that truncates toward zero discards the fractional
+part of a quotient, moving the result toward zero on the number line. In
+modern binary systems using two's complement representation, this
+operation produces an asymmetry between positive and negative numbers:
+dividing a positive integer by a power of two directly aligns with a
+standard arithmetic right bit-shift, whereas dividing a negative integer
+requires an offset or conditional correction because hardware
+bit-shifting naturally floors toward negative infinity.</p>
+<h3 id="positive-integers-and-direct-binary-shifting">Positive Integers
+and Direct Binary Shifting</h3>
+<p>For non-negative integers, truncation toward zero is identical to
+flooring (rounding down). In binary representation, dividing a positive
+number by <span class="math inline">\(2^k\)</span> (where <span
+class="math inline">\(k\)</span> is the number of bits) simply involves
+shifting the bits to the right by <span class="math inline">\(k\)</span>
+positions:</p>
+<ul>
+<li>Consider the 8-bit positive integer <span
+class="math inline">\(7\)</span> (<code>00000111</code>).</li>
+<li>Dividing <span class="math inline">\(7\)</span> by <span
+class="math inline">\(2\)</span> mathematically yields <span
+class="math inline">\(3.5\)</span>. Truncating toward zero results in
+<span class="math inline">\(3\)</span>.</li>
+<li>Performing an arithmetic right shift by 1 bit
+(<code>7 &gt;&gt; 1</code>) yields <code>00000011</code>, which
+represents the integer <span class="math inline">\(3\)</span>.</li>
+</ul>
+<p>The bits shifted out of the register represent the fractional
+remainder. Because the discarded bits are simply dropped, positive
+division aligns with the natural mechanics of an arithmetic right
+shift.</p>
+<h3 id="negative-integers-in-twos-complement">Negative Integers in Two's
+Complement</h3>
+<p>For negative integers, truncation toward zero means rounding
+<em>up</em> toward positive infinity (e.g., <span
+class="math inline">\(-3.5\)</span> truncates to <span
+class="math inline">\(-3\)</span>). However, in two's complement binary
+representation, an arithmetic right shift preserves the sign bit
+(replicating the leading <code>1</code>) and inherently rounds
+<em>down</em> toward negative infinity:</p>
+<ul>
+<li>Consider the 8-bit negative integer <span
+class="math inline">\(-7\)</span>, represented in two's complement as
+<code>11111001</code>.</li>
+<li>Dividing <span class="math inline">\(-7\)</span> by <span
+class="math inline">\(2\)</span> with truncation toward zero should
+yield <span class="math inline">\(-3\)</span>
+(<code>11111101</code>).</li>
+<li>Performing an arithmetic right shift by 1 bit
+(<code>-7 &gt;&gt; 1</code>) yields <code>11111100</code>, which is
+<span class="math inline">\(-4\)</span>.</li>
+</ul>
+<p>Because the shift operation rounds toward negative infinity, shifting
+negative numbers with a non-zero fractional remainder results in an
+off-by-one error relative to truncation toward zero.</p>
+<h3 id="algorithmic-correction-for-negative-values">Algorithmic
+Correction for Negative Values</h3>
+<p>To implement truncation toward zero correctly for negative values
+when using binary bit-shifts (division by powers of two), compilers and
+hardware algorithms add a bias to the dividend before shifting. For a
+divisor of <span class="math inline">\(2^k\)</span>, the bias added to a
+negative dividend <span class="math inline">\(x\)</span> is <span
+class="math inline">\(2^k - 1\)</span>:</p>
+<p><span class="math display">\[\text{Truncated Quotient} = (x + 2^k -
+1) \gg k\]</span></p>
+<p>Applying this to <span class="math inline">\(-7\)</span> divided by
+<span class="math inline">\(2\)</span> (<span
+class="math inline">\(k=1\)</span>, bias = <span
+class="math inline">\(1\)</span>):</p>
+<ol type="1">
+<li>Add the bias: <span class="math inline">\(-7 + 1 = -6\)</span>
+(<code>11111010</code>).</li>
+<li>Perform the arithmetic right shift: <code>-6 &gt;&gt; 1</code>
+yields <code>11111101</code> (<span
+class="math inline">\(-3\)</span>).</li>
+</ol>
+<p>For general integer division not involving powers of two, dedicated
+hardware divider units compute the absolute magnitudes of the dividend
+and divisor, perform unsigned division, and subsequently reapply the
+appropriate sign to guarantee consistent truncation toward zero across
+the entire numeric range.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

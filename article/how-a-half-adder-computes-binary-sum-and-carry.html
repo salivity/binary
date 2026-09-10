@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How a Half Adder Computes Binary Sum and Carry - binary</title>
+    <meta name="description" content="A half adder is a fundamental digital logic circuit that performs the addition of two single-bit binary numbers. It produces two distinct outputs: the Sum ($S$) and the Carry ($C$). The circuit achieves this by combining two basic logic gates—an Exclus">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-a-half-adder-computes-binary-sum-and-carry">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How a Half Adder Computes Binary Sum and Carry - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-a-half-adder-computes-binary-sum-and-carry" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A half adder is a fundamental digital logic circuit that performs the addition of two single-bit binary numbers. It produces two distinct outputs: the Sum ($S$) and the Carry ($C$). The circuit achieves this by combining two basic logic gates—an Exclus" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-a-half-adder-computes-binary-sum-and-carry">How a Half Adder
+Computes Binary Sum and Carry</h1>
+<p>A half adder is a fundamental digital logic circuit that performs the
+addition of two single-bit binary numbers. It produces two distinct
+outputs: the <strong>Sum (<span
+class="math inline">\(S\)</span>)</strong> and the <strong>Carry (<span
+class="math inline">\(C\)</span>)</strong>. The circuit achieves this by
+combining two basic logic gates—an Exclusive-OR (XOR) gate to generate
+the Sum bit and an AND gate to generate the Carry bit. This article
+explains the underlying binary rules, logic gate operations, and truth
+table that allow a half adder to compute these values.</p>
+<hr />
+<h3 id="binary-single-bit-addition-rules">Binary Single-Bit Addition
+Rules</h3>
+<p>To understand the half adder, consider the four possible combinations
+when adding two single-bit binary numbers (<span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>):</p>
+<ol type="1">
+<li><span class="math inline">\(0 + 0 = 0\)</span> (Sum: <span
+class="math inline">\(0\)</span>, Carry: <span
+class="math inline">\(0\)</span>)</li>
+<li><span class="math inline">\(0 + 1 = 1\)</span> (Sum: <span
+class="math inline">\(1\)</span>, Carry: <span
+class="math inline">\(0\)</span>)</li>
+<li><span class="math inline">\(1 + 0 = 1\)</span> (Sum: <span
+class="math inline">\(1\)</span>, Carry: <span
+class="math inline">\(0\)</span>)</li>
+<li><span class="math inline">\(1 + 1 = 10_2\)</span> (Sum: <span
+class="math inline">\(0\)</span>, Carry: <span
+class="math inline">\(1\)</span>)</li>
+</ol>
+<p>In the final case (<span class="math inline">\(1 + 1\)</span>), the
+decimal result is <span class="math inline">\(2\)</span>, which is
+written as <code>10</code> in binary. This requires a two-digit output:
+the least significant bit (Sum) becomes <span
+class="math inline">\(0\)</span>, and the most significant bit (Carry)
+becomes <span class="math inline">\(1\)</span>.</p>
+<hr />
+<h3 id="logic-gate-implementation">Logic Gate Implementation</h3>
+<p>A half adder splits the operation into two distinct logic functions
+to handle the two outputs independently.</p>
+<pre><code>       A ──┬──────────────┐
+           │              ├──[ XOR ]──── Sum (S)
+       B ──┼───────┬──────┘
+           │       │
+           └──[ AND ]───────────── Carry (C)
+                   │
+                   └── (B input)</code></pre>
+<h4 id="1-computing-the-sum-with-an-xor-gate">1. Computing the Sum with
+an XOR Gate</h4>
+<p>The Sum bit is high (<span class="math inline">\(1\)</span>) only
+when the inputs are different (<span class="math inline">\(0+1\)</span>
+or <span class="math inline">\(1+0\)</span>). When both inputs are
+identical (<span class="math inline">\(0+0\)</span> or <span
+class="math inline">\(1+1\)</span>), the Sum bit is <span
+class="math inline">\(0\)</span>. This behavior perfectly matches the
+logic of an <strong>XOR (Exclusive-OR)</strong> gate:</p>
+<p><span class="math display">\[\text{Sum} = A \oplus B\]</span></p>
+<h4 id="2-computing-the-carry-with-an-and-gate">2. Computing the Carry
+with an AND Gate</h4>
+<p>The Carry bit is high (<span class="math inline">\(1\)</span>) only
+when both inputs are <span class="math inline">\(1\)</span> (<span
+class="math inline">\(1+1\)</span>). For all other combinations, the
+Carry is <span class="math inline">\(0\)</span>. This behavior matches
+the logic of an <strong>AND</strong> gate:</p>
+<p><span class="math display">\[\text{Carry} = A \cdot B\]</span></p>
+<hr />
+<h3 id="half-adder-truth-table">Half Adder Truth Table</h3>
+<p>The combined operation of the XOR and AND gates is summarized in the
+truth table below:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Input A</th>
+<th style="text-align: center;">Input B</th>
+<th style="text-align: center;">Sum (<span class="math inline">\(A
+\oplus B\)</span>)</th>
+<th style="text-align: center;">Carry (<span class="math inline">\(A
+\cdot B\)</span>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="limitations-of-a-half-adder">Limitations of a Half Adder</h3>
+<p>While a half adder efficiently adds two single-bit numbers, it has no
+input for a "Carry-in" (<span class="math inline">\(C_{in}\)</span>)
+generated by a previous addition stage. Consequently, it cannot be
+directly chained to add multi-bit binary numbers where carrying from one
+column to the next is required. To overcome this limitation, two half
+adders and an OR gate are combined to create a <strong>Full
+Adder</strong>, which can process <span
+class="math inline">\(A\)</span>, <span
+class="math inline">\(B\)</span>, and an incoming Carry bit
+simultaneously.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

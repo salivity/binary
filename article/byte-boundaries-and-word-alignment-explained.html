@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Byte Boundaries and Word Alignment Explained - binary</title>
+    <meta name="description" content="This article explores the fundamental relationship between byte boundaries and word alignment during CPU instruction execution within the binary number system. It examines how memory is structured at the binary level, why word alignment relies on specifi">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/byte-boundaries-and-word-alignment-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Byte Boundaries and Word Alignment Explained - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/byte-boundaries-and-word-alignment-explained" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores the fundamental relationship between byte boundaries and word alignment during CPU instruction execution within the binary number system. It examines how memory is structured at the binary level, why word alignment relies on specifi" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="byte-boundaries-and-word-alignment-explained">Byte Boundaries
+and Word Alignment Explained</h1>
+<p>This article explores the fundamental relationship between byte
+boundaries and word alignment during CPU instruction execution within
+the binary number system. It examines how memory is structured at the
+binary level, why word alignment relies on specific binary address
+patterns, and how these concepts directly impact processor efficiency,
+instruction fetching, and hardware exception handling.</p>
+<h2 id="understanding-byte-boundaries-in-binary-memory">Understanding
+Byte Boundaries in Binary Memory</h2>
+<p>Computer memory is organized as a sequential array of 8-bit units
+called bytes. In the binary number system, every byte is assigned a
+unique binary address. A byte boundary represents the discrete start or
+end point of any single 8-bit memory cell. Because memory addresses are
+expressed as binary integers, consecutive byte boundaries increase by an
+increment of one in binary notation:</p>
+<ul>
+<li>Byte 0: <code>...0000_0000</code></li>
+<li>Byte 1: <code>...0000_0001</code></li>
+<li>Byte 2: <code>...0000_0010</code></li>
+<li>Byte 3: <code>...0000_0011</code></li>
+</ul>
+<p>Every single byte can be uniquely located, but modern processors
+rarely fetch data or instructions one individual byte at a time.</p>
+<h2 id="word-alignment-in-binary-architectures">Word Alignment in Binary
+Architectures</h2>
+<p>A machine "word" is the standard unit of data that a central
+processing unit (CPU) processes in a single operation. Common word sizes
+are 32 bits (4 bytes) or 64 bits (8 bytes).</p>
+<p>Word alignment occurs when a multi-byte word is stored at a memory
+address that is an exact integer multiple of the word's size in bytes.
+In binary arithmetic, this mathematical requirement translates directly
+to the state of the least significant bits (LSBs) of the memory
+address:</p>
+<ul>
+<li><strong>2-Byte Alignment (16-bit):</strong> Addresses must be
+multiples of 2. In binary, the last bit must be <code>0</code> (e.g.,
+<code>...0010</code>, <code>...0100</code>).</li>
+<li><strong>4-Byte Alignment (32-bit):</strong> Addresses must be
+multiples of 4. In binary, the last two bits must be <code>00</code>
+(e.g., <code>...0100</code>, <code>...1000</code>).</li>
+<li><strong>8-Byte Alignment (64-bit):</strong> Addresses must be
+multiples of 8. In binary, the last three bits must be <code>000</code>
+(e.g., <code>...1000</code>, <code>...0000</code>).</li>
+</ul>
+<p>When an address matches these bit patterns, it aligns perfectly with
+the physical wiring of the system's memory bus.</p>
+<h2 id="the-relationship-during-instruction-execution">The Relationship
+During Instruction Execution</h2>
+<p>The relationship between byte boundaries and word alignment governs
+how the CPU's instruction fetch unit interacts with the memory bus.</p>
+<h3 id="1-memory-bus-transfers-and-bus-width">1. Memory Bus Transfers
+and Bus Width</h3>
+<p>Hardware data buses are designed to transfer chunks of memory
+matching the native word size or cache line size along fixed byte
+boundaries. For a 32-bit system, the hardware reads 4 contiguous bytes
+starting only at addresses ending in <code>00</code> binary. If a 32-bit
+instruction is aligned, it resides entirely between two fixed 4-byte
+boundaries and is retrieved in a single memory cycle.</p>
+<h3 id="2-the-cost-of-unaligned-execution">2. The Cost of Unaligned
+Execution</h3>
+<p>If a 32-bit instruction starts at an unaligned byte boundary (such as
+an address ending in <code>01</code>, <code>10</code>, or
+<code>11</code>), the instruction spans across two separate physical
+words:</p>
+<ol type="1">
+<li>The CPU must execute two separate memory read cycles to fetch both
+words.</li>
+<li>The internal logic must shift the retrieved binary data and mask out
+the unused bytes.</li>
+<li>The remaining segments are merged into a single register before the
+instruction can be decoded.</li>
+</ol>
+<p>This process introduces latency and reduces pipeline throughput.</p>
+<h3 id="3-program-counter-pc-binary-optimization">3. Program Counter
+(PC) Binary Optimization</h3>
+<p>Because instructions on aligned architectures reside at fixed word
+boundaries, the Program Counter register does not need to increment by
+single byte steps. In a 32-bit fixed-length instruction architecture
+(such as ARM or RISC-V), instructions are always 4-byte aligned.
+Consequently, the CPU can hardwire the two lowest bits of the Program
+Counter to <code>00</code>, simplifying branch calculations and
+instruction decode logic.</p>
+<h3 id="4-architecture-enforcement">4. Architecture Enforcement</h3>
+<p>Different architectures handle unaligned byte boundaries differently
+during instruction execution:</p>
+<ul>
+<li><strong>Strict Alignment (RISC architectures):</strong> The
+processor requires instruction fetches to be word-aligned. Attempting to
+execute an instruction from a non-aligned byte boundary triggers a
+hardware alignment fault (exception).</li>
+<li><strong>Flexible Alignment (CISC architectures like x86):</strong>
+The processor supports unaligned instruction fetching across byte
+boundaries using internal micro-operations, trading execution speed and
+hardware complexity for code density.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

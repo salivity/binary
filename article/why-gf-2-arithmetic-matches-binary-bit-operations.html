@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why GF(2) Arithmetic Matches Binary Bit Operations - binary</title>
+    <meta name="description" content="Galois Field 2, denoted as $\text{GF}(2)$, is the smallest non-trivial finite field, consisting strictly of the set $\{0, 1\}$. Its fundamental arithmetic operations—addition and multiplication modulo 2—map perfectly to basic single-bit logical gates">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/why-gf-2-arithmetic-matches-binary-bit-operations">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why GF(2) Arithmetic Matches Binary Bit Operations - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/why-gf-2-arithmetic-matches-binary-bit-operations" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Galois Field 2, denoted as $\text{GF}(2)$, is the smallest non-trivial finite field, consisting strictly of the set $\{0, 1\}$. Its fundamental arithmetic operations—addition and multiplication modulo 2—map perfectly to basic single-bit logical gates" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="why-gf2-arithmetic-matches-binary-bit-operations">Why GF(2)
+Arithmetic Matches Binary Bit Operations</h1>
+<p>Galois Field 2, denoted as <span
+class="math inline">\(\text{GF}(2)\)</span>, is the smallest non-trivial
+finite field, consisting strictly of the set <span
+class="math inline">\(\{0, 1\}\)</span>. Its fundamental arithmetic
+operations—addition and multiplication modulo 2—map perfectly to basic
+single-bit logical gates in digital electronics. This article explores
+why the algebraic axioms of <span
+class="math inline">\(\text{GF}(2)\)</span> make its arithmetic
+completely equivalent to single-bit binary operations, specifically the
+XOR and AND operations, and how this equivalence simplifies digital
+system design and cryptography.</p>
+<h3 id="the-foundation-of-gf2">The Foundation of GF(2)</h3>
+<p>A field is an algebraic structure with defined addition, subtraction,
+multiplication, and division (except by zero). For a finite field of
+order 2, <span class="math inline">\(\text{GF}(2)\)</span>, the universe
+of numbers contains only two elements:</p>
+<p><span class="math display">\[\text{GF}(2) = \{0, 1\}\]</span></p>
+<p>All operations inside this field are evaluated modulo 2. Because the
+modulus is 2, any integer result is divided by 2, and only the remainder
+(<span class="math inline">\(0\)</span> or <span
+class="math inline">\(1\)</span>) is retained.</p>
+<h3 id="addition-in-gf2-is-the-xor-operation">Addition in GF(2) is the
+XOR Operation</h3>
+<p>In standard integer arithmetic, adding two single-bit values can
+produce a sum of 2 (<span class="math inline">\(1 + 1 = 2\)</span>). In
+<span class="math inline">\(\text{GF}(2)\)</span>, arithmetic is
+performed modulo 2:</p>
+<ul>
+<li><span class="math inline">\(0 + 0 = 0 \pmod 2 \rightarrow
+0\)</span></li>
+<li><span class="math inline">\(0 + 1 = 1 \pmod 2 \rightarrow
+1\)</span></li>
+<li><span class="math inline">\(1 + 0 = 1 \pmod 2 \rightarrow
+1\)</span></li>
+<li><span class="math inline">\(1 + 1 = 2 \equiv 0 \pmod 2 \rightarrow
+0\)</span></li>
+</ul>
+<p>This behavior corresponds exactly to the truth table of the boolean
+exclusive-OR (XOR) gate:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Input A</th>
+<th style="text-align: left;">Input B</th>
+<th style="text-align: left;">A + B in GF(2)</th>
+<th style="text-align: left;">A XOR B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+</tr>
+</tbody>
+</table>
+<p>In binary hardware, a single-bit half-adder calculates the sum using
+an XOR gate while generating a carry bit. Because <span
+class="math inline">\(\text{GF}(2)\)</span> operates strictly within a
+single-element representation with no carry propagation, addition in
+<span class="math inline">\(\text{GF}(2)\)</span> is fundamentally
+identical to bitwise XOR.</p>
+<p>Furthermore, subtraction in <span
+class="math inline">\(\text{GF}(2)\)</span> is equivalent to addition
+because <span class="math inline">\(-1 \equiv 1 \pmod 2\)</span>.
+Consequently, <span class="math inline">\(a - b = a + b = a \oplus
+b\)</span>.</p>
+<h3 id="multiplication-in-gf2-is-the-and-operation">Multiplication in
+GF(2) is the AND Operation</h3>
+<p>Multiplication in <span class="math inline">\(\text{GF}(2)\)</span>
+follows standard arithmetic multiplication reduced modulo 2:</p>
+<ul>
+<li><span class="math inline">\(0 \times 0 = 0 \pmod 2 \rightarrow
+0\)</span></li>
+<li><span class="math inline">\(0 \times 1 = 0 \pmod 2 \rightarrow
+0\)</span></li>
+<li><span class="math inline">\(1 \times 0 = 0 \pmod 2 \rightarrow
+0\)</span></li>
+<li><span class="math inline">\(1 \times 1 = 1 \pmod 2 \rightarrow
+1\)</span></li>
+</ul>
+<p>This matches the truth table of the boolean AND gate:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Input A</th>
+<th style="text-align: left;">Input B</th>
+<th style="text-align: left;">A × B in GF(2)</th>
+<th style="text-align: left;">A AND B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">1</td>
+</tr>
+</tbody>
+</table>
+<p>The product is <span class="math inline">\(1\)</span> if and only if
+both operands are <span class="math inline">\(1\)</span>; otherwise, the
+product is <span class="math inline">\(0\)</span>.</p>
+<h3 id="why-the-equivalence-matters">Why the Equivalence Matters</h3>
+<p>The complete alignment between <span
+class="math inline">\(\text{GF}(2)\)</span> arithmetic and binary logic
+gates provides several critical advantages in computer science and
+hardware engineering:</p>
+<ol type="1">
+<li><strong>Carry-Free Execution:</strong> Because <span
+class="math inline">\(\text{GF}(2)\)</span> addition does not generate
+carry bits, operations across vectors of <span
+class="math inline">\(\text{GF}(2)\)</span> elements can execute in
+parallel with constant-time complexity, preventing carry-chain
+propagation delays.</li>
+<li><strong>Hardware Efficiency:</strong> Polynomial arithmetic over
+<span class="math inline">\(\text{GF}(2)\)</span> can be built directly
+using simple arrangements of shift registers, XOR gates, and AND gates
+without requiring dedicated arithmetic logic units (ALUs).</li>
+<li><strong>Cryptographic and Error-Correction Applications:</strong>
+Algorithms such as AES (Advanced Encryption Standard), CRC (Cyclic
+Redundancy Checks), Reed-Solomon coding, and Galois/Counter Mode (GCM)
+rely heavily on <span class="math inline">\(\text{GF}(2)\)</span>
+polynomial mathematics to ensure fast, deterministic, and secure binary
+processing.</li>
+</ol></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

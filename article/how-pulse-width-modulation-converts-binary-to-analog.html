@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Pulse-Width Modulation Converts Binary to Analog - binary</title>
+    <meta name="description" content="Pulse-width modulation (PWM) is a digital technique used to control analog devices by rapidly switching a direct current (DC) signal between fully on and fully off states. By varying the proportion of time the signal remains high relative to its total pe">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-pulse-width-modulation-converts-binary-to-analog">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Pulse-Width Modulation Converts Binary to Analog - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-pulse-width-modulation-converts-binary-to-analog" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Pulse-width modulation (PWM) is a digital technique used to control analog devices by rapidly switching a direct current (DC) signal between fully on and fully off states. By varying the proportion of time the signal remains high relative to its total pe" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-pulse-width-modulation-converts-binary-to-analog">How
+Pulse-Width Modulation Converts Binary to Analog</h1>
+<p>Pulse-width modulation (PWM) is a digital technique used to control
+analog devices by rapidly switching a direct current (DC) signal between
+fully on and fully off states. By varying the proportion of time the
+signal remains high relative to its total period, microcontrollers can
+translate discrete binary numbers into a proportional average voltage.
+This article covers the fundamental mechanics of PWM, how digital
+counters map binary values to duty cycles, and how physical loads filter
+these rapid pulses into continuous analog behavior.</p>
+<h3 id="what-is-pulse-width-modulation">What Is Pulse-Width
+Modulation?</h3>
+<p>Digital microcontrollers operate in binary states—outputting either a
+logic low (0V) or a logic high (typically 3.3V or 5V). Because digital
+pins cannot inherently output intermediate voltages (such as 2.5V), they
+simulate variable voltage using PWM.</p>
+<p>A PWM signal is a high-frequency square wave characterized by two
+main parameters:</p>
+<ul>
+<li><strong>Frequency:</strong> How many switching cycles occur per
+second, measured in Hertz (Hz).</li>
+<li><strong>Duty Cycle:</strong> The percentage of one complete cycle
+during which the signal remains at the high logic level.</li>
+</ul>
+<h3 id="the-role-of-duty-cycle-in-calculating-average-voltage">The Role
+of Duty Cycle in Calculating Average Voltage</h3>
+<p>The effective voltage delivered to a load depends entirely on the
+duty cycle. The mathematical relationship is:</p>
+<p><span class="math display">\[\text{Duty Cycle (\%)} =
+\left(\frac{T_{\text{on}}}{T_{\text{total}}}\right) \times
+100\]</span></p>
+<p><span class="math display">\[\text{Average Voltage } (V_{\text{avg}})
+= V_{\text{max}} \times \left(\frac{\text{Duty
+Cycle}}{100}\right)\]</span></p>
+<p>For a 5V system:</p>
+<ul>
+<li><strong>0% Duty Cycle:</strong> Signal is always 0V <span
+class="math inline">\(\rightarrow\)</span> <span
+class="math inline">\(V_{\text{avg}} = 0\text{V}\)</span></li>
+<li><strong>25% Duty Cycle:</strong> Signal is 5V for 25% of the time
+<span class="math inline">\(\rightarrow\)</span> <span
+class="math inline">\(V_{\text{avg}} = 1.25\text{V}\)</span></li>
+<li><strong>50% Duty Cycle:</strong> Signal is 5V for 50% of the time
+<span class="math inline">\(\rightarrow\)</span> <span
+class="math inline">\(V_{\text{avg}} = 2.5\text{V}\)</span></li>
+<li><strong>100% Duty Cycle:</strong> Signal is always 5V <span
+class="math inline">\(\rightarrow\)</span> <span
+class="math inline">\(V_{\text{avg}} = 5\text{V}\)</span></li>
+</ul>
+<h3 id="translating-binary-values-to-duty-cycles">Translating Binary
+Values to Duty Cycles</h3>
+<p>Microcontrollers use internal hardware timers and comparators to
+convert digital numbers from software into physical PWM duty cycles:</p>
+<ol type="1">
+<li><strong>Resolution:</strong> The resolution of a PWM channel
+determines how finely the duty cycle can be adjusted. An 8-bit
+resolution provides <span class="math inline">\(2^8 = 256\)</span>
+discrete levels (0 to 255), while a 10-bit resolution provides <span
+class="math inline">\(2^{10} = 1024\)</span> levels (0 to 1023).</li>
+<li><strong>The Counter Register:</strong> A hardware timer increments a
+counter continuously from 0 up to its maximum value, resetting back to 0
+at the end of each period.</li>
+<li><strong>The Compare Register:</strong> A target binary value is
+stored in a comparator register. For example, in an 8-bit system:
+<ul>
+<li>Binary <code>00000000</code> (Decimal 0) sets a 0% duty cycle.</li>
+<li>Binary <code>10000000</code> (Decimal 128) sets a ~50% duty cycle
+(<span class="math inline">\(128 / 255\)</span>).</li>
+<li>Binary <code>11111111</code> (Decimal 255) sets a 100% duty
+cycle.</li>
+</ul></li>
+<li><strong>Signal Generation:</strong> As long as the timer counter is
+below the value in the compare register, the output pin stays high (1).
+Once the counter exceeds that value, the output drops to low (0) until
+the counter resets.</li>
+</ol>
+<h3 id="driving-analog-loads">Driving Analog Loads</h3>
+<p>Analog loads respond to the average electrical power delivered over
+time rather than the discrete high-speed pulses, acting as natural
+low-pass filters:</p>
+<ul>
+<li><strong>DC Motors:</strong> The mechanical inertia of the rotor and
+the electrical inductance of the motor windings prevent the motor from
+stopping between pulses. Instead, the motor smooths the power delivery,
+rotating at a speed proportional to the average voltage.</li>
+<li><strong>LEDs:</strong> When driven by PWM at frequencies above 100
+Hz, the human eye cannot perceive the individual flashes due to
+persistence of vision. The eye averages the photons received over time,
+perceiving variations in duty cycle as changes in brightness.</li>
+<li><strong>Heating Elements and Thermoelectric Devices:</strong>
+Thermal mass prevents rapid temperature fluctuations, causing the heater
+to reach a steady-state temperature directly proportional to the applied
+average power.</li>
+<li><strong>True Analog Conversion (RC Filtering):</strong> For circuits
+requiring a clean, continuous DC voltage (such as audio signals or
+reference voltages), an external low-pass resistor-capacitor (RC) filter
+is added. The capacitor charges during the "on" state and discharges
+during the "off" state, smoothing the square wave into a ripple-free DC
+analog voltage.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

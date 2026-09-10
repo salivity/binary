@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is Roaring Bitmap Compression? - binary</title>
+    <meta name="description" content="Roaring bitmap compression is an advanced data structure designed to store and query large sets of 32-bit unsigned integers with exceptional speed and minimal memory overhead. Unlike traditional bitmaps or run-length encoding formats, Roaring bitmaps dyn">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-roaring-bitmap-compression">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is Roaring Bitmap Compression? - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-roaring-bitmap-compression" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Roaring bitmap compression is an advanced data structure designed to store and query large sets of 32-bit unsigned integers with exceptional speed and minimal memory overhead. Unlike traditional bitmaps or run-length encoding formats, Roaring bitmaps dyn" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-roaring-bitmap-compression">What Is Roaring Bitmap
+Compression?</h1>
+<p>Roaring bitmap compression is an advanced data structure designed to
+store and query large sets of 32-bit unsigned integers with exceptional
+speed and minimal memory overhead. Unlike traditional bitmaps or
+run-length encoding formats, Roaring bitmaps dynamically adapt their
+internal storage mechanism by partitioning data into chunks and storing
+them in array, bitset, or run containers based on local data density.
+This hybrid architecture allows systems to perform ultra-fast bitwise
+operations (AND, OR, XOR) directly on compressed data, making it a
+foundational indexing technology in modern analytical databases and
+search engines.</p>
+<h2 id="architecture-and-partitioning-strategy">Architecture and
+Partitioning Strategy</h2>
+<p>Roaring bitmaps divide the 32-bit integer space <span
+class="math inline">\([0, 2^{32} - 1]\)</span> into fixed-size chunks
+based on the binary representation of each number:</p>
+<ul>
+<li><strong>Top 16 Bits (Chunk Key):</strong> The most significant 16
+bits identify the specific chunk or partition (addressing up to 65,536
+distinct ranges).</li>
+<li><strong>Bottom 16 Bits (Container Value):</strong> The least
+significant 16 bits represent the actual value within that range <span
+class="math inline">\([0, 65,535]\)</span> and are stored inside a
+dedicated container.</li>
+</ul>
+<p>The top-level structure maintains an ordered dynamic array of 16-bit
+keys mapped to their corresponding containers. Because each container
+handles a maximum of <span class="math inline">\(2^{16} =
+65,536\)</span> distinct values, the system can select the optimal
+binary storage format per container independently.</p>
+<h2 id="the-three-container-types">The Three Container Types</h2>
+<p>Roaring bitmaps rely on three distinct container formats to optimize
+memory footprint and CPU cache efficiency according to the distribution
+of the integers.</p>
+<h3 id="1-array-containers-sparse-data">1. Array Containers (Sparse
+Data)</h3>
+<p>When a partition contains fewer than 4,096 integers, it is stored as
+an <strong>Array Container</strong>.</p>
+<ul>
+<li><strong>Storage:</strong> An array of sorted 16-bit unsigned
+integers.</li>
+<li><strong>Memory Cost:</strong> Exactly 2 bytes per integer. For
+instance, storing 1,000 integers consumes 2,000 bytes.</li>
+<li><strong>Threshold Logic:</strong> If the number of elements in an
+array container reaches 4,096, its memory consumption reaches <span
+class="math inline">\(4,096 \times 2 = 8,192\)</span> bytes (8 KB). At
+this threshold, it is automatically converted into a Bitset
+Container.</li>
+</ul>
+<h3 id="2-bitset-containers-dense-data">2. Bitset Containers (Dense
+Data)</h3>
+<p>When a partition contains 4,096 or more integers, it is stored as a
+<strong>Bitset Container</strong>.</p>
+<ul>
+<li><strong>Storage:</strong> A fixed-size bit array consisting of 1,024
+64-bit words (<span class="math inline">\(1,024 \times 64 =
+65,536\)</span> bits = 8,192 bytes / 8 KB).</li>
+<li><strong>Memory Cost:</strong> Always fixed at 8 KB, regardless of
+whether it holds 4,096 or 65,536 integers.</li>
+<li><strong>Bitwise Representation:</strong> The <span
+class="math inline">\(n\)</span>-th bit in the bitset is set to
+<code>1</code> if the integer <span class="math inline">\(n\)</span> is
+present in the set, and <code>0</code> otherwise.</li>
+</ul>
+<h3 id="3-run-containers-contiguous-ranges">3. Run Containers
+(Contiguous Ranges)</h3>
+<p>A <strong>Run Container</strong> is used when data contains long,
+consecutive sequences of integers (runs), such as
+<code>[10-500, 1000-2000]</code>.</p>
+<ul>
+<li><strong>Storage:</strong> An array of 16-bit integer pairs
+representing <code>(start_value, length)</code>. For example, the range
+<span class="math inline">\([10, 14]\)</span> is encoded as the pair
+<code>(10, 4)</code>.</li>
+<li><strong>Memory Cost:</strong> 4 bytes per run (2 bytes for the start
+value and 2 bytes for the run length).</li>
+<li><strong>Efficiency:</strong> Storing a contiguous block of 10,000
+consecutive integers takes only 4 bytes in a Run Container, compared to
+8 KB in a Bitset Container or 20 KB in an uncompressed array.</li>
+</ul>
+<h2 id="dynamic-adaptation-and-container-conversion">Dynamic Adaptation
+and Container Conversion</h2>
+<p>Roaring bitmaps evaluate data distributions both on write operations
+and through explicit optimization passes:</p>
+<ol type="1">
+<li><strong>Threshold-Based Conversion:</strong> An Array Container
+converts to a Bitset Container as soon as cardinality exceeds 4,095
+elements. If removals drop the cardinality back down to 4,096 or below,
+it converts back to an Array Container.</li>
+<li><strong>Explicit Run Optimization
+(<code>runOptimize</code>):</strong> Systems can analyze containers to
+determine if converting to Run Containers yields a smaller memory
+footprint. A Bitset Container with fewer than 2,048 runs or an Array
+Container with tightly clustered integers will be converted into a Run
+Container when it reduces total byte size.</li>
+</ol>
+<h2 id="efficient-bitwise-set-operations">Efficient Bitwise Set
+Operations</h2>
+<p>The primary advantage of Roaring bitmaps is fast set algebra (AND,
+OR, XOR, ANDNOT) executed directly at the container level:</p>
+<ul>
+<li><strong>Bitset vs. Bitset:</strong> Operations execute via
+SIMD-accelerated 64-bit CPU instructions (e.g., bitwise
+<code>AND</code>/<code>OR</code> instructions directly over the 1,024
+64-bit words).</li>
+<li><strong>Array vs. Array:</strong> Set operations use two-pointer
+merge algorithms or binary search branching depending on size
+differentials.</li>
+<li><strong>Array vs. Bitset:</strong> Elements from the array container
+are directly tested against or inserted into the 8 KB bitset using bit
+shifts and masks without converting the bitset.</li>
+<li><strong>Run vs. Run / Bitset / Array:</strong> Handled via interval
+intersection and union algorithms or by scanning run intervals directly
+into bitmasks.</li>
+</ul>
+<p>By combining the low memory usage of sparse arrays, the fixed-bound
+saturation of bitsets, and the compression power of run-length encoding,
+Roaring bitmaps deliver dense indexing performance that maximizes CPU
+cache locality and throughput in high-scale binary systems.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Reed-Muller Codes Correct Multidimensional Errors - binary</title>
+    <meta name="description" content="Reed-Muller (RM) codes are a foundational class of linear error-correcting codes that model information as multivariate polynomials evaluated over a binary hypercube. By mapping binary data to geometric coordinates across multiple dimensions, these codes">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-reed-muller-codes-correct-multidimensional-errors">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Reed-Muller Codes Correct Multidimensional Errors - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-reed-muller-codes-correct-multidimensional-errors" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Reed-Muller (RM) codes are a foundational class of linear error-correcting codes that model information as multivariate polynomials evaluated over a binary hypercube. By mapping binary data to geometric coordinates across multiple dimensions, these codes" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-reed-muller-codes-correct-multidimensional-errors">How
+Reed-Muller Codes Correct Multidimensional Errors</h1>
+<p>Reed-Muller (RM) codes are a foundational class of linear
+error-correcting codes that model information as multivariate
+polynomials evaluated over a binary hypercube. By mapping binary data to
+geometric coordinates across multiple dimensions, these codes structure
+redundancy so that errors localized or dispersed across multidimensional
+binary patterns can be detected and systematically resolved. Through
+fast majority-logic decoding, Reed-Muller codes isolate and eliminate
+corrupted bits level by level across affine subspaces, restoring the
+original binary transmission.</p>
+<h3 id="binary-representation-via-multivariate-polynomials">Binary
+Representation via Multivariate Polynomials</h3>
+<p>A classic binary Reed-Muller code, denoted as <span
+class="math inline">\(\text{RM}(r, m)\)</span>, is defined by two
+integer parameters: the order <span class="math inline">\(r\)</span> and
+the dimension <span class="math inline">\(m\)</span>, where <span
+class="math inline">\(0 \le r \le m\)</span>. The code length is <span
+class="math inline">\(n = 2^m\)</span>, representing the total number of
+vertices in an <span class="math inline">\(m\)</span>-dimensional binary
+vector space <span class="math inline">\(\mathbb{F}_2^m\)</span>.</p>
+<ol type="1">
+<li><strong>Coordinate Mapping:</strong> Every position in a codeword
+corresponds to a binary vector <span class="math inline">\((v_1, v_2,
+\dots, v_m) \in \{0, 1\}^m\)</span>.</li>
+<li><strong>Boolean Polynomials:</strong> A message is encoded as the
+evaluation of a multivariate Boolean polynomial <span
+class="math inline">\(f(x_1, x_2, \dots, x_m)\)</span> of degree at most
+<span class="math inline">\(r\)</span> over <span
+class="math inline">\(\mathbb{F}_2\)</span>.</li>
+<li><strong>Codeword Construction:</strong> The general polynomial takes
+the form: <span class="math display">\[f(x_1, \dots, x_m) = a_0 +
+\sum_{i=1}^m a_i x_i + \sum_{i &lt; j} a_{ij} x_i x_j + \dots +
+\sum_{i_1 &lt; \dots &lt; i_r} a_{i_1 \dots i_r} x_{i_1} \dots
+x_{i_r}\]</span> where all coefficients <span
+class="math inline">\(a\)</span> and variables <span
+class="math inline">\(x\)</span> belong to <span
+class="math inline">\(\{0, 1\}\)</span>. Evaluating <span
+class="math inline">\(f\)</span> across all <span
+class="math inline">\(2^m\)</span> binary coordinate combinations
+produces the <span class="math inline">\(2^m\)</span>-bit codeword.</li>
+</ol>
+<p>Because the variables represent orthogonal axes in an <span
+class="math inline">\(m\)</span>-dimensional space, the binary codeword
+inherently arranges message bits across a geometric hypercube.</p>
+<h3 id="modeling-multidimensional-error-patterns">Modeling
+Multidimensional Error Patterns</h3>
+<p>When a codeword is transmitted through a noisy channel, bit flips
+alter values at specific coordinates within the <span
+class="math inline">\(m\)</span>-dimensional hypercube. The received
+vector <span class="math inline">\(R\)</span> is expressed as <span
+class="math inline">\(R = C \oplus E\)</span>, where <span
+class="math inline">\(C\)</span> is the transmitted codeword, <span
+class="math inline">\(E\)</span> is the binary error vector, and <span
+class="math inline">\(\oplus\)</span> denotes bitwise modulo-2
+addition.</p>
+<p>In the binary hypercube framework:</p>
+<ul>
+<li>An error pattern <span class="math inline">\(E\)</span> corresponds
+to an indicator function that takes the value <span
+class="math inline">\(1\)</span> at corrupted coordinates and <span
+class="math inline">\(0\)</span> elsewhere.</li>
+<li>Errors may manifest as isolated coordinate flips, dense clusters
+along particular sub-dimensions (lines or planes), or distributed
+patterns spanning multiple orthogonal directions.</li>
+<li>The minimum Hamming distance of an <span
+class="math inline">\(\text{RM}(r, m)\)</span> code is <span
+class="math inline">\(d_{\min} = 2^{m-r}\)</span>, which guarantees the
+correction of any arbitrary error pattern containing up to: <span
+class="math display">\[t = \left\lfloor \frac{2^{m-r} - 1}{2}
+\right\rfloor\]</span> erroneous bits, regardless of how they are
+distributed across the multidimensional grid.</li>
+</ul>
+<h3 id="error-correction-via-majority-logic-decoding">Error Correction
+via Majority-Logic Decoding</h3>
+<p>Reed-Muller codes correct errors using Reed's majority-logic
+decoding, an algorithm that leverages the geometric properties of affine
+subspaces within <span class="math inline">\(\mathbb{F}_2^m\)</span>.
+The decoder works iteratively from the highest-degree terms down to the
+constant term.</p>
+<h4 id="1-isolating-higher-degree-coefficients">1. Isolating
+Higher-Degree Coefficients</h4>
+<p>To determine the coefficient of a degree-<span
+class="math inline">\(k\)</span> monomial (such as <span
+class="math inline">\(a_{1,2,\dots,k}\)</span> for <span
+class="math inline">\(x_1 x_2 \dots x_k\)</span>), the algorithm selects
+an affine subspace of dimension <span class="math inline">\(m-k\)</span>
+where the remaining variables <span class="math inline">\((x_{k+1},
+\dots, x_m)\)</span> vary over all <span
+class="math inline">\(2^{m-k}\)</span> possible states while the target
+variables are held fixed.</p>
+<p>Summing the received values over this subspace yields a parity check.
+Because lower-degree polynomials evaluate to an even number of ones
+across complete affine subspaces, their contributions cancel out under
+modulo-2 arithmetic. Consequently, each parity check isolates the
+specific target coefficient plus a combination of channel errors.</p>
+<h4 id="2-majority-voting">2. Majority Voting</h4>
+<p>For each coefficient of degree <span
+class="math inline">\(k\)</span>, there exist <span
+class="math inline">\(2^{m-k}\)</span> parallel, non-overlapping affine
+subspaces that yield independent estimates of that coefficient.</p>
+<p>The decoder computes the binary parity sum for each subspace and
+applies a majority vote:</p>
+<ul>
+<li>If the majority of the parity checks evaluate to <span
+class="math inline">\(1\)</span>, the coefficient is decided as <span
+class="math inline">\(1\)</span>.</li>
+<li>If the majority evaluate to <span class="math inline">\(0\)</span>,
+the coefficient is decided as <span
+class="math inline">\(0\)</span>.</li>
+</ul>
+<p>Because the error budget <span class="math inline">\(t &lt;
+2^{m-r-1}\)</span> is smaller than half the number of independent checks
+(<span class="math inline">\(2^{m-k-1}\)</span> for <span
+class="math inline">\(k \le r\)</span>), corruptions cannot flip the
+outcome of the majority vote.</p>
+<h4 id="3-successive-cancellation-of-errors">3. Successive Cancellation
+of Errors</h4>
+<p>Once all coefficients of degree <span
+class="math inline">\(r\)</span> are determined:</p>
+<ol type="1">
+<li>Their corresponding polynomial evaluations are generated and
+subtracted (via modulo-2 addition) from the received vector.</li>
+<li>This removes the higher-order component from the corrupted word,
+effectively reducing the decoding problem to an <span
+class="math inline">\(\text{RM}(r-1, m)\)</span> code.</li>
+<li>The process repeats recursively for degrees <span
+class="math inline">\(r-1, r-2, \dots, 0\)</span>.</li>
+</ol>
+<p>After the constant term <span class="math inline">\(a_0\)</span> is
+evaluated and subtracted, all errors in the received word are fully
+rectified, reconstructing the exact original binary message.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

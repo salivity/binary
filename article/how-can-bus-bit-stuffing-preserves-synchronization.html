@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How CAN Bus Bit Stuffing Preserves Synchronization - binary</title>
+    <meta name="description" content="The Controller Area Network (CAN) bus protocol relies on a mechanism known as bit stuffing to maintain clock synchronization across all communicating nodes and detect transmission errors. Because CAN uses Non-Return-to-Zero (NRZ) bit coding, long sequenc">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-can-bus-bit-stuffing-preserves-synchronization">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How CAN Bus Bit Stuffing Preserves Synchronization - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-can-bus-bit-stuffing-preserves-synchronization" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Controller Area Network (CAN) bus protocol relies on a mechanism known as bit stuffing to maintain clock synchronization across all communicating nodes and detect transmission errors. Because CAN uses Non-Return-to-Zero (NRZ) bit coding, long sequenc" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-can-bus-bit-stuffing-preserves-synchronization">How CAN Bus
+Bit Stuffing Preserves Synchronization</h1>
+<p>The Controller Area Network (CAN) bus protocol relies on a mechanism
+known as bit stuffing to maintain clock synchronization across all
+communicating nodes and detect transmission errors. Because CAN uses
+Non-Return-to-Zero (NRZ) bit coding, long sequences of identical binary
+values (consecutive 0s or 1s) lack the signal transitions needed for
+nodes to recalibrate their internal clocks. Bit stuffing solves this by
+automatically inserting a complementary bit after five consecutive
+identical bits, ensuring regular voltage transitions for synchronization
+while remaining transparent to the upper data layer.</p>
+<h2 id="the-synchronization-challenge-in-nrz-encoding">The
+Synchronization Challenge in NRZ Encoding</h2>
+<p>In binary transmission using NRZ encoding, a logical '0' (dominant
+state) and a logical '1' (recessive state) maintain a constant voltage
+level for the entire duration of the bit. While NRZ is
+bandwidth-efficient, it does not include an embedded clock line.</p>
+<p>Nodes on a CAN network rely on signal state transitions—specifically
+the edges from recessive to dominant or dominant to recessive—to
+resynchronize their internal clock oscillators. If a transmitter sends a
+long sequence of identical bits, such as <code>00000000</code> or
+<code>11111111</code>, the physical bus line remains at a static voltage
+level. Due to minor oscillator tolerances and temperature variations
+between microcontrollers, receiving nodes would gradually drift out of
+sync, leading to bit-timing errors and data corruption.</p>
+<h2 id="how-the-bit-stuffing-mechanism-works">How the Bit-Stuffing
+Mechanism Works</h2>
+<p>Bit stuffing operates automatically at the physical/data-link layer
+boundary during the transmission of CAN frames.</p>
+<ol type="1">
+<li><strong>Transmission (Stuffing):</strong> While generating the frame
+fields (from the Start of Frame through the Cyclic Redundancy Check
+sequence), the transmitter monitors the outgoing bitstream. If it
+transmits five consecutive bits of the same logical polarity (e.g.,
+<code>11111</code> or <code>00000</code>), the hardware automatically
+injects a sixth "stuff bit" of the opposite polarity (e.g.,
+<code>111110</code> or <code>000001</code>).</li>
+<li><strong>Reception (De-stuffing):</strong> The receiving node
+monitors the incoming bitstream. When it detects five consecutive bits
+of the same logical value, it checks the sixth bit. If the sixth bit is
+the opposite value, the receiver recognizes it as a stuff bit, uses the
+transition for clock resynchronization, strips the stuff bit from the
+sequence, and processes only the original data.</li>
+</ol>
+<h2 id="preserving-synchronization-in-the-binary-system">Preserving
+Synchronization in the Binary System</h2>
+<p>In the binary system used by CAN, bit stuffing guarantees that a
+signal transition occurs at least once every ten bit times (five
+identical bits followed by a stuff bit, potentially followed by another
+set of inverse bits).</p>
+<p>When the voltage level changes at the stuff bit edge, the CAN
+controller's bit-timing logic triggers "phase resynchronization." The
+controller adjusts its internal Phase Buffer Segments (Phase_Seg1 and
+Phase_Seg2) to align the nominal sample point directly with the center
+of incoming bits. This continuous realignment ensures that every node
+samples the bus value accurately, regardless of payload length or clock
+jitter.</p>
+<h2 id="error-detection-and-frame-demarcation">Error Detection and Frame
+Demarcation</h2>
+<p>Bit stuffing also provides an integrated error-checking feature:</p>
+<ul>
+<li><strong>Stuff Errors:</strong> If a receiver detects six consecutive
+bits of the identical logical level within a stuffed field, the rule has
+been violated. The receiver immediately treats this as a "Stuff Error,"
+invalidates the frame, and broadcasts an active error frame on the
+bus.</li>
+<li><strong>Fixed-Form Fields:</strong> Certain control sections of the
+CAN frame do not use bit stuffing, including the CRC Delimiter, ACK
+Slot, ACK Delimiter, and the End of Frame (EOF) field. The EOF consists
+of seven consecutive recessive bits (<code>1111111</code>). Because bit
+stuffing never allows seven consecutive identical bits during normal
+data transmission, the EOF reliably signals the absolute end of the
+frame without ambiguity.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

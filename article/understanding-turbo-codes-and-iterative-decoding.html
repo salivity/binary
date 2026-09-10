@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Turbo Codes and Iterative Decoding - binary</title>
+    <meta name="description" content="Turbo codes are a class of high-performance forward error correction (FEC) codes that revolutionized digital communications by enabling data transmission rates exceptionally close to the theoretical Shannon limit. By combining parallel convolutional enco">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/understanding-turbo-codes-and-iterative-decoding">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Understanding Turbo Codes and Iterative Decoding - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/understanding-turbo-codes-and-iterative-decoding" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Turbo codes are a class of high-performance forward error correction (FEC) codes that revolutionized digital communications by enabling data transmission rates exceptionally close to the theoretical Shannon limit. By combining parallel convolutional enco" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="understanding-turbo-codes-and-iterative-decoding">Understanding
+Turbo Codes and Iterative Decoding</h1>
+<p>Turbo codes are a class of high-performance forward error correction
+(FEC) codes that revolutionized digital communications by enabling data
+transmission rates exceptionally close to the theoretical Shannon limit.
+By combining parallel convolutional encoders with an interleaver and
+employing an iterative decoding mechanism, turbo codes allow receivers
+to reconstruct original binary data streams with remarkable accuracy,
+even across channels with severe signal noise and interference.</p>
+<h3 id="the-structure-of-turbo-codes">The Structure of Turbo Codes</h3>
+<p>A standard turbo encoder processes an input sequence of binary digits
+(bits) using two constituent convolutional encoders separated by an
+interleaver:</p>
+<ol type="1">
+<li><strong>Systematic Stream:</strong> The original binary input is
+transmitted directly without alteration.</li>
+<li><strong>First Parity Stream:</strong> The first convolutional
+encoder processes the binary input in its original sequence to produce a
+set of parity bits.</li>
+<li><strong>Interleaver:</strong> The binary input is rearranged into a
+pseudo-random order. This step decorrelates the sequence and prevents
+localized bursts of channel noise from affecting both encoders
+simultaneously.</li>
+<li><strong>Second Parity Stream:</strong> The second convolutional
+encoder processes the interleaved binary sequence to generate a second
+set of parity bits.</li>
+</ol>
+<p>These three components—the systematic bits and both sets of parity
+bits—are combined and transmitted across the communication channel.</p>
+<h3 id="how-iterative-decoding-works">How Iterative Decoding Works</h3>
+<p>At the receiving end, channel noise often corrupts the transmitted
+signal, turning discrete binary values into noisy, continuous analog
+samples. The turbo decoder interprets these samples using iterative
+decoding, which operates on probabilities rather than making immediate
+"hard" binary decisions (0 or 1).</p>
+<h4 id="1-soft-input-soft-output-siso-decoders">1. Soft-Input
+Soft-Output (SISO) Decoders</h4>
+<p>The turbo decoder consists of two component decoders that work
+collaboratively using algorithms such as the Bahl-Cocke-Jelinek-Raviv
+(BCJR) algorithm or Maximum A Posteriori (MAP) estimation. These
+decoders accept soft channel information and output refined probability
+estimates known as Log-Likelihood Ratios (LLRs). An LLR represents the
+logarithm of the ratio of the probability that a bit is a 0 versus a
+1.</p>
+<h4 id="2-information-exchange-and-feedback-loops">2. Information
+Exchange and Feedback Loops</h4>
+<p>The iterative decoding cycle functions as follows:</p>
+<ul>
+<li><strong>Decoder 1:</strong> Receives the noisy systematic data and
+the first parity stream to compute initial LLR values for each bit. It
+subtracts its inputs to isolate new statistical insights, known as
+<strong>extrinsic information</strong>.</li>
+<li><strong>Interleaving:</strong> The extrinsic information from
+Decoder 1 is interleaved to match the shuffled structure of the second
+encoder.</li>
+<li><strong>Decoder 2:</strong> Uses the interleaved systematic data,
+the second parity stream, and the extrinsic information provided by
+Decoder 1. It refines the probabilities and produces its own extrinsic
+information.</li>
+<li><strong>Deinterleaving and Feedback:</strong> Decoder 2's extrinsic
+information is deinterleaved back to the original bit order and fed back
+to Decoder 1 as <em>a priori</em> probability for the next cycle.</li>
+</ul>
+<h4 id="3-convergence-to-binary-decisions">3. Convergence to Binary
+Decisions</h4>
+<p>This exchange repeats for a predetermined number of iterations
+(typically between 4 and 10) or until the probability values stabilize.
+With each cycle, the decoders cross-validate their estimates,
+systematically reducing uncertainty caused by noise.</p>
+<p>Once the iterations are complete, the final LLRs undergo a hard
+threshold decision: positive values are resolved to binary
+<code>0</code> (or <code>1</code>, depending on signaling convention),
+and negative values are resolved to the opposite binary state. This
+final step yields a clean, reconstructed binary data stream identical to
+the original transmission.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

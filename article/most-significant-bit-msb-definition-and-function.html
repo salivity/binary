@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Most Significant Bit (MSB): Definition and Function - binary</title>
+    <meta name="description" content="This article provides a concise overview of the Most Significant Bit (MSB) within the binary number system. It explains the fundamental definition of the MSB, its positional significance, its exact mathematical function in both unsigned and signed repres">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/most-significant-bit-msb-definition-and-function">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Most Significant Bit (MSB): Definition and Function - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/most-significant-bit-msb-definition-and-function" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article provides a concise overview of the Most Significant Bit (MSB) within the binary number system. It explains the fundamental definition of the MSB, its positional significance, its exact mathematical function in both unsigned and signed repres" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="most-significant-bit-msb-definition-and-function">Most
+Significant Bit (MSB): Definition and Function</h1>
+<p>This article provides a concise overview of the Most Significant Bit
+(MSB) within the binary number system. It explains the fundamental
+definition of the MSB, its positional significance, its exact
+mathematical function in both unsigned and signed representations, and
+the formulas used to extract or evaluate it in digital computation.</p>
+<hr />
+<h2 id="what-is-the-most-significant-bit-msb">What is the Most
+Significant Bit (MSB)?</h2>
+<p>In a binary sequence, the <strong>Most Significant Bit (MSB)</strong>
+is the bit position that holds the highest numerical value or weight. It
+is located at the far-left position of a conventional binary string.
+Because the binary system is a base-2 positional numeral system, the
+placement of a bit determines its magnitude, making the MSB the most
+influential bit in determining the overall magnitude of the number.</p>
+<p>For example, in the 8-bit binary number <code>10000000</code>, the
+leading <code>1</code> is the MSB, representing a decimal value of 128.
+Conversely, the bit at the far right is the Least Significant Bit (LSB),
+representing a value of <span class="math inline">\(2^0 =
+1\)</span>.</p>
+<hr />
+<h2 id="positional-weight-in-an-n-bit-system">Positional Weight in an
+<span class="math inline">\(n\)</span>-Bit System</h2>
+<p>In an <span class="math inline">\(n\)</span>-bit binary string
+represented as:</p>
+<p><span class="math display">\[B = (b_{n-1}, b_{n-2}, \dots, b_1,
+b_0)_2\]</span></p>
+<p>where each <span class="math inline">\(b_i \in \{0, 1\}\)</span>:</p>
+<ul>
+<li><strong>The MSB is bit <span
+class="math inline">\(b_{n-1}\)</span></strong> (the leftmost bit).</li>
+<li><strong>The positional weight of the MSB is <span
+class="math inline">\(2^{n-1}\)</span></strong>.</li>
+</ul>
+<hr />
+<h2 id="mathematical-functions-of-the-msb">Mathematical Functions of the
+MSB</h2>
+<p>The mathematical function and contribution of the MSB vary depending
+on whether the binary representation is unsigned or signed.</p>
+<h3 id="1-unsigned-binary-representation">1. Unsigned Binary
+Representation</h3>
+<p>In an unsigned binary system, the total decimal value <span
+class="math inline">\(V\)</span> of an <span
+class="math inline">\(n\)</span>-bit number is given by:</p>
+<p><span class="math display">\[V = \sum_{i=0}^{n-1} b_i \cdot 2^i =
+(b_{n-1} \cdot 2^{n-1}) + \sum_{i=0}^{n-2} b_i \cdot 2^i\]</span></p>
+<p>Here, the MSB function simply adds <span
+class="math inline">\(2^{n-1}\)</span> to the total value when <span
+class="math inline">\(b_{n-1} = 1\)</span>, and <span
+class="math inline">\(0\)</span> when <span
+class="math inline">\(b_{n-1} = 0\)</span>.</p>
+<h3 id="2-signed-binary-representation-twos-complement">2. Signed Binary
+Representation (Two's Complement)</h3>
+<p>In two's complement notation—the standard method for representing
+signed integers in computer systems—the MSB acts as the sign bit while
+retaining positional weight.</p>
+<p>The mathematical value <span class="math inline">\(V\)</span> is
+defined as:</p>
+<p><span class="math display">\[V = -b_{n-1} \cdot 2^{n-1} +
+\sum_{i=0}^{n-2} b_i \cdot 2^i\]</span></p>
+<ul>
+<li>If the <strong>MSB is 0</strong>, the number is non-negative (<span
+class="math inline">\(V \ge 0\)</span>).</li>
+<li>If the <strong>MSB is 1</strong>, the number is negative (<span
+class="math inline">\(V &lt; 0\)</span>), with the MSB applying a
+negative weight of <span class="math inline">\(-2^{n-1}\)</span>.</li>
+</ul>
+<hr />
+<h2 id="mathematical-extraction-of-the-msb">Mathematical Extraction of
+the MSB</h2>
+<p>To mathematically extract the value of the MSB from an integer <span
+class="math inline">\(x\)</span> in an <span
+class="math inline">\(n\)</span>-bit system, the following arithmetic
+function is used:</p>
+<p><span class="math display">\[\text{MSB}(x) = \left\lfloor
+\frac{x}{2^{n-1}} \right\rfloor \pmod 2\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(\lfloor \dots \rfloor\)</span>
+represents the floor function.</li>
+<li>Dividing by <span class="math inline">\(2^{n-1}\)</span> shifts the
+<span class="math inline">\((n-1)\)</span>-th bit to the unit
+position.</li>
+<li>The modulo <span class="math inline">\(2\)</span> operation isolates
+the target bit.</li>
+</ul>
+<p>In discrete bitwise arithmetic, this operation is expressed as:</p>
+<p><span class="math display">\[\text{MSB}(x) = (x \gg (n - 1)) \ \&amp;
+\ 1\]</span></p>
+<p>where <span class="math inline">\(\gg\)</span> denotes the
+arithmetic/logical right shift operator and <span
+class="math inline">\(\&amp;\)</span> represents the bitwise AND
+operator.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

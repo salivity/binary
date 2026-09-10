@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Encode FSMs into Binary Transition Tables - binary</title>
+    <meta name="description" content="This article outlines the systematic process of converting any finite state machine (FSM) into binary-encoded state transition tables for digital hardware implementation. The procedure involves calculating the required number of binary bits for states, i">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-to-encode-fsms-into-binary-transition-tables">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How to Encode FSMs into Binary Transition Tables - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-to-encode-fsms-into-binary-transition-tables" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article outlines the systematic process of converting any finite state machine (FSM) into binary-encoded state transition tables for digital hardware implementation. The procedure involves calculating the required number of binary bits for states, i" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-to-encode-fsms-into-binary-transition-tables">How to Encode
+FSMs into Binary Transition Tables</h1>
+<p>This article outlines the systematic process of converting any finite
+state machine (FSM) into binary-encoded state transition tables for
+digital hardware implementation. The procedure involves calculating the
+required number of binary bits for states, inputs, and outputs,
+assigning unique binary codes to each symbolic element, translating the
+conceptual state transitions into a binary truth table, and handling
+unused binary states. This conversion bridges high-level algorithmic
+state diagrams and low-level digital logic circuits such as flip-flops
+and combinational logic gates.</p>
+<hr />
+<h3 id="step-1-quantify-states-inputs-and-outputs">Step 1: Quantify
+States, Inputs, and Outputs</h3>
+<p>To represent an FSM in binary, first determine the minimum number of
+binary digits (bits) required to uniquely identify all discrete states,
+input conditions, and output symbols.</p>
+<ul>
+<li><strong>State Bits (<span
+class="math inline">\(n\)</span>):</strong> If an FSM has <span
+class="math inline">\(N\)</span> total states, the number of required
+state variables (flip-flops) <span class="math inline">\(n\)</span> is
+calculated using the ceiling function: <span class="math display">\[n =
+\lceil \log_2(N) \rceil\]</span></li>
+<li><strong>Input Bits (<span
+class="math inline">\(k\)</span>):</strong> If the machine responds to
+<span class="math inline">\(M\)</span> distinct input conditions, the
+number of binary input lines <span class="math inline">\(k\)</span> is:
+<span class="math display">\[k = \lceil \log_2(M) \rceil\]</span></li>
+<li><strong>Output Bits (<span
+class="math inline">\(m\)</span>):</strong> If the system generates
+<span class="math inline">\(P\)</span> distinct outputs, the number of
+binary output lines <span class="math inline">\(m\)</span> is: <span
+class="math display">\[m = \lceil \log_2(P) \rceil\]</span></li>
+</ul>
+<h3 id="step-2-assign-binary-codes-state-assignment">Step 2: Assign
+Binary Codes (State Assignment)</h3>
+<p>Assign a unique <span class="math inline">\(n\)</span>-bit binary
+string to every named state in the FSM. While different encoding schemes
+exist (such as Gray code or One-Hot encoding), standard binary encoding
+assigns sequential binary values to each state:</p>
+<ul>
+<li>State <span class="math inline">\(S_0 \rightarrow
+00\dots0_2\)</span></li>
+<li>State <span class="math inline">\(S_1 \rightarrow
+00\dots1_2\)</span></li>
+<li>State <span class="math inline">\(S_{N-1} \rightarrow \text{binary
+representation of } (N-1)\)</span></li>
+</ul>
+<p>The same sequential assignment is applied to inputs (<span
+class="math inline">\(I_0, I_1, \dots\)</span>) and outputs (<span
+class="math inline">\(O_0, O_1, \dots\)</span>).</p>
+<h3 id="step-3-construct-the-symbolic-transition-table">Step 3:
+Construct the Symbolic Transition Table</h3>
+<p>Before full binary conversion, document the FSM’s behavior in a
+standard tabular format based on its state diagram. The symbolic table
+contains four primary columns:</p>
+<ol type="1">
+<li><strong>Present State (<span
+class="math inline">\(S\)</span>):</strong> The current state of the
+machine.</li>
+<li><strong>Input (<span class="math inline">\(X\)</span>):</strong> The
+active external condition.</li>
+<li><strong>Next State (<span
+class="math inline">\(S&#39;\)</span>):</strong> The state to which the
+machine transitions.</li>
+<li><strong>Output (<span class="math inline">\(Y\)</span>):</strong>
+The generated control signals (dependent on Present State and Input for
+a Mealy machine, or Present State only for a Moore machine).</li>
+</ol>
+<h3 id="step-4-map-symbolic-values-to-binary-vectors">Step 4: Map
+Symbolic Values to Binary Vectors</h3>
+<p>Replace all symbolic entries in the transition table with their
+corresponding binary representations:</p>
+<ul>
+<li>Replace the <strong>Present State</strong> with <span
+class="math inline">\(n\)</span> state variables: <span
+class="math inline">\(Q_{n-1}, Q_{n-2}, \dots, Q_0\)</span>.</li>
+<li>Replace the <strong>Input</strong> with <span
+class="math inline">\(k\)</span> input variables: <span
+class="math inline">\(X_{k-1}, X_{k-2}, \dots, X_0\)</span>.</li>
+<li>Replace the <strong>Next State</strong> with <span
+class="math inline">\(n\)</span> next-state variables: <span
+class="math inline">\(D_{n-1}, D_{n-2}, \dots, D_0\)</span> (or <span
+class="math inline">\(Q^+_{n-1}, \dots, Q^+_0\)</span>).</li>
+<li>Replace the <strong>Output</strong> with <span
+class="math inline">\(m\)</span> output variables: <span
+class="math inline">\(Y_{m-1}, Y_{m-2}, \dots, Y_0\)</span>.</li>
+</ul>
+<h3 id="step-5-complete-the-binary-state-transition-table">Step 5:
+Complete the Binary State Transition Table</h3>
+<p>Combine the binary inputs and present state variables to form the
+table's inputs (left side), and the next state variables and output
+variables to form the table's outputs (right side).</p>
+<p>For example, an FSM with 3 states (<span class="math inline">\(S_0,
+S_1, S_2\)</span>) requiring <span class="math inline">\(n=2\)</span>
+bits (<span class="math inline">\(Q_1, Q_0\)</span>) and 1 input bit
+(<span class="math inline">\(X\)</span>) produces a binary transition
+table like the following:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Present State (<span
+class="math inline">\(Q_1 Q_0\)</span>)</th>
+<th style="text-align: center;">Input (<span
+class="math inline">\(X\)</span>)</th>
+<th style="text-align: center;">Next State (<span
+class="math inline">\(Q_1^+ Q_0^+\)</span>)</th>
+<th style="text-align: center;">Output (<span
+class="math inline">\(Y\)</span>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(00\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(0\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(00\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(0\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(00\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(01\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(0\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(01\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(0\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(00\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(0\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(01\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(1\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(0\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(1\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(10\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(00\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(0\)</span></td>
+</tr>
+</tbody>
+</table>
+<h3 id="step-6-handle-unused-states-dont-care-conditions">Step 6: Handle
+Unused States (Don't-Care Conditions)</h3>
+<p>If the total number of states <span class="math inline">\(N\)</span>
+is not a power of 2, there will be <span class="math inline">\(2^n -
+N\)</span> unused binary combinations.</p>
+<ul>
+<li>Add the unused state combinations (e.g., <span
+class="math inline">\(Q_1 Q_0 = 11\)</span> in a 3-state machine) to the
+binary table.</li>
+<li>Assign <strong>Don’t-Care</strong> conditions (<span
+class="math inline">\(X\)</span>) to their corresponding Next State and
+Output entries.</li>
+</ul>
+<p>These don't-care entries provide flexibility to simplify the final
+Boolean equations during circuit synthesis.</p>
+<h3 id="step-7-derive-boolean-functions">Step 7: Derive Boolean
+Functions</h3>
+<p>Once the binary state transition table is complete, it acts as a
+standard truth table. Each Next State bit (<span
+class="math inline">\(Q^+\)</span>) and Output bit (<span
+class="math inline">\(Y\)</span>) is treated as a separate Boolean
+function of the Present State and Input variables. These functions can
+be directly extracted via Karnaugh Maps (K-maps) or automated logic
+minimization algorithms to implement the hardware using flip-flops and
+logic gates.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

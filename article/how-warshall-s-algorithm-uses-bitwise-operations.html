@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Warshall's Algorithm Uses Bitwise Operations - binary</title>
+    <meta name="description" content="Warshall's algorithm is a fundamental graph theory algorithm used to compute the transitive closure of a directed graph, determining whether a path exists between any two vertices. When implemented using the binary number system and bitwise operations, t">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-warshall-s-algorithm-uses-bitwise-operations">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Warshall's Algorithm Uses Bitwise Operations - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-warshall-s-algorithm-uses-bitwise-operations" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Warshall's algorithm is a fundamental graph theory algorithm used to compute the transitive closure of a directed graph, determining whether a path exists between any two vertices. When implemented using the binary number system and bitwise operations, t" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-warshalls-algorithm-uses-bitwise-operations">How Warshall's
+Algorithm Uses Bitwise Operations</h1>
+<p>Warshall's algorithm is a fundamental graph theory algorithm used to
+compute the transitive closure of a directed graph, determining whether
+a path exists between any two vertices. When implemented using the
+binary number system and bitwise operations, the algorithm replaces
+nested scalar boolean checks with parallel bitwise operations across
+machine words. This bit-level parallelism significantly improves
+performance, reducing the standard computational constant by a factor
+equal to the machine's word size (<span
+class="math inline">\(W\)</span>, typically 64 bits) and streamlining
+the <span class="math inline">\(O(V^3)\)</span> reachability
+calculation.</p>
+<h2 id="graph-representation-via-binary-bitsets">Graph Representation
+via Binary Bitsets</h2>
+<p>In standard implementations, a graph with <span
+class="math inline">\(V\)</span> vertices is represented as a <span
+class="math inline">\(V \times V\)</span> boolean adjacency matrix. In a
+bitwise implementation, each row of the matrix is treated as an array of
+binary words (or bitsets):</p>
+<ul>
+<li>Each bit at position <span class="math inline">\(j\)</span> in row
+<span class="math inline">\(i\)</span> represents an edge:
+<code>1</code> indicates a path exists from vertex <span
+class="math inline">\(i\)</span> to vertex <span
+class="math inline">\(j\)</span>, while <code>0</code> indicates no
+path.</li>
+<li>A single 64-bit integer can store the reachability state from one
+vertex to 64 target vertices simultaneously.</li>
+</ul>
+<h2 id="the-standard-vs-bitwise-formulation">The Standard vs. Bitwise
+Formulation</h2>
+<p>The standard Warshall's algorithm operates on the principle that a
+path exists from vertex <span class="math inline">\(i\)</span> to vertex
+<span class="math inline">\(j\)</span> through intermediate vertex <span
+class="math inline">\(k\)</span> if:</p>
+<p><span class="math display">\[R[i][j] = R[i][j] \lor (R[i][k] \land
+R[k][j])\]</span></p>
+<p>To evaluate this across all pairs, the algorithm iterates through all
+intermediate nodes <span class="math inline">\(k\)</span>, source nodes
+<span class="math inline">\(i\)</span>, and destination nodes <span
+class="math inline">\(j\)</span>.</p>
+<p>Using bitwise operations, this logic is condensed at the row
+level:</p>
+<ol type="1">
+<li><strong>Check Condition:</strong> Check if vertex <span
+class="math inline">\(i\)</span> can reach vertex <span
+class="math inline">\(k\)</span> by inspecting the <span
+class="math inline">\(k\)</span>-th bit of row <span
+class="math inline">\(i\)</span> using a bitwise AND with a mask:
+<code>(row[i] &amp; (1 &lt;&lt; k))</code>.</li>
+<li><strong>Batch Update:</strong> If the <span
+class="math inline">\(k\)</span>-th bit is <code>1</code>, every vertex
+reachable from <span class="math inline">\(k\)</span> is also reachable
+from <span class="math inline">\(i\)</span>. Instead of looping through
+all <span class="math inline">\(j\)</span> values individually, the
+algorithm performs a bitwise OR between the entire row <span
+class="math inline">\(i\)</span> and row <span
+class="math inline">\(k\)</span>: <span
+class="math display">\[\text{row}[i] = \text{row}[i] \mid
+\text{row}[k]\]</span></li>
+</ol>
+<p>If the <span class="math inline">\(k\)</span>-th bit is
+<code>0</code>, no path exists from <span
+class="math inline">\(i\)</span> to <span
+class="math inline">\(k\)</span>, and row <span
+class="math inline">\(i\)</span> remains unchanged for this
+iteration.</p>
+<h2 id="algorithmic-workflow">Algorithmic Workflow</h2>
+<p>For a graph with <span class="math inline">\(V\)</span> vertices
+using bitwise operations:</p>
+<ol type="1">
+<li>Initialize the adjacency matrix as an array of bitvectors of length
+<span class="math inline">\(V\)</span>.</li>
+<li>Loop through each intermediate vertex <span
+class="math inline">\(k\)</span> from <span
+class="math inline">\(0\)</span> to <span
+class="math inline">\(V-1\)</span>.</li>
+<li>Loop through each source vertex <span
+class="math inline">\(i\)</span> from <span
+class="math inline">\(0\)</span> to <span
+class="math inline">\(V-1\)</span>.</li>
+<li>Evaluate if the <span class="math inline">\(k\)</span>-th bit of
+bitvector <span class="math inline">\(i\)</span> is set to
+<code>1</code>.</li>
+<li>If set, apply the bitwise OR assignment
+<code>bitvector[i] |= bitvector[k]</code>.</li>
+<li>Once all <span class="math inline">\(k\)</span> iterations complete,
+the bitvectors contain the complete transitive closure.</li>
+</ol>
+<h2 id="performance-advantage">Performance Advantage</h2>
+<p>By leveraging hardware-level bitwise instructions:</p>
+<ul>
+<li><strong>Parallel Evaluation:</strong> A single CPU cycle performs
+the OR operation across 64 destination vertices at once (or 256/512 bits
+using SIMD vector instructions).</li>
+<li><strong>Reduced Memory Footprint:</strong> Storing adjacency states
+as packed binary bits reduces cache misses and memory bandwidth
+requirements by an <span class="math inline">\(8\times\)</span> factor
+compared to byte-based boolean arrays.</li>
+<li><strong>Complexity:</strong> The theoretical runtime improves from
+<span class="math inline">\(O(V^3)\)</span> scalar operations to <span
+class="math inline">\(O(V^3 / W)\)</span> bitwise word operations, where
+<span class="math inline">\(W\)</span> is the architecture word
+size.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

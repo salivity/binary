@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Integer Sign Check with x >> 31 - binary</title>
+    <meta name="description" content="In 32-bit computer architecture, the bitwise expression (x >> 31) is a fast, branchless technique used to extract the sign of a signed integer. This operation leverages the two's complement binary format and the behavior of the arithmetic right shift. By">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/understanding-integer-sign-check-with-x-31">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Understanding Integer Sign Check with x >> 31 - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/understanding-integer-sign-check-with-x-31" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In 32-bit computer architecture, the bitwise expression (x >> 31) is a fast, branchless technique used to extract the sign of a signed integer. This operation leverages the two's complement binary format and the behavior of the arithmetic right shift. By" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="understanding-integer-sign-check-with-x--31">Understanding
+Integer Sign Check with x &gt;&gt; 31</h1>
+<p>In 32-bit computer architecture, the bitwise expression
+<code>(x &gt;&gt; 31)</code> is a fast, branchless technique used to
+extract the sign of a signed integer. This operation leverages the two's
+complement binary format and the behavior of the arithmetic right shift.
+By shifting the most significant bit across the entire 32-bit register,
+the expression evaluates to <code>0</code> if the original number is
+non-negative and <code>-1</code> if the number is negative.</p>
+<h3 id="twos-complement-and-the-sign-bit">Two's Complement and the Sign
+Bit</h3>
+<p>Modern computing systems represent signed integers using two's
+complement notation. In a standard 32-bit signed integer, the bits are
+indexed from bit 0 (least significant bit) to bit 31 (most significant
+bit).</p>
+<p>Bit 31 acts as the sign bit:</p>
+<ul>
+<li>If bit 31 is <code>0</code>, the integer is zero or positive.</li>
+<li>If bit 31 is <code>1</code>, the integer is negative.</li>
+</ul>
+<p>The remaining 31 bits determine the magnitude, with negative values
+being represented by inverting all bits and adding one.</p>
+<h3 id="arithmetic-right-shift-vs-logical-right-shift">Arithmetic Right
+Shift vs. Logical Right Shift</h3>
+<p>To understand <code>(x &gt;&gt; 31)</code>, it is essential to
+distinguish between the two types of right shifts:</p>
+<ol type="1">
+<li><strong>Logical Right Shift:</strong> Shifts all bits to the right
+and fills the vacated high-order bits with zeroes, regardless of the
+original sign.</li>
+<li><strong>Arithmetic Right Shift:</strong> Shifts all bits to the
+right while preserving the original sign bit by copying it into all
+vacated high-order bit positions (a process known as sign
+extension).</li>
+</ol>
+<p>In most programming languages (such as C, C++, and Java) and
+processor instruction sets (like x86 and ARM), right-shifting a signed
+integer performs an arithmetic right shift.</p>
+<h3 id="execution-of-x--31">Execution of
+<code>(x &gt;&gt; 31)</code></h3>
+<p>When an arithmetic right shift of 31 positions is applied to a 32-bit
+integer <code>x</code>, the sign bit at position 31 is shifted into
+position 0, and every position to its left is filled with copies of that
+original sign bit.</p>
+<h4 id="case-1-non-negative-integers-x--0">Case 1: Non-Negative Integers
+(<code>x &gt;= 0</code>)</h4>
+<p>For any non-negative integer, the sign bit (bit 31) is
+<code>0</code>.</p>
+<ul>
+<li>Original binary state:
+<code>0xxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx</code></li>
+<li>Shifted by 31 bits:
+<code>0000 0000 0000 0000 0000 0000 0000 0000</code></li>
+<li><strong>Result:</strong> <code>0</code> in decimal.</li>
+</ul>
+<h4 id="case-2-negative-integers-x--0">Case 2: Negative Integers
+(<code>x &lt; 0</code>)</h4>
+<p>For any negative integer, the sign bit (bit 31) is
+<code>1</code>.</p>
+<ul>
+<li>Original binary state:
+<code>1xxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx</code></li>
+<li>Shifted by 31 bits:
+<code>1111 1111 1111 1111 1111 1111 1111 1111</code></li>
+<li>In two's complement binary, a 32-bit word filled entirely with
+<code>1</code>s equals <code>-1</code>.</li>
+<li><strong>Result:</strong> <code>-1</code> in decimal.</li>
+</ul>
+<h3 id="summary-of-practical-utility">Summary of Practical Utility</h3>
+<p>The expression <code>(x &gt;&gt; 31)</code> reduces a 32-bit signed
+number into a uniform bitmask of either all zeroes (<code>0</code>) or
+all ones (<code>-1</code>). This allows compilers and low-level
+programmers to construct branchless operations, avoiding CPU instruction
+pipeline stalls caused by conditional branching when computing absolute
+values, minimums, maximums, or signum functions.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

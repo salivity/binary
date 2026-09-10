@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is ULP and How Does It Measure Floating-Point Error? - binary</title>
+    <meta name="description" content="A Unit in the Last Place (ULP) is a fundamental metric used in computer science and numerical analysis to quantify the precision and error margins of floating-point computations. Because computers use finite binary representations to store infinitely con">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-ulp-and-how-does-it-measure-floating-point-error">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is ULP and How Does It Measure Floating-Point Error? - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-ulp-and-how-does-it-measure-floating-point-error" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A Unit in the Last Place (ULP) is a fundamental metric used in computer science and numerical analysis to quantify the precision and error margins of floating-point computations. Because computers use finite binary representations to store infinitely con" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-ulp-and-how-does-it-measure-floating-point-error">What
+Is ULP and How Does It Measure Floating-Point Error?</h1>
+<p>A Unit in the Last Place (ULP) is a fundamental metric used in
+computer science and numerical analysis to quantify the precision and
+error margins of floating-point computations. Because computers use
+finite binary representations to store infinitely continuous real
+numbers, arithmetic operations inevitably introduce rounding errors.
+This article explains the mechanics of an ULP, how it functions within
+binary floating-point systems, and how engineers and mathematicians use
+it to measure the accuracy of numerical algorithms.</p>
+<h2 id="the-problem-with-binary-floating-point-representation">The
+Problem with Binary Floating-Point Representation</h2>
+<p>Computers represent real numbers using the IEEE 754 standard, which
+structures a number in scientific binary notation:</p>
+<p><span class="math display">\[\text{Value} = (-1)^{\text{sign}} \times
+(1 + \text{significand}) \times 2^{\text{exponent}}\]</span></p>
+<p>Because the significand (or mantissa) has a fixed bit-width—24 bits
+for single precision (32-bit float) and 53 bits for double precision
+(64-bit float)—most real numbers cannot be represented exactly. Instead,
+they are rounded to the nearest representable floating-point number.</p>
+<p>This discretization creates gaps between consecutive representable
+numbers. The size of these gaps depends directly on the exponent: gaps
+are microscopic near zero and grow larger as the magnitude of the number
+increases.</p>
+<h2 id="defining-the-unit-in-the-last-place-ulp">Defining the Unit in
+the Last Place (ULP)</h2>
+<p>An ULP is the distance between a given floating-point number and the
+next immediately representable floating-point number. In other words, it
+represents the value of the least significant bit (LSB) of the
+significand when scaled by the current exponent.</p>
+<p>Mathematically, for a normalized floating-point number with base
+<span class="math inline">\(b = 2\)</span>, precision <span
+class="math inline">\(p\)</span> (number of bits in the significand),
+and exponent <span class="math inline">\(e\)</span>:</p>
+<p><span class="math display">\[\text{1 ULP} = 2^{e - (p -
+1)}\]</span></p>
+<p>For example, in IEEE 754 single precision (<span
+class="math inline">\(p = 24\)</span> bits):</p>
+<ul>
+<li>Between <span class="math inline">\(1.0\)</span> (<span
+class="math inline">\(2^0\)</span>) and <span
+class="math inline">\(2.0\)</span> (<span
+class="math inline">\(2^1\)</span>), the spacing between representable
+numbers is <span class="math inline">\(2^{0 - 23} = 2^{-23} \approx
+1.192 \times 10^{-7}\)</span>.</li>
+<li>Therefore, for any number in the range <span
+class="math inline">\([1.0, 2.0)\)</span>, <span
+class="math inline">\(1\text{ ULP} = 2^{-23}\)</span>.</li>
+</ul>
+<h2 id="how-ulp-quantifies-numerical-error">How ULP Quantifies Numerical
+Error</h2>
+<p>When evaluating an algorithm or a mathematical library function (like
+<span class="math inline">\(\sin(x)\)</span>, <span
+class="math inline">\(\ln(x)\)</span>, or <span
+class="math inline">\(\sqrt{x}\)</span>), error is measured by comparing
+the computed result to the mathematically exact real result.</p>
+<p>ULP quantifies this error relative to the hardware's ultimate
+capability:</p>
+<p><span class="math display">\[\text{Error in ULPs} =
+\frac{|\text{Computed Result} - \text{Exact Result}|}{\text{Value of 1
+ULP at Exact Result}}\]</span></p>
+<h3 id="1-the-standard-of-correct-rounding-05-ulp">1. The Standard of
+Correct Rounding (0.5 ULP)</h3>
+<p>Under standard IEEE 754 "round to nearest" modes, any basic
+arithmetic operation (<span class="math inline">\(+\)</span>, <span
+class="math inline">\(-\)</span>, <span
+class="math inline">\(\times\)</span>, <span
+class="math inline">\(/\)</span>, <span
+class="math inline">\(\sqrt{}\)</span>) is guaranteed to return the
+representable floating-point number closest to the exact mathematical
+result. The maximum possible error for a correctly rounded operation is
+<strong>0.5 ULP</strong>. If the error exceeds 0.5 ULP, the output has
+landed on an adjacent, less accurate floating-point number.</p>
+<h3 id="2-transcendental-functions-and-math-libraries">2. Transcendental
+Functions and Math Libraries</h3>
+<p>More complex mathematical functions (like trigonometric, exponential,
+or logarithmic routines) are often approximated using polynomial series.
+Measuring their error in ULPs allows developers to verify accuracy:</p>
+<ul>
+<li><strong>Faithfully Rounded:</strong> The error is strictly less than
+<strong>1.0 ULP</strong>, meaning the computed value is one of the two
+floating-point numbers immediately surrounding the exact result.</li>
+<li><strong>Correctly Rounded:</strong> The error is at most <strong>0.5
+ULP</strong>, meaning the implementation chose the absolute best
+possible representable value.</li>
+</ul>
+<h2 id="why-ulp-is-superior-to-absolute-and-relative-error">Why ULP Is
+Superior to Absolute and Relative Error</h2>
+<ul>
+<li><strong>Absolute Error</strong> (<span
+class="math inline">\(|\text{computed} - \text{exact}|\)</span>) fails
+because an error of <span class="math inline">\(0.0001\)</span> is
+catastrophic when dealing with values around <span
+class="math inline">\(10^{-6}\)</span>, but negligible for values around
+<span class="math inline">\(10^6\)</span>.</li>
+<li><strong>Relative Error</strong> (<span
+class="math inline">\(|\text{computed} - \text{exact}| /
+|\text{exact}|\)</span>) is scale-invariant, but it does not account for
+the step-like, non-uniform nature of binary floating-point grids.</li>
+<li><strong>ULP Error</strong> reflects both the scale of the number and
+the physical architecture of the machine. An error expressed in ULPs
+tells a developer exactly how many representable binary states the
+calculation drifted away from the theoretical optimum.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

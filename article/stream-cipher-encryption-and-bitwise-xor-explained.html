@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Cipher Encryption and Bitwise XOR Explained - binary</title>
+    <meta name="description" content="Stream cipher encryption is a symmetric cryptographic method that secures data by combining individual bits of plaintext with a pseudorandom keystream using the bitwise Exclusive-OR (XOR) operation. This article explains the fundamentals of stream cipher">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/stream-cipher-encryption-and-bitwise-xor-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Stream Cipher Encryption and Bitwise XOR Explained - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/stream-cipher-encryption-and-bitwise-xor-explained" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Stream cipher encryption is a symmetric cryptographic method that secures data by combining individual bits of plaintext with a pseudorandom keystream using the bitwise Exclusive-OR (XOR) operation. This article explains the fundamentals of stream cipher" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="stream-cipher-encryption-and-bitwise-xor-explained">Stream
+Cipher Encryption and Bitwise XOR Explained</h1>
+<p>Stream cipher encryption is a symmetric cryptographic method that
+secures data by combining individual bits of plaintext with a
+pseudorandom keystream using the bitwise Exclusive-OR (XOR) operation.
+This article explains the fundamentals of stream ciphers, how keystreams
+are generated, the mathematical logic behind binary XOR operations, and
+how this process enables both encryption and decryption.</p>
+<h2 id="what-is-a-stream-cipher">What Is a Stream Cipher?</h2>
+<p>A stream cipher is an encryption algorithm that processes data
+sequentially, typically one bit or one byte at a time. Unlike block
+ciphers, which divide data into fixed-size segments (such as 128-bit
+blocks), stream ciphers encrypt continuous streams of data.</p>
+<p>In a stream cipher system:</p>
+<ol type="1">
+<li>A shared secret key and an initialization vector (IV) are fed into a
+Pseudorandom Number Generator (PRNG) or keystream generator.</li>
+<li>The generator produces a continuous sequence of binary digits known
+as the <strong>keystream</strong>.</li>
+<li>The keystream is synchronized with the binary representation of the
+original message (<strong>plaintext</strong>).</li>
+</ol>
+<h2 id="the-role-of-the-binary-number-system">The Role of the Binary
+Number System</h2>
+<p>All digital data—text, audio, video, or files—is represented at the
+machine level as binary digits (bits): <code>0</code>s and
+<code>1</code>s. To encrypt data using a stream cipher:</p>
+<ul>
+<li>The plaintext is translated into a binary string.</li>
+<li>The keystream generator produces a binary keystream of identical
+length.</li>
+<li>Each plaintext bit is paired with its corresponding keystream
+bit.</li>
+</ul>
+<h2 id="how-bitwise-xor-works">How Bitwise XOR Works</h2>
+<p>The core mathematical engine of stream cipher encryption is the
+bitwise XOR (Exclusive-OR) operation, denoted by the symbol <span
+class="math inline">\(\oplus\)</span>.</p>
+<p>XOR is a binary logical operation that compares two input bits and
+returns <code>1</code> if the inputs are different, and <code>0</code>
+if the inputs are the same:</p>
+<ul>
+<li><span class="math inline">\(0 \oplus 0 = 0\)</span></li>
+<li><span class="math inline">\(0 \oplus 1 = 1\)</span></li>
+<li><span class="math inline">\(1 \oplus 0 = 1\)</span></li>
+<li><span class="math inline">\(1 \oplus 1 = 0\)</span></li>
+</ul>
+<h3 id="encryption-process">Encryption Process</h3>
+<p>During encryption, the sender applies the XOR operation to each bit
+of the plaintext (<span class="math inline">\(P\)</span>) and the
+keystream (<span class="math inline">\(K\)</span>) to produce the
+ciphertext (<span class="math inline">\(C\)</span>):</p>
+<p><span class="math display">\[\text{Plaintext bit } (P) \oplus
+\text{Keystream bit } (K) = \text{Ciphertext bit } (C)\]</span></p>
+<p><strong>Example:</strong></p>
+<ul>
+<li><strong>Plaintext:</strong> <code>1 0 1 1 0 0 1 0</code></li>
+<li><strong>Keystream:</strong> <code>0 1 1 0 1 0 1 1</code></li>
+<li><strong>Ciphertext:</strong> <code>1 1 0 1 1 0 0 1</code></li>
+</ul>
+<h3 id="decryption-process">Decryption Process</h3>
+<p>Decryption relies on a fundamental algebraic property of the XOR
+operation: applying XOR twice with the same operand returns the original
+value:</p>
+<p><span class="math display">\[(P \oplus K) \oplus K = P\]</span></p>
+<p>To recover the original message, the receiver generates the exact
+same keystream using the shared secret key and applies XOR to the
+ciphertext (<span class="math inline">\(C\)</span>) and keystream (<span
+class="math inline">\(K\)</span>):</p>
+<p><span class="math display">\[\text{Ciphertext bit } (C) \oplus
+\text{Keystream bit } (K) = \text{Plaintext bit } (P)\]</span></p>
+<p><strong>Example:</strong></p>
+<ul>
+<li><strong>Ciphertext:</strong> <code>1 1 0 1 1 0 0 1</code></li>
+<li><strong>Keystream:</strong> <code>0 1 1 0 1 0 1 1</code></li>
+<li><strong>Plaintext:</strong> <code>1 0 1 1 0 0 1 0</code></li>
+</ul>
+<h2 id="security-requirements">Security Requirements</h2>
+<p>The security of stream cipher encryption depends on the
+unpredictability and uniqueness of the keystream. If a keystream is
+truly random, never reused, and kept secret, it functions as a
+theoretical One-Time Pad (OTP), which is mathematically unbreakable. In
+practical implementations (such as ChaCha20 or RC4), pseudorandom
+generators are used. A keystream must never be reused with the same key
+across different messages, as XORing two ciphertexts encrypted with the
+same keystream eliminates the keystream entirely, exposing structural
+information about both plaintexts.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Shift Registers Generate Pseudorandom Noise - binary</title>
+    <meta name="description" content="This article explains how shift-register generators, specifically Linear Feedback Shift Registers (LFSRs), use feedback taps and binary arithmetic to produce deterministic, pseudorandom noise (PRN) sequences. It breaks down the mechanical operation of bi">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-shift-registers-generate-pseudorandom-noise">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Shift Registers Generate Pseudorandom Noise - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-shift-registers-generate-pseudorandom-noise" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explains how shift-register generators, specifically Linear Feedback Shift Registers (LFSRs), use feedback taps and binary arithmetic to produce deterministic, pseudorandom noise (PRN) sequences. It breaks down the mechanical operation of bi" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-shift-registers-generate-pseudorandom-noise">How Shift
+Registers Generate Pseudorandom Noise</h1>
+<p>This article explains how shift-register generators, specifically
+Linear Feedback Shift Registers (LFSRs), use feedback taps and binary
+arithmetic to produce deterministic, pseudorandom noise (PRN) sequences.
+It breaks down the mechanical operation of bit shifting, the role of
+modulo-2 addition at selected tap positions, the importance of primitive
+polynomials in achieving maximal sequence length, and the statistical
+properties that allow these simple hardware structures to emulate true
+random noise.</p>
+<h3 id="the-basic-architecture-of-a-shift-register">The Basic
+Architecture of a Shift Register</h3>
+<p>A shift register consists of a cascade of binary storage elements,
+known as flip-flops or stages, where each stage holds a single binary
+digit (<span class="math inline">\(0\)</span> or <span
+class="math inline">\(1\)</span>). An <span
+class="math inline">\(n\)</span>-stage register can represent <span
+class="math inline">\(2^n\)</span> unique binary states. At every clock
+pulse, the binary value in each stage shifts to the adjacent stage to
+the right, and the value in the final stage is output.</p>
+<p>Without feedback, a shift register empties after <span
+class="math inline">\(n\)</span> clock cycles. To generate a continuous
+stream of data, the system feeds a newly computed bit back into the
+first stage of the register at every clock tick.</p>
+<h3 id="the-role-of-feedback-taps-and-modulo-2-arithmetic">The Role of
+Feedback Taps and Modulo-2 Arithmetic</h3>
+<p>Feedback taps are designated connection points drawn from specific
+stages of the shift register. The binary values present at these tapped
+stages are combined using linear operations—specifically exclusive-OR
+(<span class="math inline">\(\text{XOR}\)</span>) logic, which is the
+equivalent of modulo-2 addition in the binary number system.</p>
+<p>The feedback operation follows strict binary rules:</p>
+<ul>
+<li><span class="math inline">\(0 \oplus 0 = 0\)</span></li>
+<li><span class="math inline">\(0 \oplus 1 = 1\)</span></li>
+<li><span class="math inline">\(1 \oplus 0 = 1\)</span></li>
+<li><span class="math inline">\(1 \oplus 1 = 0\)</span></li>
+</ul>
+<p>On each clock transition:</p>
+<ol type="1">
+<li>The bits at the tapped positions are sampled.</li>
+<li>The <span class="math inline">\(\text{XOR}\)</span> sum of these
+tapped bits is calculated.</li>
+<li>The contents of all stages shift one position to the right.</li>
+<li>The calculated <span class="math inline">\(\text{XOR}\)</span>
+result is shifted into the leftmost (first) stage.</li>
+<li>The bit emerging from the rightmost stage becomes the next bit in
+the output pseudorandom sequence.</li>
+</ol>
+<h3 id="maximal-length-sequences-and-primitive-polynomials">Maximal
+Length Sequences and Primitive Polynomials</h3>
+<p>Because an <span class="math inline">\(n\)</span>-bit register has a
+finite number of states, the sequence of output bits must eventually
+repeat. The all-zero state is a trap state in standard <span
+class="math inline">\(\text{XOR}\)</span> configurations because <span
+class="math inline">\(0 \oplus 0 = 0\)</span>, which prevents the
+register from ever leaving the zero state. Consequently, the maximum
+possible non-repeating cycle length for an <span
+class="math inline">\(n\)</span>-stage LFSR is <span
+class="math inline">\(2^n - 1\)</span>.</p>
+<p>Sequences that achieve this maximum period are called
+<strong>maximal-length sequences</strong> or
+<strong>m-sequences</strong>. An LFSR achieves an m-sequence only when
+the tap positions correspond to the coefficients of a <strong>primitive
+polynomial</strong> over the Galois field <span
+class="math inline">\(\text{GF}(2)\)</span>. For example, a 4-stage
+register with taps at stages 4 and 3 corresponds to the primitive
+polynomial <span class="math inline">\(x^4 + x^3 + 1\)</span>, producing
+a repeating pattern of <span class="math inline">\(2^4 - 1 = 15\)</span>
+bits before cycling.</p>
+<h3 id="pseudorandom-characteristics-of-the-output">Pseudorandom
+Characteristics of the Output</h3>
+<p>Although generated deterministically, m-sequences exhibit statistical
+properties resembling white noise, fulfilling Golomb's randomness
+postulates:</p>
+<ol type="1">
+<li><strong>Balance Property:</strong> In every full period, the number
+of ones exceeds the number of zeros by exactly one (containing <span
+class="math inline">\(2^{n-1}\)</span> ones and <span
+class="math inline">\(2^{n-1} - 1\)</span> zeros).</li>
+<li><strong>Run Property:</strong> A "run" is a consecutive sequence of
+identical bits. Half the runs have length 1, one-quarter have length 2,
+one-eighth have length 3, and so forth, matching the distribution of
+true coin tosses.</li>
+<li><strong>Autocorrelation Property:</strong> The sequence has an
+impulse-like periodic autocorrelation function. When correlated with a
+phase-shifted version of itself, the correlation is high only at zero
+shift and uniformly low at all other shifts.</li>
+</ol>
+<p>These noise-like qualities, combined with minimal hardware overhead,
+make shift-register-generated pseudorandom noise fundamental to
+spread-spectrum communications, GPS signal modulation, cryptography, and
+built-in self-test (BIST) circuits.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

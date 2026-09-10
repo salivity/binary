@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lemire's Fast Alternative to Modulo Reduction - binary</title>
+    <meta name="description" content="Daniel Lemire's fast alternative to modulo reduction maps an uniformly distributed unsigned integer into a bounded range $[0, s)$ using fixed-point multiplication rather than expensive hardware division. By treating the random integer as a fractional val">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/lemire-s-fast-alternative-to-modulo-reduction">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Lemire's Fast Alternative to Modulo Reduction - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/lemire-s-fast-alternative-to-modulo-reduction" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Daniel Lemire's fast alternative to modulo reduction maps an uniformly distributed unsigned integer into a bounded range $[0, s)$ using fixed-point multiplication rather than expensive hardware division. By treating the random integer as a fractional val" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="lemires-fast-alternative-to-modulo-reduction">Lemire's Fast
+Alternative to Modulo Reduction</h1>
+<p>Daniel Lemire's fast alternative to modulo reduction maps an
+uniformly distributed unsigned integer into a bounded range <span
+class="math inline">\([0, s)\)</span> using fixed-point multiplication
+rather than expensive hardware division. By treating the random integer
+as a fractional value between 0 and 1, multiplying it by the target
+bound, and extracting the most significant bits of the resulting
+product, modern processors can generate bounded random numbers in only a
+few clock cycles.</p>
+<h2 id="the-cost-of-traditional-modulo-reduction">The Cost of
+Traditional Modulo Reduction</h2>
+<p>The standard approach to generate a random number within a bound
+<span class="math inline">\(s\)</span> uses the modulo operator:</p>
+<p><span class="math display">\[\text{result} = x \pmod s\]</span></p>
+<p>While simple, this method relies on integer division instructions
+(such as <code>DIV</code> or <code>IDIV</code> on x86 architectures).
+Division is one of the slowest arithmetic operations on modern CPUs,
+often requiring 10 to 40 clock cycles. Modulo operations also introduce
+"modulo bias" unless combined with rejection sampling, which
+traditionally introduces even more division operations to compute
+rejection thresholds.</p>
+<h2 id="the-fixed-point-concept">The Fixed-Point Concept</h2>
+<p>Lemire's algorithm views an <span
+class="math inline">\(L\)</span>-bit random integer <span
+class="math inline">\(x\)</span> (where <span class="math inline">\(0
+\le x &lt; 2^L\)</span>) as a fractional value in the interval <span
+class="math inline">\([0, 1)\)</span>:</p>
+<p><span class="math display">\[\text{fraction} =
+\frac{x}{2^L}\]</span></p>
+<p>To scale this value to the desired range <span
+class="math inline">\([0, s)\)</span>, you multiply the fraction by
+<span class="math inline">\(s\)</span>:</p>
+<p><span class="math display">\[\text{scaled value} = \frac{x \times
+s}{2^L}\]</span></p>
+<p>The bounded integer is the floor of this expression:</p>
+<p><span class="math display">\[\text{result} = \left\lfloor \frac{x
+\times s}{2^L} \right\rfloor\]</span></p>
+<h2 id="binary-implementation-without-division">Binary Implementation
+Without Division</h2>
+<p>In binary arithmetic, division by <span
+class="math inline">\(2^L\)</span> is equivalent to shifting right by
+<span class="math inline">\(L\)</span> bits. When working with standard
+register widths (such as <span class="math inline">\(L = 32\)</span>
+bits):</p>
+<ol type="1">
+<li><strong>Full-Precision Multiplication:</strong> Compute the full
+64-bit product <span class="math inline">\(P = x \times s\)</span>,
+where both <span class="math inline">\(x\)</span> and <span
+class="math inline">\(s\)</span> are 32-bit unsigned integers.</li>
+<li><strong>Extracting the Quotient (High Bits):</strong> The upper 32
+bits of <span class="math inline">\(P\)</span> correspond to <span
+class="math inline">\(\lfloor P / 2^{32} \rfloor\)</span>. This
+represents the scaled integer in the range <span
+class="math inline">\([0, s)\)</span>.</li>
+<li><strong>Extracting the Remainder (Low Bits):</strong> The lower 32
+bits of <span class="math inline">\(P\)</span> represent the fractional
+remainder: <span class="math inline">\(P \pmod{2^{32}}\)</span>.</li>
+</ol>
+<p>Modern 64-bit architectures can perform a <span
+class="math inline">\(32\text{-bit} \times 32\text{-bit} \to
+64\text{-bit}\)</span> multiplication in 3 to 4 clock cycles, after
+which a right-shift (or reading the upper register) immediately yields
+the bounded result without invoking a division instruction.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fast bounded random generation (biased version)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">uint32_t</span> fast_range<span class="op">(</span><span class="dt">uint32_t</span> x<span class="op">,</span> <span class="dt">uint32_t</span> s<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint64_t</span> full_product <span class="op">=</span> <span class="op">(</span><span class="dt">uint64_t</span><span class="op">)</span>x <span class="op">*</span> <span class="op">(</span><span class="dt">uint64_t</span><span class="op">)</span>s<span class="op">;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">(</span><span class="dt">uint32_t</span><span class="op">)(</span>full_product <span class="op">&gt;&gt;</span> <span class="dv">32</span><span class="op">);</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h2 id="eliminating-bias-with-efficient-rejection-sampling">Eliminating
+Bias with Efficient Rejection Sampling</h2>
+<p>Directly taking the upper bits yields a slight bias if <span
+class="math inline">\(2^L\)</span> is not evenly divisible by <span
+class="math inline">\(s\)</span>. Lemire's method eliminates this bias
+by evaluating the lower bits (the fractional portion).</p>
+<p>A bias occurs only when the fraction falls into the incomplete zone
+of size <span class="math inline">\(2^L \pmod s\)</span>.</p>
+<ol type="1">
+<li><strong>Calculate the Threshold:</strong> The threshold <span
+class="math inline">\(t = 2^L \pmod s\)</span> represents the boundary
+below which results must be rejected. This can also be written as <span
+class="math inline">\(t = -s \pmod s\)</span>.</li>
+<li><strong>Check the Fractional Part:</strong> Let <span
+class="math inline">\(l\)</span> be the lower <span
+class="math inline">\(L\)</span> bits of <span class="math inline">\(P =
+x \times s\)</span>.</li>
+<li><strong>Conditional Rejection:</strong>
+<ul>
+<li>If <span class="math inline">\(l \ge t\)</span>, the result in the
+upper bits is completely unbiased.</li>
+<li>If <span class="math inline">\(l &lt; t\)</span>, the number is
+rejected, a new random <span class="math inline">\(x\)</span> is drawn,
+and the check repeats.</li>
+</ul></li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Fast bounded random generation (unbiased version)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">uint32_t</span> unbiased_bounded_rand<span class="op">(</span><span class="dt">uint32_t</span> <span class="op">(*</span>rng<span class="op">)(</span><span class="dt">void</span><span class="op">),</span> <span class="dt">uint32_t</span> s<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint32_t</span> x <span class="op">=</span> rng<span class="op">();</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint64_t</span> full_product <span class="op">=</span> <span class="op">(</span><span class="dt">uint64_t</span><span class="op">)</span>x <span class="op">*</span> <span class="op">(</span><span class="dt">uint64_t</span><span class="op">)</span>s<span class="op">;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint32_t</span> low_bits <span class="op">=</span> <span class="op">(</span><span class="dt">uint32_t</span><span class="op">)</span>full_product<span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>low_bits <span class="op">&lt;</span> s<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">uint32_t</span> threshold <span class="op">=</span> <span class="op">-</span>s <span class="op">%</span> s<span class="op">;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">while</span> <span class="op">(</span>low_bits <span class="op">&lt;</span> threshold<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> rng<span class="op">();</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            full_product <span class="op">=</span> <span class="op">(</span><span class="dt">uint64_t</span><span class="op">)</span>x <span class="op">*</span> <span class="op">(</span><span class="dt">uint64_t</span><span class="op">)</span>s<span class="op">;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>            low_bits <span class="op">=</span> <span class="op">(</span><span class="dt">uint32_t</span><span class="op">)</span>full_product<span class="op">;</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">(</span><span class="dt">uint32_t</span><span class="op">)(</span>full_product <span class="op">&gt;&gt;</span> <span class="dv">32</span><span class="op">);</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Because the initial branch <code>low_bits &lt; s</code> is false for
+almost all random inputs (the probability of entering the branch is only
+<span class="math inline">\(s / 2^{32}\)</span>), the division to
+compute <code>threshold</code> is almost never executed. The algorithm
+operates nearly 100% of the time purely through multiplication and bit
+shifts, making it significantly faster than standard modulo-based
+bounded generators.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

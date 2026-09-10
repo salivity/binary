@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is Golomb Coding: Unary and Binary Systems - binary</title>
+    <meta name="description" content="Golomb coding is a lossless data compression method designed to efficiently encode non-negative integers, particularly when smaller values occur more frequently than larger ones. This article provides a clear overview of how Golomb coding works by splitt">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-golomb-coding-unary-and-binary-systems">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is Golomb Coding: Unary and Binary Systems - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-golomb-coding-unary-and-binary-systems" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Golomb coding is a lossless data compression method designed to efficiently encode non-negative integers, particularly when smaller values occur more frequently than larger ones. This article provides a clear overview of how Golomb coding works by splitt" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-golomb-coding-unary-and-binary-systems">What Is Golomb
+Coding: Unary and Binary Systems</h1>
+<p>Golomb coding is a lossless data compression method designed to
+efficiently encode non-negative integers, particularly when smaller
+values occur more frequently than larger ones. This article provides a
+clear overview of how Golomb coding works by splitting an input integer
+into two distinct components: a quotient and a remainder. It examines
+how the quotient is represented using unary encoding and how the
+remainder is represented using standard or truncated binary encoding,
+demonstrating how these two numerical representations merge into a
+compact, variable-length code.</p>
+<hr />
+<h3 id="what-is-golomb-coding">What Is Golomb Coding?</h3>
+<p>Invented by Solomon W. Golomb in 1966, Golomb coding is an entropy
+encoding technique optimal for data that follows a geometric
+distribution. In such distributions, the probability of an integer
+decreases exponentially as its magnitude increases. Common applications
+include run-length encoding, audio compression (such as FLAC and Apple
+Lossless), and image compression algorithms like JPEG-LS.</p>
+<p>The algorithm relies on an adjustable integer parameter, denoted as
+<span class="math inline">\(M\)</span>. The choice of <span
+class="math inline">\(M\)</span> determines the boundary between the
+quotient and the remainder, directly influencing compression efficiency
+based on the distribution of the source data.</p>
+<hr />
+<h3 id="how-golomb-coding-splits-integers">How Golomb Coding Splits
+Integers</h3>
+<p>To encode any non-negative integer <span
+class="math inline">\(N\)</span> using a chosen parameter <span
+class="math inline">\(M\)</span>, the algorithm performs integer
+division:</p>
+<ol type="1">
+<li><strong>Calculate the Quotient (<span
+class="math inline">\(q\)</span>):</strong> <span
+class="math display">\[q = \lfloor N / M \rfloor\]</span></li>
+<li><strong>Calculate the Remainder (<span
+class="math inline">\(r\)</span>):</strong> <span
+class="math display">\[r = N \pmod M\]</span></li>
+</ol>
+<p>The final Golomb codeword is formed by concatenating the encoded
+quotient and the encoded remainder: <span
+class="math display">\[\text{Codeword} = [\text{Encoded Quotient}] +
+[\text{Encoded Remainder}]\]</span></p>
+<hr />
+<h3 id="representing-the-quotient-unary-encoding">Representing the
+Quotient: Unary Encoding</h3>
+<p>Unary encoding is a base-1 numeral system where a number <span
+class="math inline">\(q\)</span> is represented by a sequence of
+identical bits followed by a terminating bit.</p>
+<p>In standard Golomb coding:</p>
+<ul>
+<li>The integer <span class="math inline">\(q\)</span> is written as
+<span class="math inline">\(q\)</span> copies of <code>1</code>,
+followed by a single <code>0</code> (or alternatively, <span
+class="math inline">\(q\)</span> copies of <code>0</code> followed by a
+<code>1</code>).</li>
+<li><strong>Examples:</strong>
+<ul>
+<li><span class="math inline">\(q = 0 \rightarrow
+\texttt{0}\)</span></li>
+<li><span class="math inline">\(q = 1 \rightarrow
+\texttt{10}\)</span></li>
+<li><span class="math inline">\(q = 2 \rightarrow
+\texttt{110}\)</span></li>
+<li><span class="math inline">\(q = 3 \rightarrow
+\texttt{1110}\)</span></li>
+</ul></li>
+</ul>
+<p>Because smaller values of <span class="math inline">\(N\)</span>
+produce smaller quotients, the unary part remains short for frequent
+values, saving significant space.</p>
+<hr />
+<h3 id="representing-the-remainder-binary-encoding">Representing the
+Remainder: Binary Encoding</h3>
+<p>The remainder <span class="math inline">\(r\)</span> can take any
+value from <span class="math inline">\(0\)</span> to <span
+class="math inline">\(M - 1\)</span>. The method used to encode <span
+class="math inline">\(r\)</span> depends on whether <span
+class="math inline">\(M\)</span> is a power of two.</p>
+<h4 id="1-when-m-is-a-power-of-two-golomb-rice-coding">1. When <span
+class="math inline">\(M\)</span> Is a Power of Two (Golomb-Rice
+Coding)</h4>
+<p>When <span class="math inline">\(M = 2^k\)</span>, the encoding
+simplifies to <strong>Rice coding</strong>. The remainder <span
+class="math inline">\(r\)</span> is simply represented as a standard
+<span class="math inline">\(k\)</span>-bit binary number.</p>
+<ul>
+<li>If <span class="math inline">\(M = 4\)</span> (<span
+class="math inline">\(k = 2\)</span>), the possible remainders (<span
+class="math inline">\(0, 1, 2, 3\)</span>) are encoded as:
+<ul>
+<li><span class="math inline">\(r = 0 \rightarrow
+\texttt{00}\)</span></li>
+<li><span class="math inline">\(r = 1 \rightarrow
+\texttt{01}\)</span></li>
+<li><span class="math inline">\(r = 2 \rightarrow
+\texttt{10}\)</span></li>
+<li><span class="math inline">\(r = 3 \rightarrow
+\texttt{11}\)</span></li>
+</ul></li>
+</ul>
+<h4 id="2-when-m-is-not-a-power-of-two-truncated-binary-encoding">2.
+When <span class="math inline">\(M\)</span> Is Not a Power of Two
+(Truncated Binary Encoding)</h4>
+<p>When <span class="math inline">\(M\)</span> is not a power of two,
+standard fixed-length binary cannot evenly represent all possible
+remainders. Golomb coding solves this using <strong>truncated binary
+encoding</strong>:</p>
+<ul>
+<li>Let <span class="math inline">\(b = \lceil \log_2(M)
+\rceil\)</span>.</li>
+<li>Compute the threshold cutoff: <span class="math inline">\(c = 2^b -
+M\)</span>.</li>
+<li>If <span class="math inline">\(r &lt; c\)</span>, encode <span
+class="math inline">\(r\)</span> as a standard binary number using <span
+class="math inline">\(b - 1\)</span> bits.</li>
+<li>If <span class="math inline">\(r \ge c\)</span>, encode the value
+<span class="math inline">\(r + c\)</span> as a standard binary number
+using <span class="math inline">\(b\)</span> bits.</li>
+</ul>
+<p>This ensures that the shorter bit patterns are assigned to lower
+remainder values without introducing ambiguity during decoding.</p>
+<hr />
+<h3 id="step-by-step-encoding-example">Step-by-Step Encoding
+Example</h3>
+<p>Consider encoding the number <span class="math inline">\(N =
+9\)</span> using the parameter <span class="math inline">\(M =
+4\)</span> (a power of two):</p>
+<ol type="1">
+<li><strong>Calculate <span class="math inline">\(q\)</span> and <span
+class="math inline">\(r\)</span>:</strong>
+<ul>
+<li><span class="math inline">\(q = \lfloor 9 / 4 \rfloor =
+2\)</span></li>
+<li><span class="math inline">\(r = 9 \pmod 4 = 1\)</span></li>
+</ul></li>
+<li><strong>Encode the Quotient (<span class="math inline">\(q =
+2\)</span>) in Unary:</strong>
+<ul>
+<li>Unary representation = <code>110</code></li>
+</ul></li>
+<li><strong>Encode the Remainder (<span class="math inline">\(r =
+1\)</span>) in Binary:</strong>
+<ul>
+<li>Since <span class="math inline">\(M = 2^2\)</span>, remainder length
+is <span class="math inline">\(k = 2\)</span> bits.</li>
+<li>Binary representation = <code>01</code></li>
+</ul></li>
+<li><strong>Concatenate the Results:</strong>
+<ul>
+<li>Final codeword = <code>11001</code></li>
+</ul></li>
+</ol>
+<hr />
+<h3 id="why-the-combination-is-effective">Why the Combination Is
+Effective</h3>
+<p>Golomb coding achieves high compression ratios by balancing the
+strengths of unary and binary numbering systems:</p>
+<ul>
+<li><strong>Unary coding</strong> handles the high-order bits (<span
+class="math inline">\(q\)</span>). It acts as a variable-length prefix
+that expands smoothly for large numbers while taking as little as 1 bit
+for numbers smaller than <span class="math inline">\(M\)</span>.</li>
+<li><strong>Binary coding</strong> handles the low-order bits (<span
+class="math inline">\(r\)</span>). It compactly captures the uniform
+distribution of remainders within a fixed or near-fixed number of
+bits.</li>
+</ul>
+<p>By adjusting the parameter <span class="math inline">\(M\)</span> to
+match the decay rate of the input data distribution, Golomb coding
+constructs near-optimal prefix codes without the computational overhead
+of building dynamic Huffman trees.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harvey and Hoeven O(n log n) Integer Multiplication - binary</title>
+    <meta name="description" content="In 2019, mathematicians David Harvey and Joris van der Hoeven published a breakthrough algorithm achieving the long-conjectured $O(n \log n)$ time complexity for multiplying two $n$-bit integers. This article explains how their method processes arbitrary">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/harvey-and-hoeven-o-n-log-n-integer-multiplication">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Harvey and Hoeven O(n log n) Integer Multiplication - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/harvey-and-hoeven-o-n-log-n-integer-multiplication" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In 2019, mathematicians David Harvey and Joris van der Hoeven published a breakthrough algorithm achieving the long-conjectured $O(n \log n)$ time complexity for multiplying two $n$-bit integers. This article explains how their method processes arbitrary" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="harvey-and-hoeven-on-log-n-integer-multiplication">Harvey and
+Hoeven O(n log n) Integer Multiplication</h1>
+<p>In 2019, mathematicians David Harvey and Joris van der Hoeven
+published a breakthrough algorithm achieving the long-conjectured <span
+class="math inline">\(O(n \log n)\)</span> time complexity for
+multiplying two <span class="math inline">\(n\)</span>-bit integers.
+This article explains how their method processes arbitrary-length binary
+numbers by dividing them into structured bit blocks, mapping them into
+multidimensional polynomial rings, computing their convolution using
+higher-dimensional Fast Fourier Transforms (FFTs), and propagating
+carries to reconstruct the final binary product.</p>
+<h3 id="1-partitioning-binary-integers-into-polynomials">1. Partitioning
+Binary Integers into Polynomials</h3>
+<p>The algorithm begins by breaking two large binary integers, <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>, of length <span
+class="math inline">\(n\)</span> bits, into smaller chunks. Given a
+chosen block size <span class="math inline">\(\beta\)</span>, the
+integers are represented in base <span
+class="math inline">\(2^\beta\)</span>:</p>
+<p><span class="math display">\[A = \sum_{i=0}^{k-1} a_i 2^{i\beta},
+\quad B = \sum_{i=0}^{k-1} b_i 2^{i\beta}\]</span></p>
+<p>where each coefficient <span class="math inline">\(a_i, b_i \in [0,
+2^\beta - 1]\)</span> fits into a <span
+class="math inline">\(\beta\)</span>-bit register.</p>
+<p>These representations are mapped directly to one-dimensional
+polynomials:</p>
+<p><span class="math display">\[A(x) = \sum_{i=0}^{k-1} a_i x^i, \quad
+B(x) = \sum_{i=0}^{k-1} b_i x^i\]</span></p>
+<p>Computing the integer product <span class="math inline">\(A \times
+B\)</span> is equivalent to evaluating the polynomial product <span
+class="math inline">\(C(x) = A(x)B(x)\)</span> at <span
+class="math inline">\(x = 2^\beta\)</span> and resolving any carries
+where coefficients exceed <span class="math inline">\(2^\beta -
+1\)</span>.</p>
+<h3 id="2-moving-to-multidimensional-transforms">2. Moving to
+Multidimensional Transforms</h3>
+<p>Standard fast multiplication methods, such as the Schönhage–Strassen
+algorithm (<span class="math inline">\(O(n \log n \log \log n)\)</span>)
+or Fürer’s algorithm (<span class="math inline">\(O(n \log n \cdot
+2^{O(\log^* n)})\)</span>), compute one-dimensional FFTs. These
+approaches suffer from coefficient growth and recursive overhead when
+evaluating large roots of unity.</p>
+<p>Harvey and Hoeven eliminate this bottleneck by restructuring the
+one-dimensional polynomial multiplication into a
+<strong>multidimensional convolution</strong>. The single index <span
+class="math inline">\(i\)</span> of polynomial coefficients is mapped to
+a <span class="math inline">\(d\)</span>-dimensional grid:</p>
+<p><span class="math display">\[(i_1, i_2, \dots, i_d) \in
+\mathbb{Z}_{m_1} \times \mathbb{Z}_{m_2} \times \dots \times
+\mathbb{Z}_{m_d}\]</span></p>
+<p>This transforms the problem into multiplying multidimensional
+polynomials over a ring of truncated polynomials or Gaussian
+integers:</p>
+<p><span class="math display">\[R = \mathbb{C}[y] / (y^M +
+1)\]</span></p>
+<p>By distributing the total transform length across <span
+class="math inline">\(d\)</span> dimensions, each individual dimension
+remains small. This keeps the precision required for the roots of unity
+bounded and prevents the progressive blowup of coefficients across
+recursive stages.</p>
+<h3 id="3-evaluating-via-multidimensional-ffts">3. Evaluating via
+Multidimensional FFTs</h3>
+<p>With the inputs arranged across a multidimensional lattice, the
+algorithm performs the following steps:</p>
+<ol type="1">
+<li><strong>Forward Transform:</strong> Apply an FFT along each of the
+<span class="math inline">\(d\)</span> dimensions independently to
+convert spatial coefficient arrays into the frequency domain.</li>
+<li><strong>Pointwise Multiplication:</strong> Multiply the transformed
+arrays pointwise. Because the transform domain maps convolution to
+standard multiplication, this requires multiplying smaller elements in
+the underlying coefficient ring <span
+class="math inline">\(R\)</span>.</li>
+<li><strong>Inverse Transform:</strong> Apply the multidimensional
+Inverse Fast Fourier Transform (IFFT) to return the result to the
+coefficient domain.</li>
+</ol>
+<p>The choice of ring <span class="math inline">\(R\)</span> ensures
+that the arithmetic operations inside the FFT can themselves be computed
+using the same multiplication algorithm recursively, maintaining the
+<span class="math inline">\(O(n \log n)\)</span> bound throughout the
+recursion tree.</p>
+<h3 id="4-carry-propagation-and-binary-reconstruction">4. Carry
+Propagation and Binary Reconstruction</h3>
+<p>After computing the inverse transform, the result is a sequence of
+integer coefficients <span class="math inline">\(c_k\)</span>
+representing <span class="math inline">\(C(x) = \sum c_k x^k\)</span>.
+Because the transform operates on exact coefficients, each <span
+class="math inline">\(c_k\)</span> is the exact sum of products:</p>
+<p><span class="math display">\[c_k = \sum_{i+j=k} a_i b_j\]</span></p>
+<p>Each coefficient <span class="math inline">\(c_k\)</span> can span up
+to <span class="math inline">\(2\beta + \lceil \log_2 k \rceil\)</span>
+bits, which is larger than the original chunk size <span
+class="math inline">\(\beta\)</span>. To produce the final binary
+number:</p>
+<ol type="1">
+<li>The coefficients are placed into memory shifted by their
+corresponding powers of two: <span class="math inline">\(c_k \cdot
+2^{k\beta}\)</span>.</li>
+<li>A linear-time (<span class="math inline">\(O(n)\)</span>)
+carry-propagation pass scans the overlapped segments from lowest bit to
+highest bit, adding overflow values to higher-order positions.</li>
+</ol>
+<p>Once carries are resolved, the output is the exact <span
+class="math inline">\(2n\)</span>-bit product <span
+class="math inline">\(A \times B\)</span> in standard binary format.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

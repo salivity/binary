@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Search: Divide and Conquer in Base-2 Logic - binary</title>
+    <meta name="description" content="This article explores how the binary search algorithm utilizes the divide-and-conquer paradigm and examines its deep conceptual and mathematical connection to the binary (base-2) number system. By breaking a sorted dataset into halves, binary search mirr">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/binary-search-divide-and-conquer-in-base-2-logic">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Binary Search: Divide and Conquer in Base-2 Logic - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/binary-search-divide-and-conquer-in-base-2-logic" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores how the binary search algorithm utilizes the divide-and-conquer paradigm and examines its deep conceptual and mathematical connection to the binary (base-2) number system. By breaking a sorted dataset into halves, binary search mirr" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="binary-search-divide-and-conquer-in-base-2-logic">Binary Search:
+Divide and Conquer in Base-2 Logic</h1>
+<p>This article explores how the binary search algorithm utilizes the
+divide-and-conquer paradigm and examines its deep conceptual and
+mathematical connection to the binary (base-2) number system. By
+breaking a sorted dataset into halves, binary search mirrors the
+fundamental properties of base-2 representation, achieving logarithmic
+time complexity by determining the value of one "bit" of information at
+each comparison step.</p>
+<h3 id="the-divide-and-conquer-principle-in-binary-search">The
+Divide-and-Conquer Principle in Binary Search</h3>
+<p>The divide-and-conquer algorithmic design paradigm solves a
+computational problem by breaking it down into smaller sub-problems,
+solving each sub-problem, and combining the results. Binary search
+executes this strategy through three distinct phases:</p>
+<ol type="1">
+<li><strong>Divide:</strong> The algorithm calculates the midpoint of a
+sorted array, partitioning the search space into two equal halves.</li>
+<li><strong>Conquer:</strong> It compares the target value with the
+middle element. If a match occurs, the search concludes. If not, the
+algorithm discards the irrelevant half and restricts the search space to
+the remaining half.</li>
+<li><strong>Combine:</strong> In binary search, the combination step is
+trivial; finding the item in a sub-array immediately resolves the query
+for the entire array.</li>
+</ol>
+<p>Because the search space is halved with every iteration, the problem
+size decreases exponentially: <span class="math inline">\(N, N/2, N/4,
+\dots, 1\)</span>. This halving mechanism yields a worst-case time
+complexity of <span class="math inline">\(O(\log_2 N)\)</span>.</p>
+<h3 id="the-conceptual-link-to-the-binary-number-system">The Conceptual
+Link to the Binary Number System</h3>
+<p>The connection between binary search and the binary number system
+lies in how both represent information through powers of two.</p>
+<h4 id="1-logarithmic-reductions-and-bit-depth">1. Logarithmic
+Reductions and Bit Depth</h4>
+<p>In the binary number system (base-2), every added bit doubles the
+range of numbers that can be represented. A binary string of length
+<span class="math inline">\(k\)</span> can represent <span
+class="math inline">\(2^k\)</span> unique values. Conversely,
+determining an unknown value out of <span
+class="math inline">\(N\)</span> possibilities requires <span
+class="math inline">\(\lceil \log_2 N \rceil\)</span> bits of
+information.</p>
+<p>Binary search operates on this exact mathematical principle:</p>
+<ul>
+<li>A collection of size <span class="math inline">\(N \le 2^k\)</span>
+requires at most <span class="math inline">\(k\)</span>
+comparisons.</li>
+<li>Each comparison in a binary search yields exactly one boolean
+outcome (greater or smaller), which corresponds to extracting exactly
+one bit of information about the target's location.</li>
+</ul>
+<h4 id="2-determining-bits-from-most-to-least-significant">2.
+Determining Bits from Most to Least Significant</h4>
+<p>Performing a binary search to find an index is functionally
+equivalent to determining the binary representation of that index from
+the Most Significant Bit (MSB) to the Least Significant Bit (LSB):</p>
+<ul>
+<li>The first comparison tests whether the target lies in the upper or
+lower half of the dataset, which determines whether the most significant
+bit of the target index is <code>1</code> or <code>0</code>.</li>
+<li>The second comparison determines the next bit, and the process
+continues until the exact index is resolved.</li>
+</ul>
+<h4 id="3-arithmetic-parallels-and-bitwise-operations">3. Arithmetic
+Parallels and Bitwise Operations</h4>
+<p>The computational steps of binary search directly align with binary
+arithmetic operations:</p>
+<ul>
+<li>Finding the midpoint of a range <span class="math inline">\([L,
+R]\)</span> involves the calculation <span class="math inline">\(\lfloor
+(L + R) / 2 \rfloor\)</span>.</li>
+<li>In binary arithmetic, dividing by 2 is equivalent to a single right
+bit-shift (<code>&gt;&gt; 1</code>), which truncates the least
+significant bit.</li>
+</ul>
+<h3 id="conclusion">Conclusion</h3>
+<p>Binary search is the direct algorithmic implementation of base-2
+mathematics applied to data retrieval. By using divide-and-conquer to
+eliminate half of the remaining elements at each step, binary search
+extracts one bit of positional information per operation, achieving
+optimal <span class="math inline">\(O(\log_2 N)\)</span> search
+efficiency.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

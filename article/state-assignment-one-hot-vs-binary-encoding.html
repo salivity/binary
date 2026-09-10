@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>State Assignment: One-Hot vs Binary Encoding - binary</title>
+    <meta name="description" content="In digital logic design, state assignment is the process of mapping unique binary patterns to the symbolic states of a Finite State Machine (FSM). This article explains the fundamentals of state assignment and directly compares two primary implementation">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/state-assignment-one-hot-vs-binary-encoding">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="State Assignment: One-Hot vs Binary Encoding - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/state-assignment-one-hot-vs-binary-encoding" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In digital logic design, state assignment is the process of mapping unique binary patterns to the symbolic states of a Finite State Machine (FSM). This article explains the fundamentals of state assignment and directly compares two primary implementation" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="state-assignment-one-hot-vs-binary-encoding">State Assignment:
+One-Hot vs Binary Encoding</h1>
+<p>In digital logic design, state assignment is the process of mapping
+unique binary patterns to the symbolic states of a Finite State Machine
+(FSM). This article explains the fundamentals of state assignment and
+directly compares two primary implementation strategies: binary encoding
+and one-hot encoding. It details how each approach utilizes hardware
+resources, affects clock speed, and dictates design choices in
+field-programmable gate arrays (FPGAs) and application-specific
+integrated circuits (ASICs).</p>
+<h2 id="what-is-state-assignment">What is State Assignment?</h2>
+<p>When designing a sequential circuit such as a Finite State Machine,
+designers start with abstract, named states (e.g., <code>IDLE</code>,
+<code>READ</code>, <code>WRITE</code>, <code>DONE</code>). Because
+digital hardware operates exclusively on binary signals, each abstract
+state must be assigned a unique combination of binary values.</p>
+<p>State assignment determines how many flip-flops (registers) are
+needed to store the current state and dictates the complexity of the
+combinational logic required to compute the next state and system
+outputs. The chosen assignment strategy significantly impacts the
+circuit’s maximum operating frequency, silicon area, and power
+consumption.</p>
+<h2 id="binary-encoding">Binary Encoding</h2>
+<p>Binary encoding represents states using standard base-2 binary
+numbers. Each state is assigned a sequential binary code (e.g.,
+<code>00</code>, <code>01</code>, <code>10</code>, <code>11</code>).</p>
+<ul>
+<li><strong>Flip-Flop Requirement:</strong> For a machine with <span
+class="math inline">\(N\)</span> states, binary encoding requires <span
+class="math inline">\(\lceil \log_2 N \rceil\)</span> flip-flops. For
+example, an 8-state FSM requires only 3 flip-flops.</li>
+<li><strong>Logic Complexity:</strong> Because the state bits are
+compressed, decoding the current state and generating next-state
+transitions requires multi-input combinational logic gates. As the
+number of states increases, this decoding logic becomes deeper and more
+complex.</li>
+<li><strong>Best Use Cases:</strong> Binary encoding is ideal when
+flip-flops are expensive in terms of silicon area, such as in custom
+ASIC designs, or when the number of states is small.</li>
+</ul>
+<h2 id="one-hot-encoding">One-Hot Encoding</h2>
+<p>One-hot encoding assigns a dedicated flip-flop to every individual
+state in the FSM. In this scheme, only one flip-flop holds a logical
+high (<code>1</code>) at any given moment, while all other flip-flops
+remain logical low (<code>0</code>). For an 8-state machine, the states
+are represented as <code>00000001</code>, <code>00000010</code>,
+<code>00000100</code>, and so on.</p>
+<ul>
+<li><strong>Flip-Flop Requirement:</strong> An <span
+class="math inline">\(N\)</span>-state machine requires exactly <span
+class="math inline">\(N\)</span> flip-flops. An 8-state machine requires
+8 flip-flops.</li>
+<li><strong>Logic Complexity:</strong> Because each state corresponds to
+a single active bit, decoding the current state requires virtually no
+combinational logic. Determining whether the system is in a specific
+state simply requires checking if that state's dedicated flip-flop
+output is <code>1</code>. This drastically simplifies next-state and
+output logic.</li>
+<li><strong>Best Use Cases:</strong> One-hot encoding is widely used in
+FPGA architectures, which are register-rich and feature built-in lookup
+tables (LUTs). It is also preferred in high-speed designs where
+minimizing gate delays is critical to achieving high clock
+frequencies.</li>
+</ul>
+<h2 id="key-differences">Key Differences</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">Binary Encoding</th>
+<th style="text-align: left;">One-Hot Encoding</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Flip-Flops Required</strong></td>
+<td style="text-align: left;"><span class="math inline">\(\lceil \log_2
+N \rceil\)</span></td>
+<td style="text-align: left;"><span
+class="math inline">\(N\)</span></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Combinational Logic
+Depth</strong></td>
+<td style="text-align: left;">Higher (more gate levels)</td>
+<td style="text-align: left;">Lower (minimal decoding logic)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Operating Speed</strong></td>
+<td style="text-align: left;">Slower due to logic propagation delay</td>
+<td style="text-align: left;">Faster due to shallow logic paths</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Power Consumption</strong></td>
+<td style="text-align: left;">Multiple bits can toggle at once</td>
+<td style="text-align: left;">Typically two bits toggle per
+transition</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Target Architecture</strong></td>
+<td style="text-align: left;">ASICs and resource-constrained
+systems</td>
+<td style="text-align: left;">FPGAs and high-speed digital
+pipelines</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Illegal State
+Detection</strong></td>
+<td style="text-align: left;">Harder to detect unused states</td>
+<td style="text-align: left;">Easier to detect (any state with <span
+class="math inline">\(\neq 1\)</span> high bit is invalid)</td>
+</tr>
+</tbody>
+</table>
+<p>Choosing between one-hot and binary encoding involves a trade-off
+between register count and combinational logic complexity. Binary
+encoding minimizes state storage at the expense of speed and logic
+depth, whereas one-hot encoding trades additional flip-flops for simpler
+logic, lower propagation delay, and faster operating frequencies.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

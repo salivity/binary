@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Circular Bit Shift Works in Binary Registers - binary</title>
+    <meta name="description" content="A circular bit shift, commonly known as a bitwise rotation, is a fundamental binary operation that shifts all bits in a register while wrapping the overflowing bits back to the opposite end. Unlike standard logical or arithmetic shifts that discard overf">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-circular-bit-shift-works-in-binary-registers">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Circular Bit Shift Works in Binary Registers - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-circular-bit-shift-works-in-binary-registers" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A circular bit shift, commonly known as a bitwise rotation, is a fundamental binary operation that shifts all bits in a register while wrapping the overflowing bits back to the opposite end. Unlike standard logical or arithmetic shifts that discard overf" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-circular-bit-shift-works-in-binary-registers">How Circular
+Bit Shift Works in Binary Registers</h1>
+<p>A circular bit shift, commonly known as a bitwise rotation, is a
+fundamental binary operation that shifts all bits in a register while
+wrapping the overflowing bits back to the opposite end. Unlike standard
+logical or arithmetic shifts that discard overflow bits and insert zeros
+or sign bits, bitwise rotation preserves every bit within the register.
+This article explains how left and right circular shifts operate at the
+register level, illustrates the process with binary examples, contrasts
+them with other bitwise operations, and highlights their primary use
+cases in computer architecture and cryptography.</p>
+<h2 id="fundamentals-of-bitwise-rotation">Fundamentals of Bitwise
+Rotation</h2>
+<p>In a fixed-width binary register (such as 8-bit, 16-bit, 32-bit, or
+64-bit), every bit occupies a specific position ranging from the Least
+Significant Bit (LSB) to the Most Significant Bit (MSB).</p>
+<p>During a circular shift:</p>
+<ul>
+<li>Bits move sequentially in the chosen direction by a specified number
+of positions.</li>
+<li>Bits pushed out of the register boundaries do not disappear.</li>
+<li>An outgoing bit from one boundary immediately re-enters the register
+at the opposite boundary.</li>
+</ul>
+<p>Because no bits are lost or newly generated, the total Hamming weight
+(the count of binary <code>1</code>s) in the register remains
+constant.</p>
+<h2 id="rotate-left-rol">Rotate Left (ROL)</h2>
+<p>A Rotate Left (ROL) operation shifts all bits toward the higher-order
+positions (left). The bit that is shifted out of the Most Significant
+Bit (MSB) position wraps around to occupy the Least Significant Bit
+(LSB) position.</p>
+<h3 id="example-8-bit-left-rotation-by-1-position">Example: 8-Bit Left
+Rotation by 1 Position</h3>
+<p>Consider an 8-bit register holding the binary value
+<code>10110001</code>:</p>
+<ol type="1">
+<li>Original register: <code>[1] 0 1 1 0 0 0 1</code></li>
+<li>Shift every bit one position to the left:
+<code>0 1 1 0 0 0 1 _</code></li>
+<li>The original MSB (<code>1</code>) wraps around into the vacant LSB
+position: <code>0 1 1 0 0 0 1 [1]</code></li>
+<li>Result: <code>01100011</code></li>
+</ol>
+<h2 id="rotate-right-ror">Rotate Right (ROR)</h2>
+<p>A Rotate Right (ROR) operation shifts all bits toward the lower-order
+positions (right). The bit pushed out of the Least Significant Bit (LSB)
+position wraps around to occupy the Most Significant Bit (MSB)
+position.</p>
+<h3 id="example-8-bit-right-rotation-by-1-position">Example: 8-Bit Right
+Rotation by 1 Position</h3>
+<p>Using the same initial binary value <code>10110001</code>:</p>
+<ol type="1">
+<li>Original register: <code>1 0 1 1 0 0 0 [1]</code></li>
+<li>Shift every bit one position to the right:
+<code>_ 1 0 1 1 0 0 0</code></li>
+<li>The original LSB (<code>1</code>) wraps around into the vacant MSB
+position: <code>[1] 1 0 1 1 0 0 0</code></li>
+<li>Result: <code>11011000</code></li>
+</ol>
+<h2 id="circular-shift-vs-standard-bit-shifts">Circular Shift vs.
+Standard Bit Shifts</h2>
+<p>Understanding bitwise rotation is easier when compared directly to
+standard shifts:</p>
+<ul>
+<li><strong>Logical Shift (<code>&lt;&lt;</code>,
+<code>&gt;&gt;</code>):</strong> Moves bits left or right, discards
+overflowing bits, and fills the vacant positions with <code>0</code>.
+Data is permanently lost if non-zero bits leave the register.</li>
+<li><strong>Arithmetic Shift (<code>ASR</code>):</strong> Shifts right
+while preserving the sign bit (MSB) to maintain correct signed integer
+division, discarding the LSB.</li>
+<li><strong>Circular Shift (<code>ROL</code>,
+<code>ROR</code>):</strong> Moves bits left or right and recycles every
+overflowing bit to the opposite end, ensuring zero data loss and
+maintaining the exact bit pattern in a rotated state.</li>
+</ul>
+<h2 id="rotate-through-carry">Rotate Through Carry</h2>
+<p>Many Central Processing Unit (CPU) architectures provide a variation
+known as "Rotate Through Carry" (often labeled <code>RCL</code> for
+Rotate Carry Left or <code>RCR</code> for Rotate Carry Right).</p>
+<p>In this mode, the CPU's single-bit Carry Flag is included in the
+rotation cycle:</p>
+<ul>
+<li>In an 8-bit register, the operation acts on a 9-bit loop (8 register
+bits + 1 carry bit).</li>
+<li>When rotating left, the MSB moves into the Carry Flag, and the
+previous Carry Flag value moves into the LSB.</li>
+<li>This mechanism enables multi-word rotations across multiple
+registers in low-level assembly programming.</li>
+</ul>
+<h2 id="practical-applications">Practical Applications</h2>
+<p>Circular bit shifts serve several critical roles in computing:</p>
+<ul>
+<li><strong>Cryptographic Algorithms:</strong> Ciphers and hash
+functions (such as SHA-256, MD5, and ChaCha20) heavily rely on bitwise
+rotations combined with XOR and addition to introduce non-linearity and
+high diffusion (the avalanche effect).</li>
+<li><strong>Data Encoding and Compression:</strong> Circular shifts
+allow efficient rearrangement and packing of data streams.</li>
+<li><strong>Cyclic Redundancy Checks (CRC):</strong> Hardware-level
+error-detection algorithms use circular shift registers to compute
+checksums.</li>
+<li><strong>Microcontroller and Hardware Control:</strong> Used for
+driving rotating LED patterns, scanning multiplexed keypads, and
+managing ring buffers.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

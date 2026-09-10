@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Subtracting One Flips Binary Bits - binary</title>
+    <meta name="description" content="In binary arithmetic, subtracting one from an integer flips the lowest set bit (the least significant bit with a value of 1) to zero and transforms all preceding lower-order zeros into ones. This behavior is the foundation of numerous low-level bitwise o">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/why-subtracting-one-flips-binary-bits">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Subtracting One Flips Binary Bits - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/why-subtracting-one-flips-binary-bits" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In binary arithmetic, subtracting one from an integer flips the lowest set bit (the least significant bit with a value of 1) to zero and transforms all preceding lower-order zeros into ones. This behavior is the foundation of numerous low-level bitwise o" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="why-subtracting-one-flips-binary-bits">Why Subtracting One Flips
+Binary Bits</h1>
+<p>In binary arithmetic, subtracting one from an integer flips the
+lowest set bit (the least significant bit with a value of 1) to zero and
+transforms all preceding lower-order zeros into ones. This behavior is
+the foundation of numerous low-level bitwise operations, such as Brian
+Kernighan’s algorithm for counting set bits. The mathematical
+explanation behind this phenomenon is rooted in the algebraic identity
+for a finite geometric series, specifically <span
+class="math inline">\(2^k - 1 = \sum_{i=0}^{k-1} 2^i\)</span>.</p>
+<h3 id="representing-the-binary-number-algebraically">Representing the
+Binary Number Algebraically</h3>
+<p>Any non-zero positive binary integer <span
+class="math inline">\(N\)</span> can be partitioned based on the
+position of its lowest set bit. Let <span
+class="math inline">\(k\)</span> be the index of this least significant
+set bit (using zero-based indexing from right to left).</p>
+<p>Because bit <span class="math inline">\(k\)</span> is the lowest set
+bit:</p>
+<ul>
+<li>Bits from index <span class="math inline">\(0\)</span> to <span
+class="math inline">\(k-1\)</span> are all <code>0</code>.</li>
+<li>Bit <span class="math inline">\(k\)</span> is <code>1</code>
+(contributing <span class="math inline">\(2^k\)</span> to the
+value).</li>
+<li>Bits from index <span class="math inline">\(k+1\)</span> onward
+represent higher-order values.</li>
+</ul>
+<p>We can express <span class="math inline">\(N\)</span> algebraically
+as: <span class="math display">\[N = M \cdot 2^{k+1} + 2^k\]</span></p>
+<p>where <span class="math inline">\(M\)</span> represents the integer
+value of all bits above index <span
+class="math inline">\(k\)</span>.</p>
+<h3 id="the-core-algebraic-identity">The Core Algebraic Identity</h3>
+<p>When subtracting <span class="math inline">\(1\)</span> from <span
+class="math inline">\(N\)</span>, the operation applies directly to the
+<span class="math inline">\(2^k\)</span> component: <span
+class="math display">\[N - 1 = M \cdot 2^{k+1} + (2^k - 1)\]</span></p>
+<p>The term <span class="math inline">\((2^k - 1)\)</span> is evaluated
+using the geometric progression sum identity: <span
+class="math display">\[2^k - 1 = \sum_{i=0}^{k-1} 2^i = 2^{k-1} +
+2^{k-2} + \dots + 2^1 + 2^0\]</span></p>
+<h3 id="bitwise-effect-of-the-identity">Bitwise Effect of the
+Identity</h3>
+<p>Applying the identity to the equation for <span
+class="math inline">\(N - 1\)</span> gives: <span
+class="math display">\[N - 1 = M \cdot 2^{k+1} + \sum_{i=0}^{k-1}
+2^i\]</span></p>
+<p>Breaking this down by bit positions reveals why each bit behaves the
+way it does:</p>
+<ol type="1">
+<li><strong>Higher Bits (<span class="math inline">\(&gt;
+k\)</span>):</strong> The term <span class="math inline">\(M \cdot
+2^{k+1}\)</span> remains unaffected, meaning all bits above index <span
+class="math inline">\(k\)</span> stay identical to those in <span
+class="math inline">\(N\)</span>.</li>
+<li><strong>The <span class="math inline">\(k\)</span>-th Bit:</strong>
+The term <span class="math inline">\(2^k\)</span> is replaced by the sum
+of smaller powers of two. Thus, the bit at index <span
+class="math inline">\(k\)</span> changes from <code>1</code> to
+<code>0</code>.</li>
+<li><strong>Lower Bits (<span class="math inline">\(0\)</span> to <span
+class="math inline">\(k-1\)</span>):</strong> The sum <span
+class="math inline">\(\sum_{i=0}^{k-1} 2^i\)</span> fills every power of
+two from <span class="math inline">\(0\)</span> up to <span
+class="math inline">\(k-1\)</span>. Consequently, all bits from index
+<span class="math inline">\(0\)</span> to <span
+class="math inline">\(k-1\)</span>, which were previously
+<code>0</code>, become <code>1</code>.</li>
+</ol>
+<h3 id="example">Example</h3>
+<p>Consider the binary number <code>11000</code> (<span
+class="math inline">\(N = 24\)</span>):</p>
+<ul>
+<li>Lowest set bit is at <span class="math inline">\(k = 3\)</span>
+(<span class="math inline">\(2^3 = 8\)</span>).</li>
+<li><span class="math inline">\(N = 1 \cdot 2^4 + 2^3 = 16 + 8 =
+24\)</span>.</li>
+<li><span class="math inline">\(N - 1 = 16 + (2^3 - 1) = 16 + (2^2 + 2^1
++ 2^0) = 16 + 7 = 23\)</span>.</li>
+</ul>
+<p>In binary:</p>
+<ul>
+<li><span class="math inline">\(N = \text{11000}_2\)</span></li>
+<li><span class="math inline">\(N - 1 = \text{10111}_2\)</span></li>
+</ul>
+<p>The bit at index 3 flipped from <code>1</code> to <code>0</code>, and
+indices 0 through 2 flipped from <code>0</code> to <code>1</code>,
+exactly matching the expansion of <span class="math inline">\(2^k -
+1\)</span>.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

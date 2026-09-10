@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Relations in Set Theory and Binary Matrices - binary</title>
+    <meta name="description" content="This article explores the mathematical definition of binary relations in formal set theory and explains their direct structural correspondence to binary matrices (matrices consisting entirely of 0s and 1s). It details how subsets of Cartesian products ma">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/binary-relations-in-set-theory-and-binary-matrices">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Binary Relations in Set Theory and Binary Matrices - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/binary-relations-in-set-theory-and-binary-matrices" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores the mathematical definition of binary relations in formal set theory and explains their direct structural correspondence to binary matrices (matrices consisting entirely of 0s and 1s). It details how subsets of Cartesian products ma" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="binary-relations-in-set-theory-and-binary-matrices">Binary
+Relations in Set Theory and Binary Matrices</h1>
+<p>This article explores the mathematical definition of binary relations
+in formal set theory and explains their direct structural correspondence
+to binary matrices (matrices consisting entirely of 0s and 1s). It
+details how subsets of Cartesian products map directly to
+two-dimensional grids of bits, and demonstrates how fundamental
+relational operations—such as composition, union, intersection, and
+transposition—align seamlessly with Boolean matrix algebra.</p>
+<h2 id="formal-definition-of-a-binary-relation">Formal Definition of a
+Binary Relation</h2>
+<p>In formal set theory, a binary relation <span
+class="math inline">\(R\)</span> between two sets <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> is defined as a subset of their
+Cartesian product, <span class="math inline">\(A \times B\)</span>. The
+Cartesian product represents the set of all ordered pairs <span
+class="math inline">\((a, b)\)</span> such that <span
+class="math inline">\(a \in A\)</span> and <span class="math inline">\(b
+\in B\)</span>:</p>
+<p><span class="math display">\[R \subseteq A \times B = \{(a, b) \mid a
+\in A \text{ and } b \in B\}\]</span></p>
+<p>If <span class="math inline">\((a, b) \in R\)</span>, we say that
+<span class="math inline">\(a\)</span> is related to <span
+class="math inline">\(b\)</span> by <span
+class="math inline">\(R\)</span>, often written as <span
+class="math inline">\(aRb\)</span>. When <span class="math inline">\(A =
+B\)</span>, <span class="math inline">\(R\)</span> is referred to as a
+homogeneous binary relation on <span
+class="math inline">\(A\)</span>.</p>
+<h2 id="the-binary-matrix-representation">The Binary Matrix
+Representation</h2>
+<p>When sets <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> are finite, a binary relation can be
+represented as a logical or binary matrix, often called an adjacency or
+relation matrix.</p>
+<p>Let <span class="math inline">\(A = \{a_1, a_2, \dots, a_m\}\)</span>
+and <span class="math inline">\(B = \{b_1, b_2, \dots, b_n\}\)</span> be
+finite sets with fixed orderings. The relation <span
+class="math inline">\(R \subseteq A \times B\)</span> corresponds to an
+<span class="math inline">\(m \times n\)</span> matrix <span
+class="math inline">\(M_R\)</span>, whose entries are elements of the
+binary domain <span class="math inline">\(\{0, 1\}\)</span>:</p>
+<p><span class="math display">\[M_R(i, j) = \begin{cases} 1 &amp;
+\text{if } (a_i, b_j) \in R \\ 0 &amp; \text{if } (a_i, b_j) \notin R
+\end{cases}\]</span></p>
+<p>Here, the row index <span class="math inline">\(i\)</span>
+corresponds to the element <span class="math inline">\(a_i \in
+A\)</span>, the column index <span class="math inline">\(j\)</span>
+corresponds to the element <span class="math inline">\(b_j \in
+B\)</span>, and the value indicates the presence (<span
+class="math inline">\(1\)</span>) or absence (<span
+class="math inline">\(0\)</span>) of the relation.</p>
+<h2 id="operational-correspondence">Operational Correspondence</h2>
+<p>The algebraic operations performed on relations correspond directly
+to operations on binary matrices using Boolean arithmetic (where
+addition corresponds to logical OR <span
+class="math inline">\(\lor\)</span>, and multiplication corresponds to
+logical AND <span class="math inline">\(\land\)</span>):</p>
+<ul>
+<li><p><strong>Union (<span class="math inline">\(R \cup
+S\)</span>):</strong> The union of two relations corresponds to the
+entrywise Boolean sum (OR) of their matrices: <span
+class="math display">\[M_{R \cup S} = M_R \lor M_S\]</span></p></li>
+<li><p><strong>Intersection (<span class="math inline">\(R \cap
+S\)</span>):</strong> The intersection corresponds to the entrywise
+Boolean product (AND) of their matrices: <span
+class="math display">\[M_{R \cap S} = M_R \land M_S\]</span></p></li>
+<li><p><strong>Converse/Inverse (<span
+class="math inline">\(R^{-1}\)</span>):</strong> The inverse relation,
+defined by <span class="math inline">\((b, a) \in R^{-1} \iff (a, b) \in
+R\)</span>, corresponds to the matrix transpose: <span
+class="math display">\[M_{R^{-1}} = (M_R)^T\]</span></p></li>
+<li><p><strong>Composition (<span class="math inline">\(S \circ
+R\)</span>):</strong> Given <span class="math inline">\(R \subseteq A
+\times B\)</span> and <span class="math inline">\(S \subseteq B \times
+C\)</span>, the composition <span class="math inline">\((a, c) \in S
+\circ R \iff \exists b \in B \text{ such that } (a, b) \in R \text{ and
+} (b, c) \in S\)</span> corresponds to the Boolean matrix
+multiplication: <span class="math display">\[M_{S \circ R} = M_R \odot
+M_S\]</span> where the entry <span class="math inline">\((i, k)\)</span>
+is computed as <span class="math inline">\(\bigvee_{j=1}^{n} (M_R(i, j)
+\land M_S(j, k))\)</span>.</p></li>
+</ul>
+<h2 id="mapping-relation-properties-to-matrix-properties">Mapping
+Relation Properties to Matrix Properties</h2>
+<p>For homogeneous relations on a single set <span
+class="math inline">\(A\)</span> (represented by an <span
+class="math inline">\(n \times n\)</span> square binary matrix <span
+class="math inline">\(M\)</span>), fundamental properties are easily
+verified through matrix structure:</p>
+<ul>
+<li><strong>Reflexivity:</strong> <span class="math inline">\(\forall a
+\in A, (a, a) \in R\)</span>. The main diagonal of <span
+class="math inline">\(M\)</span> contains only <span
+class="math inline">\(1\)</span>s (<span class="math inline">\(M(i, i) =
+1\)</span> for all <span class="math inline">\(i\)</span>).</li>
+<li><strong>Symmetry:</strong> <span class="math inline">\((a, b) \in R
+\implies (b, a) \in R\)</span>. The matrix is equal to its transpose
+(<span class="math inline">\(M = M^T\)</span>).</li>
+<li><strong>Antisymmetry:</strong> <span class="math inline">\((a, b)
+\in R \land (b, a) \in R \implies a = b\)</span>. If <span
+class="math inline">\(i \neq j\)</span> and <span
+class="math inline">\(M(i, j) = 1\)</span>, then <span
+class="math inline">\(M(j, i) = 0\)</span>.</li>
+<li><strong>Transitivity:</strong> <span class="math inline">\((a, b)
+\in R \land (b, c) \in R \implies (a, c) \in R\)</span>. Under Boolean
+matrix multiplication, <span class="math inline">\(M \odot M \le
+M\)</span> (meaning if <span class="math inline">\((M \odot M)_{ij} =
+1\)</span>, then <span class="math inline">\(M_{ij} = 1\)</span>).</li>
+</ul>
+<p>This isomorphism allows computer systems to store, manipulate, and
+query abstract mathematical relations efficiently using compact bit
+arrays and standard matrix operations.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

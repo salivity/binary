@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big-Endian vs Little-Endian Bit Ordering Explained - binary</title>
+    <meta name="description" content="This article explains the difference between big-endian and little-endian bit ordering within a single byte in binary computer systems. While endianness most commonly describes the sequence of multiple bytes in memory, bit-level endianness refers to the">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/big-endian-vs-little-endian-bit-ordering-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Big-Endian vs Little-Endian Bit Ordering Explained - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/big-endian-vs-little-endian-bit-ordering-explained" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explains the difference between big-endian and little-endian bit ordering within a single byte in binary computer systems. While endianness most commonly describes the sequence of multiple bytes in memory, bit-level endianness refers to the" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="big-endian-vs-little-endian-bit-ordering-explained">Big-Endian
+vs Little-Endian Bit Ordering Explained</h1>
+<p>This article explains the difference between big-endian and
+little-endian bit ordering within a single byte in binary computer
+systems. While endianness most commonly describes the sequence of
+multiple bytes in memory, bit-level endianness refers to the specific
+order in which individual bits within a single byte are stored, indexed,
+or transmitted sequentially across hardware interfaces and communication
+protocols.</p>
+<h2 id="the-structure-of-a-byte">The Structure of a Byte</h2>
+<p>A standard byte consists of 8 bits. Numerically, these bits carry
+different weights based on powers of two, ranging from <span
+class="math inline">\(2^0\)</span> (value 1) to <span
+class="math inline">\(2^7\)</span> (value 128):</p>
+<ul>
+<li><strong>Most Significant Bit (MSB):</strong> The bit with the
+highest mathematical value (<span
+class="math inline">\(2^7\)</span>).</li>
+<li><strong>Least Significant Bit (LSB):</strong> The bit with the
+lowest mathematical value (<span
+class="math inline">\(2^0\)</span>).</li>
+</ul>
+<p>Bit-level endianness determines whether the MSB or the LSB is
+processed, numbered, or transmitted first.</p>
+<h2 id="big-endian-bit-ordering-msb-0--msb-first">Big-Endian Bit
+Ordering (MSB 0 / MSB First)</h2>
+<p>In big-endian bit ordering, the most significant bit is positioned or
+processed first.</p>
+<ul>
+<li><strong>Transmission:</strong> When sending a byte across a serial
+interface, the MSB (<span class="math inline">\(2^7\)</span>) is sent
+first, followed by descending significance down to the LSB (<span
+class="math inline">\(2^0\)</span>).</li>
+<li><strong>Indexing/Notation:</strong> In big-endian bit indexing, bit
+index 0 is assigned to the most significant bit.</li>
+<li><strong>Example:</strong> For the binary value <code>11000001</code>
+(decimal 193), a big-endian transmission stream sends <code>1</code>
+(MSB), then <code>1</code>, <code>0</code>, <code>0</code>,
+<code>0</code>, <code>0</code>, <code>0</code>, and finally
+<code>1</code> (LSB).</li>
+</ul>
+<p>Protocols like Ethernet and I2C typically use big-endian bit ordering
+for data transmission.</p>
+<h2 id="little-endian-bit-ordering-lsb-0--lsb-first">Little-Endian Bit
+Ordering (LSB 0 / LSB First)</h2>
+<p>In little-endian bit ordering, the least significant bit is
+positioned or processed first.</p>
+<ul>
+<li><strong>Transmission:</strong> When streaming a byte over a physical
+layer, the LSB (<span class="math inline">\(2^0\)</span>) is sent first,
+followed by increasing significance up to the MSB (<span
+class="math inline">\(2^7\)</span>).</li>
+<li><strong>Indexing/Notation:</strong> In little-endian bit indexing,
+bit index 0 is assigned to the least significant bit, matching the
+mathematical power of two (<span
+class="math inline">\(2^0\)</span>).</li>
+<li><strong>Example:</strong> For the binary value <code>11000001</code>
+(decimal 193), a little-endian transmission stream sends <code>1</code>
+(LSB), then <code>0</code>, <code>0</code>, <code>0</code>,
+<code>0</code>, <code>0</code>, <code>1</code>, and finally
+<code>1</code> (MSB).</li>
+</ul>
+<p>Protocols like RS-232 (UART) and USB typically utilize little-endian
+bit ordering during transmission.</p>
+<h2 id="key-differences-summary">Key Differences Summary</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">Big-Endian Bit Ordering</th>
+<th style="text-align: left;">Little-Endian Bit Ordering</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>First Bit
+Transmitted</strong></td>
+<td style="text-align: left;">Most Significant Bit (MSB / <span
+class="math inline">\(2^7\)</span>)</td>
+<td style="text-align: left;">Least Significant Bit (LSB / <span
+class="math inline">\(2^0\)</span>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Bit 0 Assignment</strong></td>
+<td style="text-align: left;">MSB (High-order bit)</td>
+<td style="text-align: left;">LSB (Low-order bit)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Common Use Cases</strong></td>
+<td style="text-align: left;">Ethernet, I2C, SPI (configurable)</td>
+<td style="text-align: left;">UART/RS-232, USB, PCIe</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Human Readability</strong></td>
+<td style="text-align: left;">Matches standard left-to-right
+writing</td>
+<td style="text-align: left;">Inverted relative to standard
+notation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="practical-implications">Practical Implications</h2>
+<p>Within standard CPU registers and memory architecture, bits within a
+byte are accessed in parallel rather than sequentially, meaning bit
+endianness is mostly transparent to software execution. However, bit
+ordering is critical in hardware design, field-programmable gate arrays
+(FPGAs), bitmasking across different architectures, and serial
+communications, where mismatched bit-order assumptions will invert or
+corrupt the data being transferred.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

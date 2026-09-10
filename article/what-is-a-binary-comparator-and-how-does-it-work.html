@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is a Binary Comparator and How Does It Work? - binary</title>
+    <meta name="description" content="A binary comparator is a combinational logic circuit used in digital electronics to compare the values of two binary numbers. This article provides an overview of binary comparators, detailing their functional purpose and the digital logic mechanisms use">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-a-binary-comparator-and-how-does-it-work">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is a Binary Comparator and How Does It Work? - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-a-binary-comparator-and-how-does-it-work" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A binary comparator is a combinational logic circuit used in digital electronics to compare the values of two binary numbers. This article provides an overview of binary comparators, detailing their functional purpose and the digital logic mechanisms use" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-a-binary-comparator-and-how-does-it-work">What Is a
+Binary Comparator and How Does It Work?</h1>
+<p>A binary comparator is a combinational logic circuit used in digital
+electronics to compare the values of two binary numbers. This article
+provides an overview of binary comparators, detailing their functional
+purpose and the digital logic mechanisms used to evaluate equality
+(<span class="math inline">\(A = B\)</span>) and magnitude (<span
+class="math inline">\(A &gt; B\)</span>, <span class="math inline">\(A
+&lt; B\)</span>) across single-bit and multi-bit data inputs.</p>
+<h2 id="what-is-a-binary-comparator">What is a Binary Comparator?</h2>
+<p>A binary comparator takes two binary numbers as inputs (commonly
+denoted as <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>) and processes them through logic gates
+to determine their relative values. Depending on the design, the circuit
+produces three distinct binary outputs indicating whether:</p>
+<ul>
+<li><span class="math inline">\(A\)</span> is greater than <span
+class="math inline">\(B\)</span> (<span class="math inline">\(A &gt;
+B\)</span>)</li>
+<li><span class="math inline">\(A\)</span> is equal to <span
+class="math inline">\(B\)</span> (<span class="math inline">\(A =
+B\)</span>)</li>
+<li><span class="math inline">\(A\)</span> is less than <span
+class="math inline">\(B\)</span> (<span class="math inline">\(A &lt;
+B\)</span>)</li>
+</ul>
+<p>Binary comparators are typically classified into two types:
+<strong>Identity Comparators</strong>, which only test for equality
+(<span class="math inline">\(A = B\)</span>), and <strong>Magnitude
+Comparators</strong>, which evaluate all three conditions (<span
+class="math inline">\(A &gt; B\)</span>, <span class="math inline">\(A =
+B\)</span>, and <span class="math inline">\(A &lt; B\)</span>).</p>
+<hr />
+<h2 id="evaluating-equality-a--b">Evaluating Equality (<span
+class="math inline">\(A = B\)</span>)</h2>
+<p>Equality evaluation relies on comparing corresponding bit positions
+between the two numbers to verify that every pair of bits is
+identical.</p>
+<h3 id="single-bit-equality">Single-Bit Equality</h3>
+<p>For single-bit inputs, equality is evaluated using an <strong>XNOR
+(Exclusive-NOR)</strong> gate. An XNOR gate outputs a logic
+<code>1</code> if and only if both inputs are the same (both
+<code>0</code> or both <code>1</code>):</p>
+<p><span class="math display">\[\text{Equality Output} = A \odot B = (A
+\cdot B) + (\overline{A} \cdot \overline{B})\]</span></p>
+<h3 id="multi-bit-equality">Multi-Bit Equality</h3>
+<p>In multi-bit numbers (such as 4-bit numbers <span
+class="math inline">\(A_3A_2A_1A_0\)</span> and <span
+class="math inline">\(B_3B_2B_1B_0\)</span>), every bit position must
+match for the full numbers to be equal.</p>
+<ol type="1">
+<li>Each pair of bits is evaluated with a dedicated XNOR gate:
+<ul>
+<li><span class="math inline">\(x_3 = A_3 \odot B_3\)</span></li>
+<li><span class="math inline">\(x_2 = A_2 \odot B_2\)</span></li>
+<li><span class="math inline">\(x_1 = A_1 \odot B_1\)</span></li>
+<li><span class="math inline">\(x_0 = A_0 \odot B_0\)</span></li>
+</ul></li>
+<li>The outputs of all XNOR gates are fed into a multi-input
+<strong>AND</strong> gate:</li>
+</ol>
+<p><span class="math display">\[(A = B) = x_3 \cdot x_2 \cdot x_1 \cdot
+x_0\]</span></p>
+<p>If any bit pair does not match, the corresponding <span
+class="math inline">\(x_n\)</span> output becomes <code>0</code>,
+forcing the overall <span class="math inline">\((A = B)\)</span> output
+to <code>0</code>.</p>
+<hr />
+<h2 id="evaluating-magnitude-a--b-and-a--b">Evaluating Magnitude (<span
+class="math inline">\(A &gt; B\)</span> and <span
+class="math inline">\(A &lt; B\)</span>)</h2>
+<p>Evaluating magnitude requires determining which number has a higher
+value by analyzing the bits sequentially, starting from the Most
+Significant Bit (MSB) down to the Least Significant Bit (LSB).</p>
+<h3 id="single-bit-magnitude">Single-Bit Magnitude</h3>
+<p>For single-bit comparisons, magnitude is evaluated using basic
+AND-NOT logic:</p>
+<ul>
+<li><p><strong><span class="math inline">\(A &gt; B\)</span>
+condition:</strong> True only when <span class="math inline">\(A =
+1\)</span> and <span class="math inline">\(B = 0\)</span>. <span
+class="math display">\[(A &gt; B) = A \cdot
+\overline{B}\]</span></p></li>
+<li><p><strong><span class="math inline">\(A &lt; B\)</span>
+condition:</strong> True only when <span class="math inline">\(A =
+0\)</span> and <span class="math inline">\(B = 1\)</span>. <span
+class="math display">\[(A &lt; B) = \overline{A} \cdot
+B\]</span></p></li>
+</ul>
+<h3 id="multi-bit-magnitude">Multi-Bit Magnitude</h3>
+<p>For multi-bit inputs, the comparator prioritizes higher-order bits
+because a higher-order bit outweighs all lower-order bits combined.</p>
+<ol type="1">
+<li><strong>Check the MSB:</strong> If <span class="math inline">\(A_3
+&gt; B_3\)</span>, then <span class="math inline">\(A &gt; B\)</span>
+regardless of lower bits.</li>
+<li><strong>Check Successive Bits:</strong> If <span
+class="math inline">\(A_3 = B_3\)</span> (represented by <span
+class="math inline">\(x_3 = 1\)</span>), the circuit checks the next bit
+(<span class="math inline">\(A_2\)</span> and <span
+class="math inline">\(B_2\)</span>).</li>
+<li><strong>Cascading Logic:</strong> This conditional checking
+continues to the LSB.</li>
+</ol>
+<p>The logic equations for a 4-bit magnitude comparator illustrate this
+priority scheme:</p>
+<ul>
+<li><p><strong>Greater Than (<span class="math inline">\(A &gt;
+B\)</span>):</strong> <span class="math display">\[(A &gt; B) = (A_3
+\cdot \overline{B_3}) + (x_3 \cdot A_2 \cdot \overline{B_2}) + (x_3
+\cdot x_2 \cdot A_1 \cdot \overline{B_1}) + (x_3 \cdot x_2 \cdot x_1
+\cdot A_0 \cdot \overline{B_0})\]</span></p></li>
+<li><p><strong>Less Than (<span class="math inline">\(A &lt;
+B\)</span>):</strong> <span class="math display">\[(A &lt; B) =
+(\overline{A_3} \cdot B_3) + (x_3 \cdot \overline{A_2} \cdot B_2) + (x_3
+\cdot x_2 \cdot \overline{A_1} \cdot B_1) + (x_3 \cdot x_2 \cdot x_1
+\cdot \overline{A_0} \cdot B_0)\]</span></p></li>
+</ul>
+<hr />
+<h2 id="common-applications">Common Applications</h2>
+<p>Binary comparators are fundamental building blocks in digital
+systems, including:</p>
+<ul>
+<li><strong>Arithmetic Logic Units (ALUs):</strong> Used for conditional
+branching, execution flags, and sorting algorithms.</li>
+<li><strong>Memory Addressing:</strong> Decoding memory addresses to
+determine if a requested address matches a target block.</li>
+<li><strong>Control Systems:</strong> Comparing sensor data against
+preset thresholds to trigger automated actions.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

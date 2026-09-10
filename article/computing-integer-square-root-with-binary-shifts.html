@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computing Integer Square Root with Binary Shifts - binary</title>
+    <meta name="description" content="An integer square root algorithm calculates the greatest integer less than or equal to the square root of a given non-negative integer. This article explains the mechanics of computing exact integer square roots using a digit-by-digit binary method, deta">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/computing-integer-square-root-with-binary-shifts">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Computing Integer Square Root with Binary Shifts - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/computing-integer-square-root-with-binary-shifts" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="An integer square root algorithm calculates the greatest integer less than or equal to the square root of a given non-negative integer. This article explains the mechanics of computing exact integer square roots using a digit-by-digit binary method, deta" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="computing-integer-square-root-with-binary-shifts">Computing
+Integer Square Root with Binary Shifts</h1>
+<p>An integer square root algorithm calculates the greatest integer less
+than or equal to the square root of a given non-negative integer. This
+article explains the mechanics of computing exact integer square roots
+using a digit-by-digit binary method, detailing how bitwise shifts,
+remainder tracking, and binary subtraction determine each bit of the
+final result without relying on costly floating-point operations.</p>
+<h2 id="what-is-an-integer-square-root">What Is an Integer Square
+Root?</h2>
+<p>The integer square root of a non-negative integer <span
+class="math inline">\(n\)</span>, often denoted as <span
+class="math inline">\(\lfloor\sqrt{n}\rfloor\)</span>, is the largest
+integer <span class="math inline">\(r\)</span> such that:</p>
+<p><span class="math display">\[r^2 \le n &lt; (r + 1)^2\]</span></p>
+<p>In software systems, especially on microcontrollers, embedded
+hardware, or cryptographic engines without a dedicated Floating-Point
+Unit (FPU), computing square roots via floating-point approximation
+introduces performance overhead and rounding errors. Integer square root
+algorithms solve this problem by operating strictly within discrete
+integer domains.</p>
+<h2 id="the-principle-of-the-binary-bit-by-bit-method">The Principle of
+the Binary Bit-by-Bit Method</h2>
+<p>The binary bit-by-bit algorithm is the base-2 adaptation of the
+traditional pen-and-paper long division method for finding square
+roots.</p>
+<p>In base 10, numbers are grouped into pairs of digits starting from
+the decimal point. In base 2, bits are processed in pairs (2 bits at a
+time) from the most significant bits down to the least significant bits.
+This 2-to-1 relationship exists because squaring a number doubles its
+bit length:</p>
+<p><span class="math display">\[(2^k)^2 = 2^{2k}\]</span></p>
+<p>At each step, the algorithm determines the next bit of the root
+(either 0 or 1). Because binary only has two possible digits, the
+decision does not require estimating a quotient digit; it only requires
+a single test to determine if the next bit can be a 1.</p>
+<h2 id="mathematical-formulation">Mathematical Formulation</h2>
+<p>Let <span class="math inline">\(r\)</span> be the partial root
+computed so far. When shifting to the next bit, the current root becomes
+<span class="math inline">\(2r\)</span>.</p>
+<p>If the next bit to append is 1, the new root candidate is <span
+class="math inline">\((2r + 1)\)</span>. The difference between the
+square of the new candidate and the square of the previous base is:</p>
+<p><span class="math display">\[(2r + 1)^2 - (2r)^2 = 4r +
+1\]</span></p>
+<p>Therefore, to test whether the next bit of the root is
+<code>1</code>, the algorithm shifts the current remainder to include
+the next two bits of the input, and then checks if the remainder is
+greater than or equal to <span class="math inline">\((4r +
+1)\)</span>.</p>
+<ul>
+<li>If <strong>Remainder <span class="math inline">\(\ge 4r +
+1\)</span></strong>: The next root bit is <code>1</code>. Subtract <span
+class="math inline">\((4r + 1)\)</span> from the remainder, and update
+the root to <span class="math inline">\((2r + 1)\)</span>.</li>
+<li>If <strong>Remainder <span class="math inline">\(&lt; 4r +
+1\)</span></strong>: The next root bit is <code>0</code>. The remainder
+remains unchanged, and the root updates to <span
+class="math inline">\(2r\)</span>.</li>
+</ul>
+<h2 id="step-by-step-algorithm-execution">Step-by-Step Algorithm
+Execution</h2>
+<ol type="1">
+<li><p><strong>Initialization:</strong></p>
+<ul>
+<li>Set the remainder register to <code>0</code>.</li>
+<li>Set the root register to <code>0</code>.</li>
+<li>Determine the highest power-of-four mask less than or equal to <span
+class="math inline">\(n\)</span> (or iterate through bit pairs from MSB
+to LSB).</li>
+</ul></li>
+<li><p><strong>Loop Iteration (for each 2-bit pair):</strong></p>
+<ul>
+<li>Shift the remainder left by 2 bits.</li>
+<li>Bring down the current 2 bits of the input number and add them to
+the remainder.</li>
+<li>Shift the current root left by 1 bit.</li>
+<li>Compute the trial value:
+<code>test_value = (root &lt;&lt; 1) + 1</code>.</li>
+<li>If <code>remainder &gt;= test_value</code>:
+<ul>
+<li><code>remainder = remainder - test_value</code></li>
+<li><code>root = root + 1</code></li>
+</ul></li>
+</ul></li>
+<li><p><strong>Termination:</strong></p>
+<ul>
+<li>Once all bit pairs from the input are processed, the
+<code>root</code> variable contains <span
+class="math inline">\(\lfloor\sqrt{n}\rfloor\)</span>, and the
+<code>remainder</code> variable contains <span class="math inline">\(n -
+r^2\)</span>.</li>
+</ul></li>
+</ol>
+<h2 id="example-computing-lfloorsqrt27rfloor">Example: Computing <span
+class="math inline">\(\lfloor\sqrt{27}\rfloor\)</span></h2>
+<p>The decimal value 27 in 6-bit binary is <code>01 10 11</code><span
+class="math inline">\(_2\)</span> (grouped in pairs). The expected root
+is 5 (<code>101</code><span class="math inline">\(_2\)</span>) with a
+remainder of 2.</p>
+<ul>
+<li><p><strong>Step 1 (Bits: <code>01</code>):</strong></p>
+<ul>
+<li>Remainder becomes <code>01</code><span
+class="math inline">\(_2\)</span> (1).</li>
+<li>Root is <code>0</code>. Test value:
+<code>(0 &lt;&lt; 1) + 1 = 1</code>.</li>
+<li>Since <span class="math inline">\(1 \ge 1\)</span>: Remainder <span
+class="math inline">\(= 1 - 1 = 0\)</span>, Root becomes
+<code>1</code>.</li>
+</ul></li>
+<li><p><strong>Step 2 (Bits: <code>10</code>):</strong></p>
+<ul>
+<li>Remainder becomes <code>00</code> shifted left by 2 plus
+<code>10</code><span class="math inline">\(_2 = 2\)</span>.</li>
+<li>Root is <code>1</code> (shifted candidate:
+<code>root &lt;&lt; 1 = 2</code>). Test value:
+<code>(1 &lt;&lt; 1) + 1 = 3</code>.</li>
+<li>Since <span class="math inline">\(2 &lt; 3\)</span>: Remainder stays
+<span class="math inline">\(2\)</span>, Root becomes
+<code>10</code><span class="math inline">\(_2\)</span> (2).</li>
+</ul></li>
+<li><p><strong>Step 3 (Bits: <code>11</code>):</strong></p>
+<ul>
+<li>Remainder becomes <code>2</code> shifted left by 2 plus
+<code>11</code><span class="math inline">\(_2 = 11\)</span>.</li>
+<li>Root is <code>2</code> (<code>10</code><span
+class="math inline">\(_2\)</span>). Test value:
+<code>(2 &lt;&lt; 1) + 1 = 5</code> (<code>101</code><span
+class="math inline">\(_2\)</span>).</li>
+<li>Since <span class="math inline">\(11 \ge 5\)</span>: Remainder <span
+class="math inline">\(= 11 - 5 = 6\)</span> (or <span
+class="math inline">\(1011_2 - 1001_2 = 2\)</span>).</li>
+<li>Root becomes <code>101</code><span class="math inline">\(_2\)</span>
+(5).</li>
+</ul></li>
+</ul>
+<p>Final result: Root is <span class="math inline">\(5\)</span>, with a
+final remainder of <span class="math inline">\(2\)</span>.</p>
+<h2 id="computational-advantages">Computational Advantages</h2>
+<p>The binary shift-based integer square root algorithm requires only
+basic arithmetic and logical operations: left shifts, additions,
+subtractions, and comparisons. It executes in deterministic <span
+class="math inline">\(O(b)\)</span> time, where <span
+class="math inline">\(b\)</span> is half the number of bits in the input
+integer, making it highly efficient for hardware logic, DSP
+applications, and low-level firmware.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

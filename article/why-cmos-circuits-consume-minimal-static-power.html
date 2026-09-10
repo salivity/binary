@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why CMOS Circuits Consume Minimal Static Power - binary</title>
+    <meta name="description" content="Complementary Metal-Oxide-Semiconductor (CMOS) technology is the foundation of modern digital integrated circuits, largely due to its remarkable power efficiency. While active computing causes dynamic power consumption, CMOS logic draws virtually zero st">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/why-cmos-circuits-consume-minimal-static-power">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why CMOS Circuits Consume Minimal Static Power - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/why-cmos-circuits-consume-minimal-static-power" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Complementary Metal-Oxide-Semiconductor (CMOS) technology is the foundation of modern digital integrated circuits, largely due to its remarkable power efficiency. While active computing causes dynamic power consumption, CMOS logic draws virtually zero st" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="why-cmos-circuits-consume-minimal-static-power">Why CMOS
+Circuits Consume Minimal Static Power</h1>
+<p>Complementary Metal-Oxide-Semiconductor (CMOS) technology is the
+foundation of modern digital integrated circuits, largely due to its
+remarkable power efficiency. While active computing causes dynamic power
+consumption, CMOS logic draws virtually zero static power when
+maintaining a stable binary state of either logic high ('1') or logic
+low ('0'). This efficiency stems directly from the complementary pairing
+of transistors, the high input impedance of insulated gates, and the
+absence of a continuous conductive path between the power supply and
+ground during steady-state conditions.</p>
+<h3 id="the-complementary-transistor-pair">The Complementary Transistor
+Pair</h3>
+<p>A basic CMOS circuit consists of two complementary types of
+Metal-Oxide-Semiconductor Field-Effect Transistors (MOSFETs):</p>
+<ol type="1">
+<li><strong>P-channel MOSFET (PMOS):</strong> Connected to the positive
+supply voltage (<span class="math inline">\(V_{DD}\)</span>) to serve as
+a "pull-up" network. A PMOS transistor turns <strong>ON</strong> when
+the input gate voltage is LOW and turns <strong>OFF</strong> when the
+gate voltage is HIGH.</li>
+<li><strong>N-channel MOSFET (NMOS):</strong> Connected to ground (<span
+class="math inline">\(V_{SS}\)</span>) to serve as a "pull-down"
+network. An NMOS transistor turns <strong>ON</strong> when the input
+gate voltage is HIGH and turns <strong>OFF</strong> when the gate
+voltage is LOW.</li>
+</ol>
+<p>Because these two devices operate under inverted gate voltage
+conditions, they complement each other in logic design.</p>
+<h3 id="steady-state-operation">Steady-State Operation</h3>
+<p>When a CMOS inverter holds a fixed binary logic state, only one
+network is conducting at any given time:</p>
+<ul>
+<li><strong>Holding Logic '0' at the Input:</strong> The input is driven
+to <span class="math inline">\(0\text{ V}\)</span>. This turns the PMOS
+transistor ON and the NMOS transistor OFF. The output node is pulled up
+to <span class="math inline">\(V_{DD}\)</span> (Logic '1'). Because the
+NMOS is switched OFF, the path to ground is completely blocked.</li>
+<li><strong>Holding Logic '1' at the Input:</strong> The input is driven
+to <span class="math inline">\(V_{DD}\)</span>. This turns the NMOS
+transistor ON and the PMOS transistor OFF. The output node is pulled
+down to <span class="math inline">\(0\text{ V}\)</span> (Logic '0').
+Because the PMOS is switched OFF, the path to the positive supply rail
+is completely blocked.</li>
+</ul>
+<p>In both static conditions, at least one of the series-connected
+transistors is turned off.</p>
+<h3 id="elimination-of-the-direct-dc-current-path">Elimination of the
+Direct DC Current Path</h3>
+<p>In older logic families, such as NMOS logic or Transistor-Transistor
+Logic (TTL), pull-up resistors or continuously active transistors were
+used. In those designs, holding a specific logic state created a
+continuous path for Direct Current (DC) to flow from <span
+class="math inline">\(V_{DD}\)</span> to ground, resulting in constant
+power dissipation.</p>
+<p>In CMOS, the OFF transistor exhibits an extremely high channel
+resistance (typically in the gigaohm range). Because the pull-up and
+pull-down networks are never intentionally active simultaneously in a
+steady state, no direct DC path exists between <span
+class="math inline">\(V_{DD}\)</span> and ground. Static current (<span
+class="math inline">\(I_{static}\)</span>) is theoretically zero,
+keeping static power dissipation (<span class="math inline">\(P_{static}
+= V_{DD} \times I_{static}\)</span>) negligible.</p>
+<h3 id="insulated-gate-impedance">Insulated Gate Impedance</h3>
+<p>Static power is also minimized at the circuit inputs. The control
+gate of a MOSFET is electrically isolated from the conducting channel by
+a thin dielectric layer (silicon dioxide or high-k dielectric material).
+This oxide barrier creates an extremely high input impedance, preventing
+DC current from flowing into or out of the gate terminals while holding
+a static voltage level.</p>
+<h3 id="dynamic-switching-vs-static-state">Dynamic Switching vs. Static
+State</h3>
+<p>CMOS circuits consume the vast majority of their power during state
+transitions rather than in a fixed state. Dynamic power consumption
+occurs during switching for two reasons:</p>
+<ul>
+<li><strong>Capacitive Charging/Discharging:</strong> Energy is required
+to charge and discharge the parasitic capacitances of the output load
+and interconnects.</li>
+<li><strong>Short-Circuit (Crowbar) Current:</strong> During the brief
+moment of switching between '0' and '1', the input voltage passes
+through an intermediate threshold where both PMOS and NMOS transistors
+are momentarily partially conductive, creating a brief spike in
+current.</li>
+</ul>
+<p>Once the transition finishes and the output settles at a binary rail,
+the dynamic current stops entirely.</p>
+<h3 id="static-leakage-in-modern-nanometer-nodes">Static Leakage in
+Modern Nanometer Nodes</h3>
+<p>While ideal CMOS circuits draw zero static power, physical
+limitations in modern deep-submicron process nodes introduce minor
+leakage currents, including:</p>
+<ul>
+<li><strong>Subthreshold Leakage:</strong> Weak current flowing between
+the drain and source even when the gate voltage is below the threshold
+voltage.</li>
+<li><strong>Gate Oxide Tunneling:</strong> Quantum tunneling of
+electrons through ultra-thin dielectric layers.</li>
+<li><strong>Reverse-Biased Junction Leakage:</strong> Small currents
+leaking through the p-n junctions formed between transistor
+drains/sources and the substrate.</li>
+</ul>
+<p>Despite these nanoscale quantum effects, the fundamental
+complementary architecture of CMOS ensures that static power remains
+orders of magnitude lower than that of non-complementary logic
+designs.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

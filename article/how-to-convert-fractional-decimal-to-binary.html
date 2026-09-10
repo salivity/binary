@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Convert Fractional Decimal to Binary - binary</title>
+    <meta name="description" content="Converting a fractional decimal number to its binary equivalent is a straightforward process that uses repeated multiplication by 2. This guide provides a clear, step-by-step walkthrough of the conversion algorithm, demonstrates the process using the exa">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-to-convert-fractional-decimal-to-binary">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How to Convert Fractional Decimal to Binary - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-to-convert-fractional-decimal-to-binary" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Converting a fractional decimal number to its binary equivalent is a straightforward process that uses repeated multiplication by 2. This guide provides a clear, step-by-step walkthrough of the conversion algorithm, demonstrates the process using the exa" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-to-convert-fractional-decimal-to-binary">How to Convert
+Fractional Decimal to Binary</h1>
+<p>Converting a fractional decimal number to its binary equivalent is a
+straightforward process that uses repeated multiplication by 2. This
+guide provides a clear, step-by-step walkthrough of the conversion
+algorithm, demonstrates the process using the example decimal number
+0.625, and explains how to verify the final binary result.</p>
+<h3 id="the-repeated-multiplication-algorithm">The Repeated
+Multiplication Algorithm</h3>
+<p>To convert a decimal fraction to binary:</p>
+<ol type="1">
+<li><strong>Multiply</strong> the fractional decimal number by 2.</li>
+<li><strong>Record</strong> the integer part (the digit before the
+decimal point, which will always be <code>0</code> or <code>1</code>) as
+the next binary digit.</li>
+<li><strong>Remove</strong> the integer part, keeping only the remaining
+fractional part.</li>
+<li><strong>Repeat</strong> the process with the new fractional part
+until it reaches <code>0.0</code> or until you reach the desired degree
+of precision.</li>
+<li><strong>Write</strong> the recorded integers in the order they were
+calculated, placed immediately after a binary point
+(<code>0.</code>).</li>
+</ol>
+<hr />
+<h3 id="step-by-step-example-converting-0625-to-binary">Step-by-Step
+Example: Converting 0.625 to Binary</h3>
+<p><strong>Step 1:</strong> Multiply 0.625 by 2<br />
+<span class="math display">\[0.625 \times 2 = 1.250\]</span></p>
+<ul>
+<li>Integer part: <strong>1</strong></li>
+<li>Remaining fraction: <strong>0.25</strong></li>
+</ul>
+<p><strong>Step 2:</strong> Multiply 0.25 by 2<br />
+<span class="math display">\[0.25 \times 2 = 0.50\]</span></p>
+<ul>
+<li>Integer part: <strong>0</strong></li>
+<li>Remaining fraction: <strong>0.5</strong></li>
+</ul>
+<p><strong>Step 3:</strong> Multiply 0.5 by 2<br />
+<span class="math display">\[0.5 \times 2 = 1.0\]</span></p>
+<ul>
+<li>Integer part: <strong>1</strong></li>
+<li>Remaining fraction: <strong>0.0</strong> (The process stops here
+since the fraction is zero.)</li>
+</ul>
+<hr />
+<h3 id="result">Result</h3>
+<p>Read the recorded integer parts from top to bottom: <strong>1, 0,
+1</strong>.</p>
+<p>Place them after the radix point:<br />
+<strong><span class="math inline">\(0.625_{10} =
+0.101_2\)</span></strong></p>
+<hr />
+<h3 id="verification">Verification</h3>
+<p>To verify the result, convert the binary fraction back into decimal
+using negative powers of 2:</p>
+<p><span class="math display">\[0.101_2 = (1 \times 2^{-1}) + (0 \times
+2^{-2}) + (1 \times 2^{-3})\]</span><br />
+<span class="math display">\[0.101_2 = (1 \times 0.5) + (0 \times 0.25)
++ (1 \times 0.125)\]</span><br />
+<span class="math display">\[0.101_2 = 0.5 + 0 + 0.125 =
+0.625_{10}\]</span></p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

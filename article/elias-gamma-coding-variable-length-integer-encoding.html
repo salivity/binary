@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elias Gamma Coding: Variable-Length Integer Encoding - binary</title>
+    <meta name="description" content="Elias gamma coding is a universal variable-length encoding scheme designed to represent positive integers using binary sequences. Unlike fixed-width binary formats that require a predetermined bit-depth, Elias gamma coding dynamically scales the length o">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/elias-gamma-coding-variable-length-integer-encoding">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Elias Gamma Coding: Variable-Length Integer Encoding - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/elias-gamma-coding-variable-length-integer-encoding" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Elias gamma coding is a universal variable-length encoding scheme designed to represent positive integers using binary sequences. Unlike fixed-width binary formats that require a predetermined bit-depth, Elias gamma coding dynamically scales the length o" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="elias-gamma-coding-variable-length-integer-encoding">Elias Gamma
+Coding: Variable-Length Integer Encoding</h1>
+<p>Elias gamma coding is a universal variable-length encoding scheme
+designed to represent positive integers using binary sequences. Unlike
+fixed-width binary formats that require a predetermined bit-depth, Elias
+gamma coding dynamically scales the length of the code relative to the
+magnitude of the integer being stored. This article explains how Elias
+gamma coding operates, how it encodes and decodes values, and how it
+extends standard binary representations to create self-delimiting,
+prefix-free data streams for efficient data compression.</p>
+<h2 id="the-limitation-of-standard-binary-representation">The Limitation
+of Standard Binary Representation</h2>
+<p>In standard computing, integers are typically stored in fixed-width
+binary formats, such as 8-bit, 16-bit, 32-bit, or 64-bit blocks. While
+fixed-width encoding allows straightforward memory addressing, it
+introduces two distinct problems in data transmission and
+compression:</p>
+<ol type="1">
+<li><strong>Space Inefficiency:</strong> Small values like 1 or 5
+consume the same amount of storage as large values when stored in fixed
+32-bit or 64-bit words.</li>
+<li><strong>Ambiguity in Bitstreams:</strong> Simply truncating leading
+zeros to save space makes it impossible for a decoder to determine where
+one integer ends and the next begins without external delimiters or
+explicit length headers.</li>
+</ol>
+<p>Elias gamma coding resolves these limitations by creating a
+<strong>prefix-free (self-delimiting)</strong> code, meaning no complete
+code word is a prefix of another code word in the set. This allows a
+continuous stream of bits to be decoded unambiguously without
+separators.</p>
+<h2 id="how-elias-gamma-coding-works">How Elias Gamma Coding Works</h2>
+<p>Developed by Peter Elias in 1975, Elias gamma coding encodes any
+positive integer <span class="math inline">\(x \ge 1\)</span> by
+splitting the number into two parts: its magnitude (the highest power of
+2) and its remainder.</p>
+<p>The encoding process follows three steps:</p>
+<ol type="1">
+<li><strong>Determine the highest power of 2:</strong> Find <span
+class="math inline">\(N = \lfloor\log_2(x)\rfloor\)</span>, which
+represents the position of the most significant bit of <span
+class="math inline">\(x\)</span>.</li>
+<li><strong>Write the Unary Prefix:</strong> Output <span
+class="math inline">\(N\)</span> zeros followed by a <code>1</code> (or
+simply <span class="math inline">\(N\)</span> zeros as a prefix).</li>
+<li><strong>Append the Binary Suffix:</strong> Append the remaining
+<span class="math inline">\(N\)</span> least significant bits of the
+standard binary representation of <span
+class="math inline">\(x\)</span>.</li>
+</ol>
+<p>The total bit length for an encoded integer <span
+class="math inline">\(x\)</span> is <span
+class="math inline">\(2\lfloor\log_2(x)\rfloor + 1\)</span> bits.</p>
+<h3 id="encoding-examples">Encoding Examples</h3>
+<ul>
+<li><p><strong>Encoding <span class="math inline">\(x =
+1\)</span>:</strong></p>
+<ul>
+<li><span class="math inline">\(N = \lfloor\log_2(1)\rfloor =
+0\)</span></li>
+<li>Unary prefix (<span class="math inline">\(N\)</span> zeros):
+None</li>
+<li>Binary representation: <code>1</code></li>
+<li><strong>Result:</strong> <code>1</code> (1 bit)</li>
+</ul></li>
+<li><p><strong>Encoding <span class="math inline">\(x =
+5\)</span>:</strong></p>
+<ul>
+<li><span class="math inline">\(N = \lfloor\log_2(5)\rfloor =
+2\)</span></li>
+<li>Standard binary for 5: <code>101</code></li>
+<li>Unary prefix: <code>00</code></li>
+<li>Binary suffix (all bits of 5 starting from the leading 1):
+<code>101</code></li>
+<li><strong>Result:</strong> <code>00101</code> (5 bits)</li>
+</ul></li>
+<li><p><strong>Encoding <span class="math inline">\(x =
+9\)</span>:</strong></p>
+<ul>
+<li><span class="math inline">\(N = \lfloor\log_2(9)\rfloor =
+3\)</span></li>
+<li>Standard binary for 9: <code>1001</code></li>
+<li>Unary prefix: <code>000</code></li>
+<li>Binary suffix: <code>1001</code></li>
+<li><strong>Result:</strong> <code>0001001</code> (7 bits)</li>
+</ul></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Integer (<span
+class="math inline">\(x\)</span>)</th>
+<th style="text-align: left;">Standard Binary</th>
+<th style="text-align: left;">Unary Prefix</th>
+<th style="text-align: left;">Suffix</th>
+<th style="text-align: left;">Elias Gamma Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>1</strong></td>
+<td style="text-align: left;"><code>1</code></td>
+<td style="text-align: left;">(none)</td>
+<td style="text-align: left;"><code>1</code></td>
+<td style="text-align: left;"><code>1</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>2</strong></td>
+<td style="text-align: left;"><code>10</code></td>
+<td style="text-align: left;"><code>0</code></td>
+<td style="text-align: left;"><code>10</code></td>
+<td style="text-align: left;"><code>010</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>3</strong></td>
+<td style="text-align: left;"><code>11</code></td>
+<td style="text-align: left;"><code>0</code></td>
+<td style="text-align: left;"><code>11</code></td>
+<td style="text-align: left;"><code>011</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>4</strong></td>
+<td style="text-align: left;"><code>100</code></td>
+<td style="text-align: left;"><code>00</code></td>
+<td style="text-align: left;"><code>100</code></td>
+<td style="text-align: left;"><code>00100</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>5</strong></td>
+<td style="text-align: left;"><code>101</code></td>
+<td style="text-align: left;"><code>00</code></td>
+<td style="text-align: left;"><code>101</code></td>
+<td style="text-align: left;"><code>00101</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>6</strong></td>
+<td style="text-align: left;"><code>110</code></td>
+<td style="text-align: left;"><code>00</code></td>
+<td style="text-align: left;"><code>110</code></td>
+<td style="text-align: left;"><code>00110</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>7</strong></td>
+<td style="text-align: left;"><code>111</code></td>
+<td style="text-align: left;"><code>00</code></td>
+<td style="text-align: left;"><code>111</code></td>
+<td style="text-align: left;"><code>00111</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>8</strong></td>
+<td style="text-align: left;"><code>1000</code></td>
+<td style="text-align: left;"><code>000</code></td>
+<td style="text-align: left;"><code>1000</code></td>
+<td style="text-align: left;"><code>0001000</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="decoding-elias-gamma-codes">Decoding Elias Gamma Codes</h2>
+<p>Decoding an Elias gamma bitstream is deterministic and requires no
+lookahead buffers:</p>
+<ol type="1">
+<li>Read consecutive zeros from the bitstream until a <code>1</code> is
+encountered.</li>
+<li>Count the number of zeros read; let this count be <span
+class="math inline">\(N\)</span>.</li>
+<li>Keep the <code>1</code> and read the subsequent <span
+class="math inline">\(N\)</span> bits from the stream.</li>
+<li>Convert the resulting <span class="math inline">\((N +
+1)\)</span>-bit binary sequence into its decimal integer
+equivalent.</li>
+</ol>
+<p>For example, given the bitstream <code>001101...</code>:</p>
+<ul>
+<li>Count zeros: Two zeros (<code>00</code>), so <span
+class="math inline">\(N = 2\)</span>.</li>
+<li>Read the <code>1</code> plus the next 2 bits: <code>110</code>.</li>
+<li>Convert <code>110</code> to decimal: <span class="math inline">\(4 +
+2 + 0 = 6\)</span>.</li>
+<li>The next integer starts immediately with the following bit
+<code>1</code>.</li>
+</ul>
+<h2 id="extending-variable-length-integer-representations">Extending
+Variable-Length Integer Representations</h2>
+<p>Elias gamma coding extends standard binary logic by functioning as a
+<strong>universal code</strong>. In information theory, a code is
+universal if its asymptotic transmission rate is within a constant
+factor of the optimal code for an unknown probability distribution,
+provided the distribution is monotonically decreasing.</p>
+<p>Elias gamma coding provides key structural extensions:</p>
+<ul>
+<li><strong>Elimination of Size Limits:</strong> Unlike fixed integer
+types (like <code>uint32</code>), gamma codes have no upper ceiling. Any
+arbitrarily large integer can be encoded without format changes.</li>
+<li><strong>Optimal Compression for Skewed Distributions:</strong> It
+achieves optimal storage when small integers occur far more frequently
+than large ones (such as in inverted index posting lists for search
+engines or delta-encoded time series).</li>
+<li><strong>Foundation for Advanced Encodings:</strong> While Elias
+gamma encoding becomes less space-efficient for very large numbers due
+to the linear growth of the unary prefix, it serves as the base layer
+for <strong>Elias delta</strong> and <strong>Elias omega</strong> codes,
+which encode the length component using gamma coding recursively to save
+additional space.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

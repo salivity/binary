@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Non-Restoring Division in Binary Arithmetic - binary</title>
+    <meta name="description" content="Non-restoring division is an efficient hardware algorithm used in digital computing to perform binary division without the performance penalty of restoring intermediate values. In traditional restoring division, if a trial subtraction yields a negative r">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/non-restoring-division-in-binary-arithmetic">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Non-Restoring Division in Binary Arithmetic - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/non-restoring-division-in-binary-arithmetic" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Non-restoring division is an efficient hardware algorithm used in digital computing to perform binary division without the performance penalty of restoring intermediate values. In traditional restoring division, if a trial subtraction yields a negative r" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="non-restoring-division-in-binary-arithmetic">Non-Restoring
+Division in Binary Arithmetic</h1>
+<p>Non-restoring division is an efficient hardware algorithm used in
+digital computing to perform binary division without the performance
+penalty of restoring intermediate values. In traditional restoring
+division, if a trial subtraction yields a negative result, the system
+must perform an extra addition step to restore the previous remainder.
+Non-restoring division eliminates this redundant step by deferring the
+correction to the next operational cycle, significantly increasing
+quotient calculation speed and reducing hardware complexity in computer
+processors.</p>
+<h2 id="the-principle-of-non-restoring-division">The Principle of
+Non-Restoring Division</h2>
+<p>In standard binary division, the hardware shifts the partial
+remainder and subtracts the divisor. If the subtraction results in a
+negative value (indicated by a sign bit of 1), the algorithm determines
+that the divisor does not fit, sets the current quotient bit to
+<code>0</code>, and adds the divisor back to restore the previous state
+before shifting again.</p>
+<p>Non-restoring division removes the need to undo this negative
+subtraction immediately. Instead, it leverages algebraic equivalence
+across consecutive cycles:</p>
+<ol type="1">
+<li><p><strong>If the current partial remainder is positive or
+zero:</strong></p>
+<ul>
+<li>Set the current quotient bit to <code>1</code>.</li>
+<li>Shift the remainder left by one bit (<span
+class="math inline">\(2R\)</span>).</li>
+<li>Subtract the divisor (<span class="math inline">\(D\)</span>) in the
+next step: <span class="math inline">\(R_{next} = 2R - D\)</span>.</li>
+</ul></li>
+<li><p><strong>If the current partial remainder is
+negative:</strong></p>
+<ul>
+<li>Set the current quotient bit to <code>0</code>.</li>
+<li>Shift the negative remainder left by one bit (<span
+class="math inline">\(2R\)</span>).</li>
+<li>Add the divisor (<span class="math inline">\(D\)</span>) in the next
+step: <span class="math inline">\(R_{next} = 2R + D\)</span>.</li>
+</ul></li>
+</ol>
+<p>Because shifting a negative remainder of <span
+class="math inline">\((R - D)\)</span> results in <span
+class="math inline">\(2(R - D) = 2R - 2D\)</span>, adding <span
+class="math inline">\(D\)</span> in the subsequent cycle yields <span
+class="math inline">\(2R - 2D + D = 2R - D\)</span>. This mathematically
+achieves the exact same state as restoring the remainder first and then
+subtracting, but requires half the arithmetic steps.</p>
+<h2 id="how-non-restoring-division-accelerates-computation">How
+Non-Restoring Division Accelerates Computation</h2>
+<h3 id="1-halving-the-worst-case-operations">1. Halving the Worst-Case
+Operations</h3>
+<p>Restoring division can require up to two arithmetic operations per
+bit (one subtraction and one conditional addition). Non-restoring
+division guarantees exactly one arithmetic operation (either an addition
+or a subtraction) per bit cycle, dramatically cutting down the total
+execution time for division operations.</p>
+<h3 id="2-predictable-cycle-times-and-simpler-control-logic">2.
+Predictable Cycle Times and Simpler Control Logic</h3>
+<p>Because every step consists strictly of one shift and one
+add/subtract operation, the execution timing is constant and
+predictable. Hardware designers can construct synchronous clock
+pipelines without handling variable delays caused by conditional
+restoration branches.</p>
+<h3 id="3-reduced-propagation-delay-in-hardware">3. Reduced Propagation
+Delay in Hardware</h3>
+<p>Arithmetic Logic Units (ALUs) implementing non-restoring division
+experience less internal switching and lower propagation delay. The
+decision to add or subtract in step <span
+class="math inline">\(k+1\)</span> is directly dictated by the sign bit
+of step <span class="math inline">\(k\)</span>, allowing direct
+multiplexer routing rather than sequential add-back hardware loops.</p>
+<h2 id="final-correction">Final Correction</h2>
+<p>If the final partial remainder remains negative after all quotient
+bits have been determined, a single addition of the divisor is performed
+at the very end to yield the true positive remainder. Because this
+correction occurs at most once per entire division operation rather than
+once per bit, it introduces negligible overhead compared to the
+cumulative performance gains.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

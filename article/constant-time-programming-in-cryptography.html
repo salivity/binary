@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constant-Time Programming in Cryptography - binary</title>
+    <meta name="description" content="Constant-time programming is a foundational software security paradigm designed to eliminate timing side-channel attacks by ensuring that code execution duration remains identical regardless of the input values. In modern cryptography, sensitive data suc">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/constant-time-programming-in-cryptography">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Constant-Time Programming in Cryptography - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/constant-time-programming-in-cryptography" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Constant-time programming is a foundational software security paradigm designed to eliminate timing side-channel attacks by ensuring that code execution duration remains identical regardless of the input values. In modern cryptography, sensitive data suc" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="constant-time-programming-in-cryptography">Constant-Time
+Programming in Cryptography</h1>
+<p>Constant-time programming is a foundational software security
+paradigm designed to eliminate timing side-channel attacks by ensuring
+that code execution duration remains identical regardless of the input
+values. In modern cryptography, sensitive data such as private keys,
+nonces, and plaintext must be processed without revealing clues through
+execution speed. By replacing conditional branching and secret-dependent
+memory lookups with branchless bit manipulation, developers ensure that
+operations on the underlying binary number system execute predictably
+across CPU cycles.</p>
+<h3 id="the-threat-of-timing-side-channel-attacks">The Threat of Timing
+Side-Channel Attacks</h3>
+<p>In standard software development, compilers and CPUs optimize for
+speed using branch predictors, dynamic instruction scheduling, and data
+caches. Traditional operations often rely on conditional statements
+(like <code>if-else</code> blocks) or early-exit loops (such as standard
+string comparison functions).</p>
+<p>When applied to cryptographic secrets, these optimizations create
+measurable variances in execution time. An attacker measuring the
+nanoseconds or clock cycles required to process a payload can infer:</p>
+<ul>
+<li>Whether a specific bit in a private key is a <code>0</code> or a
+<code>1</code>.</li>
+<li>How many leading bytes in a message authentication code (MAC)
+matched before comparison failed.</li>
+<li>Cache hit and miss patterns that correlate to secret lookup
+indices.</li>
+</ul>
+<h3 id="what-is-constant-time-programming">What Is Constant-Time
+Programming?</h3>
+<p>Constant-time programming enforces two strict execution rules when
+handling secret data:</p>
+<ol type="1">
+<li><strong>No Secret-Dependent Branching:</strong> The execution flow
+(instruction pointer path) must never diverge based on secret
+values.</li>
+<li><strong>No Secret-Dependent Memory Access:</strong> Memory addresses
+used for reading or writing (such as array indices) must not depend on
+secret values, preventing cache-timing leaks.</li>
+</ol>
+<p>To achieve this, the runtime complexity and CPU instruction sequence
+must be deterministic for any given secret input length, regardless of
+the values of the individual bits.</p>
+<h3
+id="securing-the-binary-number-system-with-branchless-bit-manipulation">Securing
+the Binary Number System with Branchless Bit Manipulation</h3>
+<p>Because standard conditional logic cannot be used, constant-time
+algorithms rely on bitwise operations—such as <code>AND</code>,
+<code>OR</code>, <code>XOR</code>, <code>NOT</code>, and shifts—which
+map to deterministic, fixed-cycle CPU instructions on modern
+architectures.</p>
+<h4 id="1-constant-time-conditional-selection-ct_select">1.
+Constant-Time Conditional Selection (<code>ct_select</code>)</h4>
+<p>In regular code, choosing between two binary values <span
+class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span> based on a condition <span
+class="math inline">\(c\)</span> is typically written as:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>c<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> a<span class="op">;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> b<span class="op">;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In a constant-time environment, this is replaced by generating a
+bitmask:</p>
+<ol type="1">
+<li>Convert the boolean condition <span class="math inline">\(c \in \{0,
+1\}\)</span> into a full-width mask using two's complement negation:
+<code>mask = -c</code>. If <span class="math inline">\(c = 1\)</span>,
+<code>mask</code> becomes <code>0xFFFFFFFF</code> (all 1s); if <span
+class="math inline">\(c = 0\)</span>, <code>mask</code> becomes
+<code>0x00000000</code> (all 0s).</li>
+<li>Compute the result using bitwise logic:
+<code>result = (a &amp; mask) | (b &amp; ~mask);</code></li>
+</ol>
+<p>Both code paths evaluate simultaneously at the bit level, executing
+identical CPU instructions regardless of whether <span
+class="math inline">\(a\)</span> or <span
+class="math inline">\(b\)</span> is selected.</p>
+<h4 id="2-constant-time-equality-and-comparison">2. Constant-Time
+Equality and Comparison</h4>
+<p>Standard equality checks (<code>memcmp</code>) exit early on the
+first non-matching byte, immediately leaking the position of the
+mismatch.</p>
+<p>Constant-time equality performs a full traversal across all binary
+bytes:</p>
+<ul>
+<li>Compute the bitwise XOR between corresponding bytes: <span
+class="math inline">\(x \oplus y\)</span> yields <code>0</code> only if
+the bytes are identical.</li>
+<li>Accumulate the differences across the entire buffer using bitwise
+OR: <code>accumulator |= (x ^ y)</code>.</li>
+<li>Convert the final accumulator value into a normalized binary status
+(<code>0</code> for match, <code>1</code> for mismatch) using
+constant-time shift and mask operations.</li>
+</ul>
+<p>The CPU processes every bit in the buffer, ensuring the execution
+duration depends only on the buffer size, not its contents.</p>
+<h4 id="3-bitslicing-to-avoid-table-lookups">3. Bitslicing to Avoid
+Table Lookups</h4>
+<p>Algorithms like AES historically used lookup tables (S-boxes) stored
+in memory, which exposed them to cache-based timing attacks.
+Constant-time implementations utilize <strong>bitslicing</strong>, a
+technique that reconstructs cryptographic primitives purely out of basic
+boolean logic gates (<code>AND</code>, <code>XOR</code>,
+<code>NOT</code>). By treating CPU registers as a parallel array of
+single-bit execution units, bitslicing removes all table lookups while
+maintaining high performance.</p>
+<h3 id="practical-impact-on-binary-security">Practical Impact on Binary
+Security</h3>
+<p>By strictly operating on raw binary representations using branchless
+bit manipulation, constant-time programming decouples the execution
+behavior of the hardware from the values of the data. This guarantees
+that mathematical secrets within the binary number system remain
+mathematically isolated from the physical characteristics of the
+executing processor.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

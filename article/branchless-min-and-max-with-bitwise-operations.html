@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branchless Min and Max with Bitwise Operations - binary</title>
+    <meta name="description" content="Branchless computation of the minimum or maximum of two integers is an optimization technique used in high-performance computing to avoid CPU branch mispredictions. By replacing conditional jump instructions with a fixed sequence of bitwise and arithmeti">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/branchless-min-and-max-with-bitwise-operations">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Branchless Min and Max with Bitwise Operations - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/branchless-min-and-max-with-bitwise-operations" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Branchless computation of the minimum or maximum of two integers is an optimization technique used in high-performance computing to avoid CPU branch mispredictions. By replacing conditional jump instructions with a fixed sequence of bitwise and arithmeti" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="branchless-min-and-max-with-bitwise-operations">Branchless Min
+and Max with Bitwise Operations</h1>
+<p>Branchless computation of the minimum or maximum of two integers is
+an optimization technique used in high-performance computing to avoid
+CPU branch mispredictions. By replacing conditional jump instructions
+with a fixed sequence of bitwise and arithmetic operations, the
+processor executes instructions in constant time across parallel
+execution units without disrupting the instruction pipeline.</p>
+<h3 id="the-sign-bit-and-mask-generation">The Sign Bit and Mask
+Generation</h3>
+<p>In binary representation using the two's complement system, the most
+significant bit (MSB) indicates the sign of an integer: <code>0</code>
+for non-negative numbers and <code>1</code> for negative numbers.</p>
+<p>When subtracting integer <span class="math inline">\(y\)</span> from
+integer <span class="math inline">\(x\)</span> (<span
+class="math inline">\(x - y\)</span>), the sign of the result indicates
+the relationship between the two values:</p>
+<ul>
+<li>If <span class="math inline">\(x &lt; y\)</span>, then <span
+class="math inline">\((x - y)\)</span> is negative, and the sign bit is
+<code>1</code>.</li>
+<li>If <span class="math inline">\(x \ge y\)</span>, then <span
+class="math inline">\((x - y)\)</span> is non-negative, and the sign bit
+is <code>0</code>.</li>
+</ul>
+<p>By performing an arithmetic right shift by <span
+class="math inline">\(N - 1\)</span> bits (where <span
+class="math inline">\(N\)</span> is the bit width of the integer, such
+as 32 or 64), the sign bit is replicated across all bit positions. This
+generates a bitmask:</p>
+<ul>
+<li>If <span class="math inline">\(x &lt; y\)</span>, the resulting mask
+is all ones (<code>0xFFFFFFFF</code> or <code>-1</code> in
+decimal).</li>
+<li>If <span class="math inline">\(x \ge y\)</span>, the resulting mask
+is all zeros (<code>0x00000000</code> or <code>0</code> in
+decimal).</li>
+</ul>
+<p><span class="math display">\[\text{mask} = (x - y) \gg (N -
+1)\]</span></p>
+<h3 id="calculating-minimum-and-maximum-via-masking">Calculating Minimum
+and Maximum via Masking</h3>
+<p>Once the bitmask is generated, it can be combined with bitwise
+<code>AND</code> (<code>&amp;</code>) and addition or subtraction to
+select the target value deterministically:</p>
+<p><strong>Minimum:</strong> <span class="math display">\[\min(x, y) = y
++ ((x - y) \ \&amp; \ \text{mask})\]</span></p>
+<ul>
+<li>When <span class="math inline">\(x &lt; y\)</span>, <span
+class="math inline">\(\text{mask} = -1\)</span>, reducing the expression
+to <span class="math inline">\(y + (x - y) = x\)</span>.</li>
+<li>When <span class="math inline">\(x \ge y\)</span>, <span
+class="math inline">\(\text{mask} = 0\)</span>, reducing the expression
+to <span class="math inline">\(y + 0 = y\)</span>.</li>
+</ul>
+<p><strong>Maximum:</strong> <span class="math display">\[\max(x, y) = x
+- ((x - y) \ \&amp; \ \text{mask})\]</span></p>
+<ul>
+<li>When <span class="math inline">\(x &lt; y\)</span>, <span
+class="math inline">\(\text{mask} = -1\)</span>, reducing the expression
+to <span class="math inline">\(x - (x - y) = y\)</span>.</li>
+<li>When <span class="math inline">\(x \ge y\)</span>, <span
+class="math inline">\(\text{mask} = 0\)</span>, reducing the expression
+to <span class="math inline">\(x - 0 = x\)</span>.</li>
+</ul>
+<h3 id="the-xor-based-method">The XOR-Based Method</h3>
+<p>An alternative approach avoids subtraction entirely to eliminate the
+risk of integer overflow. It relies on the XOR (<code>^</code>)
+operator:</p>
+<p><span class="math display">\[\min(x, y) = y \oplus ((x \oplus y) \
+\&amp; \ -(x &lt; y))\]</span> <span class="math display">\[\max(x, y) =
+x \oplus ((x \oplus y) \ \&amp; \ -(x &lt; y))\]</span></p>
+<p>If <span class="math inline">\(x &lt; y\)</span> evaluates to
+<code>1</code>, its negation <code>-(1)</code> produces a full bitmask
+of ones (<code>~0</code>). The expression evaluates to <span
+class="math inline">\(y \oplus (x \oplus y) = x\)</span>. If <span
+class="math inline">\(x \ge y\)</span>, the evaluation yields
+<code>0</code>, leaving <span class="math inline">\(y \oplus 0 =
+y\)</span>.</p>
+<h3 id="parallel-and-simd-execution">Parallel and SIMD Execution</h3>
+<p>Bitwise branchless logic is foundational for Single Instruction,
+Multiple Data (SIMD) architectures such as AVX, SSE, and ARM NEON.
+Because SIMD registers operate on packed data vectors simultaneously,
+traditional control-flow branching cannot be executed on individual
+vector lanes. Bitwise masks allow SIMD units to evaluate minimums and
+maximums across dozens of parallel integers simultaneously within a
+single clock cycle.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

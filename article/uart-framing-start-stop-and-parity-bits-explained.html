@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UART Framing: Start, Stop, and Parity Bits Explained - binary</title>
+    <meta name="description" content="Universal Asynchronous Receiver-Transmitter (UART) serial communication packages binary data into structured units called data frames to transmit information across a single data line without a shared clock signal. Because the transmitter and receiver do">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/uart-framing-start-stop-and-parity-bits-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="UART Framing: Start, Stop, and Parity Bits Explained - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/uart-framing-start-stop-and-parity-bits-explained" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Universal Asynchronous Receiver-Transmitter (UART) serial communication packages binary data into structured units called data frames to transmit information across a single data line without a shared clock signal. Because the transmitter and receiver do" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="uart-framing-start-stop-and-parity-bits-explained">UART Framing:
+Start, Stop, and Parity Bits Explained</h1>
+<p>Universal Asynchronous Receiver-Transmitter (UART) serial
+communication packages binary data into structured units called data
+frames to transmit information across a single data line without a
+shared clock signal. Because the transmitter and receiver do not share a
+common clock line, UART relies on precise timing conventions—defined by
+the baud rate—and specific framing bits (the start bit, optional parity
+bit, and stop bits) to synchronize transmission, deliver the binary
+payload, and detect basic transmission errors.</p>
+<h3 id="the-idle-state">The Idle State</h3>
+<p>Before any data transmission begins, the UART transmission line is
+held at a continuous high voltage level, known in binary logic as a
+logic 1 or "Mark" state. This sustained high voltage ensures that the
+receiver can distinguish between an inactive channel and a disconnected
+or broken line.</p>
+<h3 id="the-start-bit">The Start Bit</h3>
+<p>Every UART frame begins with a single Start bit. To initiate
+transmission, the transmitting device pulls the line from the high idle
+state (logic 1) down to a low voltage level (logic 0 or "Space").</p>
+<p>This transition from high to low alerts the receiving UART that a
+data word is arriving. The receiver uses this edge transition to
+synchronize its internal clock and begins sampling the incoming line at
+intervals corresponding to the predetermined baud rate, typically
+sampling at the midpoint of each subsequent bit period.</p>
+<h3 id="the-data-word">The Data Word</h3>
+<p>Immediately following the start bit, the binary data payload is
+transmitted. The data word typically consists of 5 to 9 bits, with 8
+bits (one byte) being the standard configuration.</p>
+<ul>
+<li><strong>Bit Order:</strong> Data is almost universally transmitted
+Least Significant Bit (LSB) first and ends with the Most Significant Bit
+(MSB).</li>
+<li><strong>Binary Representation:</strong> Each bit occupies a precise
+time slot defined by the baud rate (<span class="math inline">\(T =
+\frac{1}{\text{baud}}\)</span>). A high voltage represents a binary 1,
+and a low voltage represents a binary 0. For example, the ASCII
+character 'A' (binary <code>01000001</code>) is sent sequentially as
+<code>1, 0, 0, 0, 0, 0, 1, 0</code>.</li>
+</ul>
+<h3 id="the-parity-bit">The Parity Bit</h3>
+<p>Following the data word, an optional parity bit can be added to
+provide basic single-bit error detection. The parity bit checks the sum
+of binary 1s in the data payload:</p>
+<ul>
+<li><strong>Even Parity:</strong> The transmitter sets the parity bit to
+0 or 1 to make the total count of 1s in the data word plus the parity
+bit an even number.</li>
+<li><strong>Odd Parity:</strong> The transmitter sets the parity bit to
+make the total count of 1s an odd number.</li>
+<li><strong>No Parity (None):</strong> The parity bit is omitted
+entirely, shortening the frame.</li>
+</ul>
+<p>When the receiver reads the data bits, it recalculates the parity. If
+the calculated value does not match the received parity bit, the
+receiver flags a parity error.</p>
+<h3 id="the-stop-bits">The Stop Bit(s)</h3>
+<p>The frame concludes with one or two Stop bits (and occasionally 1.5
+bit periods). The transmitting UART drives the communication line back
+to the high voltage level (logic 1).</p>
+<p>The stop bit confirms the end of the packet, allows the receiver to
+verify frame integrity, and resets the line to the idle state. If the
+receiver does not detect a high logic level during the expected stop bit
+duration, it registers a "framing error," indicating a timing mismatch
+or corrupted data. Once the stop bit duration concludes, the line either
+remains high (idle) or immediately transitions low to signal the start
+bit of the next frame.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

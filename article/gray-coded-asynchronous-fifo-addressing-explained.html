@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gray Coded Asynchronous FIFO Addressing Explained - binary</title>
+    <meta name="description" content="Asynchronous First-In, First-Out (FIFO) buffers are critical digital circuits used to reliably transfer data between two independent clock domains. The integrity of an asynchronous FIFO depends heavily on tracking read and write pointers across these clo">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/gray-coded-asynchronous-fifo-addressing-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Gray Coded Asynchronous FIFO Addressing Explained - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/gray-coded-asynchronous-fifo-addressing-explained" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Asynchronous First-In, First-Out (FIFO) buffers are critical digital circuits used to reliably transfer data between two independent clock domains. The integrity of an asynchronous FIFO depends heavily on tracking read and write pointers across these clo" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="gray-coded-asynchronous-fifo-addressing-explained">Gray Coded
+Asynchronous FIFO Addressing Explained</h1>
+<p>Asynchronous First-In, First-Out (FIFO) buffers are critical digital
+circuits used to reliably transfer data between two independent clock
+domains. The integrity of an asynchronous FIFO depends heavily on
+tracking read and write pointers across these clock boundaries without
+corruption. This article explains how Gray-coded addressing protects
+asynchronous FIFOs from race conditions and metastability, highlighting
+why standard binary counting fails in multi-clock systems and how the
+single-bit transition property of Gray code ensures robust data
+synchronization.</p>
+<h3 id="the-problem-with-asynchronous-clock-domains">The Problem with
+Asynchronous Clock Domains</h3>
+<p>In an asynchronous FIFO, the write logic operates on a write clock
+(<span class="math inline">\(wclk\)</span>), and the read logic operates
+on an independent read clock (<span
+class="math inline">\(rclk\)</span>). To determine whether the FIFO is
+full or empty, the current state of the write pointer must be passed to
+the read domain, and the read pointer must be passed to the write
+domain.</p>
+<p>Because the two clocks are unsynchronized, pointer values sampled
+across the clock boundary arrive arbitrarily relative to the receiving
+clock edge. This introduces the risk of metastability, where a register
+input changing too close to an active clock edge can cause the output to
+settle into an unpredictable state or create logic glitches.</p>
+<h3 id="why-standard-binary-addressing-causes-race-conditions">Why
+Standard Binary Addressing Causes Race Conditions</h3>
+<p>In a standard binary numbering system, moving from one increment to
+the next often requires multiple bits to change state simultaneously.
+For example:</p>
+<ul>
+<li>Transitioning from <span class="math inline">\(3\)</span>
+(<code>0011</code>) to <span class="math inline">\(4\)</span>
+(<code>0100</code>) requires three bits to flip.</li>
+<li>Transitioning from <span class="math inline">\(7\)</span>
+(<code>0111</code>) to <span class="math inline">\(8\)</span>
+(<code>1000</code>) requires four bits to flip.</li>
+</ul>
+<p>In physical silicon, every signal path has slightly different routing
+delays, parasitic capacitance, and gate latencies. Consequently,
+multiple bits never switch at the exact same physical picosecond. If the
+receiving clock domain captures a multi-bit binary transition midway
+through switching, it may sample an invalid intermediate value.</p>
+<p>For instance, during the transition from <code>0111</code> to
+<code>1000</code>, the destination domain might temporarily sample
+<code>0000</code>, <code>0110</code>, or <code>1111</code>. This race
+condition can cause the FIFO logic to falsely trigger a "full" or
+"empty" condition, resulting in dropped data, read underflows, or buffer
+overflows.</p>
+<h3 id="how-gray-code-prevents-race-conditions">How Gray Code Prevents
+Race Conditions</h3>
+<p>Gray code is a binary numeral system where two successive values
+differ by only one bit.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Decimal</th>
+<th style="text-align: left;">Binary</th>
+<th style="text-align: left;">Gray Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;"><code>0000</code></td>
+<td style="text-align: left;"><code>0000</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;"><code>0001</code></td>
+<td style="text-align: left;"><code>0001</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;"><code>0010</code></td>
+<td style="text-align: left;"><code>0011</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;"><code>0011</code></td>
+<td style="text-align: left;"><code>0010</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;"><code>0100</code></td>
+<td style="text-align: left;"><code>0110</code></td>
+</tr>
+</tbody>
+</table>
+<p>Because only a single bit changes per counter increment:</p>
+<ol type="1">
+<li><strong>Elimination of Bus Skew Errors:</strong> There are no
+intermediate multi-bit states. Regardless of wire delays between
+different bits of the bus, only one line is transitioning at any given
+time.</li>
+<li><strong>Safe Metastability Outcomes:</strong> If the single
+transitioning bit is sampled during an active clock edge, standard
+two-flip-flop synchronizers resolve the metastability. The synchronizer
+will capture either the previous valid value (if the transition is
+deemed not to have occurred yet) or the new valid value (if the
+transition has completed).</li>
+</ol>
+<p>Neither outcome corrupts FIFO operation. If the read domain reads the
+old write pointer, it simply assumes the FIFO has one less element than
+it actually does, delaying an empty flag release by one cycle—a
+completely safe failure mode.</p>
+<h3 id="implementation-in-fifo-architecture">Implementation in FIFO
+Architecture</h3>
+<p>In practice, asynchronous FIFO designs use both binary and Gray
+representations:</p>
+<ol type="1">
+<li><strong>Internal Addressing:</strong> Binary counters are used
+locally to index the underlying dual-port RAM because memory addressing
+hardware requires standard binary decoding.</li>
+<li><strong>Domain Crossing:</strong> The local binary pointer is
+converted to Gray code using simple combinational logic (<span
+class="math inline">\(Gray = Binary \oplus (Binary &gt;&gt; 1)\)</span>)
+immediately before being registered and passed to the opposite clock
+domain.</li>
+<li><strong>Comparison:</strong> The synchronized Gray pointer is
+compared directly with the local Gray pointer, or converted back to
+binary, to accurately calculate FIFO "full" and "empty" status
+flags.</li>
+</ol></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

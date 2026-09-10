@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Every Integer Has a Unique Binary Representation - binary</title>
+    <meta name="description" content="Every non-negative integer maps to exactly one representation in the standard positional binary (base-2) system. This fundamental property of computer science and mathematics rests on two mathematical guarantees: existence, which ensures every non-negati">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/why-every-integer-has-a-unique-binary-representation">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Every Integer Has a Unique Binary Representation - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/why-every-integer-has-a-unique-binary-representation" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Every non-negative integer maps to exactly one representation in the standard positional binary (base-2) system. This fundamental property of computer science and mathematics rests on two mathematical guarantees: existence, which ensures every non-negati" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="why-every-integer-has-a-unique-binary-representation">Why Every
+Integer Has a Unique Binary Representation</h1>
+<p>Every non-negative integer maps to exactly one representation in the
+standard positional binary (base-2) system. This fundamental property of
+computer science and mathematics rests on two mathematical guarantees:
+<strong>existence</strong>, which ensures every non-negative integer can
+be expressed as a sum of distinct powers of two, and
+<strong>uniqueness</strong>, which ensures that no two different bit
+sequences represent the same number. Together, these principles allow
+modern computing systems to reliably store, process, and retrieve
+numerical data without ambiguity.</p>
+<h2 id="understanding-the-positional-binary-system">Understanding the
+Positional Binary System</h2>
+<p>In a positional numeral system with base <span
+class="math inline">\(b = 2\)</span>, any number is represented by a
+sequence of digits (bits) <span class="math inline">\(d_k d_{k-1} \dots
+d_1 d_0\)</span>, where each digit <span class="math inline">\(d_i \in
+\{0, 1\}\)</span>.</p>
+<p>The mathematical value <span class="math inline">\(N\)</span> of this
+sequence is defined as:</p>
+<p><span class="math display">\[N = \sum_{i=0}^{k} d_i \cdot 2^i = d_k
+2^k + d_{k-1} 2^{k-1} + \dots + d_1 2^1 + d_0 2^0\]</span></p>
+<p>To establish that this system works for all non-negative integers
+without ambiguity, we must prove both existence and uniqueness.</p>
+<h2 id="existence-why-every-integer-can-be-represented">Existence: Why
+Every Integer Can Be Represented</h2>
+<p>The existence of a binary representation for any non-negative integer
+is guaranteed by the Division Algorithm.</p>
+<p>For the base case, the integer <span class="math inline">\(0\)</span>
+is simply represented as <span class="math inline">\(0\)</span> (or an
+empty sum of powers).</p>
+<p>For any positive integer <span class="math inline">\(N\)</span>,
+dividing by <span class="math inline">\(2\)</span> produces an integer
+quotient <span class="math inline">\(Q_0\)</span> and a remainder <span
+class="math inline">\(R_0\)</span>:</p>
+<p><span class="math display">\[N = 2 \cdot Q_0 + R_0, \quad \text{where
+} R_0 \in \{0, 1\}\]</span></p>
+<p>The remainder <span class="math inline">\(R_0\)</span> determines the
+least significant bit (<span class="math inline">\(d_0\)</span>).
+Repeating this process with the quotient <span
+class="math inline">\(Q_0\)</span>:</p>
+<p><span class="math display">\[Q_0 = 2 \cdot Q_1 + R_1, \quad
+\text{where } R_1 \in \{0, 1\}\]</span></p>
+<p>Because each quotient is strictly smaller than the previous one
+(<span class="math inline">\(N &gt; Q_0 &gt; Q_1 &gt; \dots\)</span>),
+the sequence of quotients must eventually reach <span
+class="math inline">\(0\)</span>. When <span class="math inline">\(Q_k =
+0\)</span>, the process terminates, yielding a finite sequence of binary
+digits <span class="math inline">\((R_k, R_{k-1}, \dots, R_1,
+R_0)\)</span> such that:</p>
+<p><span class="math display">\[N = R_k 2^k + R_{k-1} 2^{k-1} + \dots +
+R_1 2^1 + R_0 2^0\]</span></p>
+<p>Because the Division Algorithm works for any positive integer, every
+non-negative integer is guaranteed to have a binary representation.</p>
+<h2 id="uniqueness-why-only-one-representation-exists">Uniqueness: Why
+Only One Representation Exists</h2>
+<p>To understand why no integer has two distinct binary representations
+(ignoring leading zeros), we look at the geometric sum property of
+powers of two.</p>
+<p>The sum of all powers of two from <span
+class="math inline">\(2^0\)</span> up to <span
+class="math inline">\(2^{k-1}\)</span> is strictly less than the next
+power of two, <span class="math inline">\(2^k\)</span>:</p>
+<p><span class="math display">\[\sum_{i=0}^{k-1} 2^i = 2^0 + 2^1 + 2^2 +
+\dots + 2^{k-1} = 2^k - 1 &lt; 2^k\]</span></p>
+<p>This property prevents two different combinations of bits from
+equaling the same integer:</p>
+<ol type="1">
+<li><strong>Higher Bits Cannot Be Replaced by Lower Bits:</strong> Even
+if all bits below position <span class="math inline">\(k\)</span> are
+set to <span class="math inline">\(1\)</span>, their combined sum (<span
+class="math inline">\(2^k - 1\)</span>) cannot reach the value of
+setting bit <span class="math inline">\(k\)</span> to <span
+class="math inline">\(1\)</span> (<span
+class="math inline">\(2^k\)</span>).</li>
+<li><strong>Mathematical Contradiction:</strong> Suppose an integer
+<span class="math inline">\(N\)</span> has two different
+representations, <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>. Let <span
+class="math inline">\(k\)</span> be the highest bit position where <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> differ. Without loss of generality,
+assume bit <span class="math inline">\(k\)</span> is <span
+class="math inline">\(1\)</span> in <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(0\)</span> in <span
+class="math inline">\(B\)</span>.
+<ul>
+<li>The value contributed by the remaining bits in <span
+class="math inline">\(B\)</span> (from position <span
+class="math inline">\(k-1\)</span> down to <span
+class="math inline">\(0\)</span>) cannot exceed <span
+class="math inline">\(2^k - 1\)</span>.</li>
+<li>However, representation <span class="math inline">\(A\)</span> has
+at least <span class="math inline">\(2^k\)</span> at position <span
+class="math inline">\(k\)</span>, plus non-negative values from lower
+bits.</li>
+<li>Therefore, <span class="math inline">\(A &gt; B\)</span>, which
+contradicts the assumption that <span class="math inline">\(A\)</span>
+and <span class="math inline">\(B\)</span> represent the same integer
+<span class="math inline">\(N\)</span>.</li>
+</ul></li>
+</ol>
+<p>Since assuming two different representations leads to a
+contradiction, the representation must be unique.</p>
+<h2 id="summary">Summary</h2>
+<p>Every non-negative integer has an exact and unique binary
+representation because:</p>
+<ul>
+<li><strong>The Division Algorithm</strong> guarantees a terminating
+procedure to find a binary form for any number (existence).</li>
+<li><strong>The geometric property <span
+class="math inline">\(\sum_{i=0}^{k-1} 2^i &lt; 2^k\)</span></strong>
+guarantees that smaller powers of two cannot combine to duplicate or
+replace a higher power of two (uniqueness).</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

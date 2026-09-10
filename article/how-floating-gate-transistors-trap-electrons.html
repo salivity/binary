@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Floating-Gate Transistors Trap Electrons - binary</title>
+    <meta name="description" content="Flash memory relies on floating-gate transistors (FGMOS) to store digital data non-voluntarily, retaining information even when power is disconnected. By using quantum tunneling and high electric fields, these specialized semiconductor devices trap or re">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-floating-gate-transistors-trap-electrons">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Floating-Gate Transistors Trap Electrons - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-floating-gate-transistors-trap-electrons" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Flash memory relies on floating-gate transistors (FGMOS) to store digital data non-voluntarily, retaining information even when power is disconnected. By using quantum tunneling and high electric fields, these specialized semiconductor devices trap or re" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-floating-gate-transistors-trap-electrons">How Floating-Gate
+Transistors Trap Electrons</h1>
+<p>Flash memory relies on floating-gate transistors (FGMOS) to store
+digital data non-voluntarily, retaining information even when power is
+disconnected. By using quantum tunneling and high electric fields, these
+specialized semiconductor devices trap or release negative electrical
+charges (electrons) on an electrically isolated gate. The presence or
+absence of these trapped electrons modifies the voltage required to
+activate the transistor, enabling the cell to represent the binary
+digits—0s and 1s—that form the foundation of computing.</p>
+<h3 id="the-structure-of-a-floating-gate-transistor">The Structure of a
+Floating-Gate Transistor</h3>
+<p>A standard floating-gate transistor resembles a traditional MOSFET
+(Metal-Oxide-Semiconductor Field-Effect Transistor) but includes an
+additional component. It consists of:</p>
+<ul>
+<li><strong>Control Gate:</strong> The top gate connected to the memory
+circuit's word lines, used to apply operating voltages.</li>
+<li><strong>Floating Gate:</strong> A conductive polysilicon layer
+positioned beneath the control gate, entirely encapsulated by
+high-quality insulating dielectric layers (typically silicon dioxide).
+Because it is completely surrounded by insulators, any electrons placed
+on this gate remain trapped for years.</li>
+<li><strong>Channel, Source, and Drain:</strong> The semiconductor
+pathway beneath the floating gate where electrical current flows when
+the transistor is turned on.</li>
+</ul>
+<h3 id="the-trapping-mechanism-tunneling-and-injection">The Trapping
+Mechanism: Tunneling and Injection</h3>
+<p>To place electrons onto the isolated floating gate—a process known as
+programming or writing—electrons must overcome or pass through the
+insulating oxide barrier. Flash memory accomplishes this using two
+primary physical phenomena:</p>
+<ol type="1">
+<li><strong>Fowler-Nordheim (F-N) Tunneling:</strong> A strong electric
+field is applied across the thin oxide layer by placing a high positive
+voltage on the control gate relative to the silicon substrate. This
+thins the energy barrier enough for electrons to physically "tunnel"
+through the insulator via quantum mechanical effects, entering the
+floating gate.</li>
+<li><strong>Channel Hot-Electron (CHE) Injection:</strong> A high
+voltage is applied across both the drain and the control gate. This
+accelerates electrons flowing through the channel to high kinetic
+energies ("hot electrons"), allowing them to overcome the insulator's
+electrostatic barrier and jump directly into the floating gate.</li>
+</ol>
+<p>Once inside the floating gate, the electrons are permanently trapped
+because the insulating oxide prevents them from discharging under normal
+operating conditions.</p>
+<h3 id="translating-trapped-charges-to-binary-states">Translating
+Trapped Charges to Binary States</h3>
+<p>The trapped electrons alter the electrical properties of the
+transistor by modifying its <strong>threshold voltage (<span
+class="math inline">\(V_{th}\)</span>)</strong>—the minimum voltage
+required on the control gate to allow electrical current to flow from
+the source to the drain.</p>
+<ul>
+<li><strong>High Trapped Charge (Programmed State / Binary 0):</strong>
+When electrons are trapped on the floating gate, their negative charge
+partially cancels out (screens) any positive voltage applied to the
+control gate. Consequently, a much higher voltage is required to turn
+the transistor on.</li>
+<li><strong>No Trapped Charge (Erased State / Binary 1):</strong> In an
+uncharged floating gate, there is no negative screening effect, meaning
+a relatively low voltage on the control gate is sufficient to open the
+channel and allow current to flow.</li>
+</ul>
+<h3 id="reading-and-erasing-data">Reading and Erasing Data</h3>
+<p>To <strong>read</strong> the stored bit, a reference voltage
+(intermediate between the high and low threshold voltages) is applied to
+the control gate:</p>
+<ul>
+<li>If current flows through the channel, the floating gate has no
+trapped charge, registering as a <strong>1</strong>.</li>
+<li>If current is blocked because the threshold voltage was not reached,
+trapped electrons are present, registering as a <strong>0</strong>.</li>
+</ul>
+<p>To <strong>erase</strong> the cell and reset it to a binary 1, a
+reverse electric field is applied (typically a large negative voltage on
+the control gate or a high positive voltage on the substrate). This
+forces the trapped electrons to tunnel back out of the floating gate via
+Fowler-Nordheim tunneling, clearing the charge and returning the
+transistor to its default state.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

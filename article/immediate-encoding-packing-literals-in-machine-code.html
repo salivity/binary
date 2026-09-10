@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Immediate Encoding: Packing Literals in Machine Code - binary</title>
+    <meta name="description" content="Immediate encoding is a CPU instruction format technique where constant numeric values—known as literal values or immediates—are embedded directly inside the binary instruction word rather than stored in separate memory locations or registers. This a">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/immediate-encoding-packing-literals-in-machine-code">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Immediate Encoding: Packing Literals in Machine Code - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/immediate-encoding-packing-literals-in-machine-code" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Immediate encoding is a CPU instruction format technique where constant numeric values—known as literal values or immediates—are embedded directly inside the binary instruction word rather than stored in separate memory locations or registers. This a" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="immediate-encoding-packing-literals-in-machine-code">Immediate
+Encoding: Packing Literals in Machine Code</h1>
+<p>Immediate encoding is a CPU instruction format technique where
+constant numeric values—known as literal values or immediates—are
+embedded directly inside the binary instruction word rather than stored
+in separate memory locations or registers. This article explores the
+architecture of immediate encoding, detailing how binary literals are
+partitioned, formatted, sign-extended, and packed into fixed-width and
+variable-length machine instructions to maximize processor efficiency
+and execution speed.</p>
+<h3 id="what-is-an-immediate-operand">What Is an Immediate Operand?</h3>
+<p>In assembly language and machine code, an immediate operand is a
+hardcoded constant value used directly by an operation. For instance, in
+an instruction like <code>ADD R1, R2, #5</code>, the number
+<code>5</code> is an immediate value. Instead of requiring the central
+processing unit (CPU) to perform an extra memory access cycle to fetch
+this constant from the data cache or RAM, the processor reads the value
+directly from the instruction stream as it decodes the binary word.</p>
+<h3 id="structure-of-an-instruction-word">Structure of an Instruction
+Word</h3>
+<p>CPU architectures process instructions as binary words, commonly 32
+or 64 bits wide in modern Reduced Instruction Set Computer (RISC)
+systems, or variable lengths in Complex Instruction Set Computer (CISC)
+systems like x86. An instruction word is divided into distinct bit
+fields:</p>
+<ul>
+<li><strong>Opcode (Operation Code):</strong> Defines the operation to
+be performed (e.g., add, load, jump).</li>
+<li><strong>Register Specifiers:</strong> Designate the source and
+destination registers.</li>
+<li><strong>Immediate Field:</strong> A dedicated sequence of bits
+allocated to hold the literal value.</li>
+</ul>
+<p>In a standard 32-bit RISC instruction (such as a MIPS I-type
+instruction), the layout typically allocates 6 bits for the opcode, 5
+bits for the source register (<span class="math inline">\(R_s\)</span>),
+5 bits for the destination register (<span
+class="math inline">\(R_t\)</span>), and the remaining 16 bits for the
+immediate value:</p>
+<pre><code>[ Opcode (6 bits) | Rs (5 bits) | Rt (5 bits) | Immediate Literal (16 bits) ]</code></pre>
+<h3 id="how-binary-literals-are-packed">How Binary Literals Are
+Packed</h3>
+<p>When an assembler translates code containing a constant, it converts
+the literal number into a binary integer and inserts it directly into
+the allocated bit positions of the instruction.</p>
+<h4 id="1-bit-width-constraints-and-range">1. Bit-Width Constraints and
+Range</h4>
+<p>The number of bits allocated to the immediate field determines the
+range of values that can be encoded:</p>
+<ul>
+<li>An unsigned <span class="math inline">\(n\)</span>-bit field
+represents values from <span class="math inline">\(0\)</span> to <span
+class="math inline">\(2^n - 1\)</span>.</li>
+<li>A signed <span class="math inline">\(n\)</span>-bit field represents
+values from <span class="math inline">\(-2^{n-1}\)</span> to <span
+class="math inline">\(2^{n-1} - 1\)</span> using two's complement binary
+notation.</li>
+</ul>
+<p>For a 12-bit signed immediate (common in ARM and RISC-V
+architectures), the literal can range from <span
+class="math inline">\(-2048\)</span> (<code>0x800</code>) to <span
+class="math inline">\(+2047\)</span> (<code>0x7FF</code>).</p>
+<h4 id="2-sign-extension-and-zero-extension">2. Sign Extension and Zero
+Extension</h4>
+<p>Because immediate fields are usually smaller than the CPU's
+general-purpose register width (e.g., a 12-bit or 16-bit immediate
+loaded into a 32-bit or 64-bit register), the CPU must expand the
+literal during execution:</p>
+<ul>
+<li><strong>Sign Extension:</strong> For signed arithmetic and memory
+offsets, the most significant bit (MSB) of the immediate field—the sign
+bit—is replicated across all higher-order bits of the register. If the
+sign bit is <code>1</code> (negative), the upper bits become
+<code>1</code>s; if <code>0</code> (positive), the upper bits become
+<code>0</code>s.</li>
+<li><strong>Zero Extension:</strong> For logical operations (like
+<code>ANDI</code> or <code>ORI</code>), the upper bits of the register
+are filled strictly with <code>0</code>s to preserve the literal as an
+unsigned value.</li>
+</ul>
+<h4 id="3-split-field-immediate-encoding">3. Split-Field Immediate
+Encoding</h4>
+<p>Some modern architectures, such as RISC-V, intentionally split
+immediate fields across non-contiguous bit positions in the instruction
+word. This design keeps the register specifiers in fixed bit locations
+across all instruction formats, simplifying the hardware decoder.</p>
+<p>For example, a RISC-V store instruction (S-type) splits a 12-bit
+immediate into two chunks:</p>
+<ul>
+<li>Bits <code>11:5</code> are placed in instruction bits
+<code>31:25</code>.</li>
+<li>Bits <code>4:0</code> are placed in instruction bits
+<code>11:7</code>.</li>
+</ul>
+<p>The CPU hardware routes these separate bit slices through internal
+wiring to reconstruct the original 12-bit two's complement number before
+feeding it into the Arithmetic Logic Unit (ALU).</p>
+<h4 id="4-scaled-and-shifted-immediates">4. Scaled and Shifted
+Immediates</h4>
+<p>To extend the effective reach of small immediate fields without
+increasing instruction length, architectures often apply implicit
+scaling:</p>
+<ul>
+<li><strong>PC-Relative Branching:</strong> Since instructions are
+typically aligned to 2-byte or 4-byte boundaries, the least significant
+bit(s) of branch target offsets are always <code>0</code>. Instruction
+encodings omit these trailing zeros, shifting the immediate value left
+by 1 or 2 bits during decoding. A 12-bit branch field can thus address a
+<span class="math inline">\(\pm 4\text{KB}\)</span> or <span
+class="math inline">\(\pm 8\text{KB}\)</span> range.</li>
+<li><strong>Shifted Literals:</strong> Architectures like ARM provide
+instructions where an 8-bit immediate is paired with a 4-bit rotation or
+shift factor, allowing a compact field to represent large sparse numbers
+(e.g., <code>0xFF000000</code>).</li>
+</ul>
+<h3 id="handling-large-literals">Handling Large Literals</h3>
+<p>When a literal value exceeds the bit capacity of a single
+instruction's immediate field, architectures handle it using
+multi-instruction sequences:</p>
+<ol type="1">
+<li><strong>Upper Immediate Instructions:</strong> An instruction such
+as <code>LUI</code> (Load Upper Immediate) loads the upper 20 bits of a
+32-bit constant into a register.</li>
+<li><strong>Lower Immediate Instructions:</strong> A subsequent
+instruction, such as <code>ADDI</code> or <code>ORI</code>, provides the
+lower 12 bits, combining them into the full 32-bit literal.</li>
+</ol>
+<p>By tightly packing constant values into the binary instruction
+layout, processors avoid extraneous memory lookups, minimize pipeline
+stalls, and optimize the execution footprint of software programs.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

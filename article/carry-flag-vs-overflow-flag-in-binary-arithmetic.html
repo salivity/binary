@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carry Flag vs Overflow Flag in Binary Arithmetic - binary</title>
+    <meta name="description" content="The Carry Flag (CF) and the Overflow Flag (OF) are processor status flags used to determine whether the result of a binary arithmetic operation exceeds the storage capacity of a fixed-width register. The fundamental conceptual difference between them lie">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/carry-flag-vs-overflow-flag-in-binary-arithmetic">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Carry Flag vs Overflow Flag in Binary Arithmetic - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/carry-flag-vs-overflow-flag-in-binary-arithmetic" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Carry Flag (CF) and the Overflow Flag (OF) are processor status flags used to determine whether the result of a binary arithmetic operation exceeds the storage capacity of a fixed-width register. The fundamental conceptual difference between them lie" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="carry-flag-vs-overflow-flag-in-binary-arithmetic">Carry Flag vs
+Overflow Flag in Binary Arithmetic</h1>
+<p>The Carry Flag (CF) and the Overflow Flag (OF) are processor status
+flags used to determine whether the result of a binary arithmetic
+operation exceeds the storage capacity of a fixed-width register. The
+fundamental conceptual difference between them lies in the mathematical
+interpretation of the binary data: the Carry Flag detects overflow in
+<strong>unsigned arithmetic</strong>, while the Overflow Flag detects
+overflow in <strong>signed (two's complement) arithmetic</strong>.
+Because the central processing unit (CPU) executes identical binary
+addition and subtraction regardless of sign convention, it computes and
+sets both flags simultaneously, leaving the software to inspect the flag
+relevant to its data type.</p>
+<h2 id="the-carry-flag-cf-unsigned-arithmetic">The Carry Flag (CF):
+Unsigned Arithmetic</h2>
+<p>The Carry Flag tracks arithmetic operations treating values strictly
+as non-negative integers ranging from <span
+class="math inline">\(0\)</span> to <span class="math inline">\(2^N -
+1\)</span>, where <span class="math inline">\(N\)</span> is the bit
+width of the register.</p>
+<ul>
+<li><strong>During Addition:</strong> The Carry Flag is set to
+<code>1</code> when the sum produces a carry out of the most significant
+bit (MSB). This indicates that the true mathematical result is too large
+to fit in the destination register (i.e., it exceeds <span
+class="math inline">\(2^N - 1\)</span>).</li>
+<li><strong>During Subtraction:</strong> The Carry Flag acts as a
+"borrow flag" in many architectures (such as x86). It is set to
+<code>1</code> when a larger unsigned number is subtracted from a
+smaller unsigned number, requiring a borrow that cannot be satisfied
+within the bit width.</li>
+</ul>
+<h2 id="the-overflow-flag-of-signed-arithmetic">The Overflow Flag (OF):
+Signed Arithmetic</h2>
+<p>The Overflow Flag tracks arithmetic operations treating values as
+signed integers encoded in two's complement, representing a range from
+<span class="math inline">\(-2^{N-1}\)</span> to <span
+class="math inline">\(2^{N-1} - 1\)</span>.</p>
+<p>In two's complement, the most significant bit represents the sign
+(<span class="math inline">\(0\)</span> for positive, <span
+class="math inline">\(1\)</span> for negative). A signed overflow occurs
+when an operation produces a result that falls outside the representable
+positive or negative range, causing the sign bit to flip
+incorrectly.</p>
+<ul>
+<li><strong>Addition Rule:</strong> An overflow occurs only when adding
+two numbers of the same sign produces a result with the opposite sign
+(e.g., <code>positive + positive = negative</code> or
+<code>negative + negative = positive</code>). Adding numbers of opposite
+signs can never produce a signed overflow.</li>
+<li><strong>Hardware Logic:</strong> At the circuit level, the Overflow
+Flag is evaluated by calculating the XOR of the carry into the most
+significant bit (<span class="math inline">\(C_{in}\)</span>) and the
+carry out of the most significant bit (<span
+class="math inline">\(C_{out}\)</span>): <span
+class="math display">\[\text{OF} = C_{in} \oplus C_{out}\]</span></li>
+</ul>
+<h2 id="comparison-with-8-bit-examples">Comparison with 8-Bit
+Examples</h2>
+<p>An 8-bit register stores unsigned values from <span
+class="math inline">\(0\)</span> to <span
+class="math inline">\(255\)</span> and signed values from <span
+class="math inline">\(-128\)</span> to <span
+class="math inline">\(+127\)</span>. The following examples demonstrate
+how identical binary operations yield different flag states.</p>
+<h3 id="example-1-0x7f--0x01-01111111--00000001--10000000">Example 1:
+<code>0x7F + 0x01</code> (<code>01111111</code> + <code>00000001</code>
+= <code>10000000</code>)</h3>
+<ul>
+<li><strong>Unsigned Perspective:</strong> <span
+class="math inline">\(127 + 1 = 128\)</span>. The value <span
+class="math inline">\(128\)</span> fits comfortably in the <span
+class="math inline">\(0\)</span> to <span
+class="math inline">\(255\)</span> range. There is no carry-out from the
+MSB. <strong><span class="math inline">\(\rightarrow\)</span> CF =
+0</strong></li>
+<li><strong>Signed Perspective:</strong> <span
+class="math inline">\((+127) + (+1) = -128\)</span>. Adding two positive
+numbers resulted in a negative value because the sum exceeded <span
+class="math inline">\(+127\)</span>. <strong><span
+class="math inline">\(\rightarrow\)</span> OF = 1</strong></li>
+</ul>
+<h3
+id="example-2-0xff--0x01-11111111--00000001--00000000-with-carry">Example
+2: <code>0xFF + 0x01</code> (<code>11111111</code> +
+<code>00000001</code> = <code>00000000</code> with carry)</h3>
+<ul>
+<li><strong>Unsigned Perspective:</strong> <span
+class="math inline">\(255 + 1 = 256\)</span>. The value <span
+class="math inline">\(256\)</span> cannot fit into 8 bits (<span
+class="math inline">\(0\text{--}255\)</span>), producing a carry out of
+the MSB. <strong><span class="math inline">\(\rightarrow\)</span> CF =
+1</strong></li>
+<li><strong>Signed Perspective:</strong> <span
+class="math inline">\((-1) + (+1) = 0\)</span>. The value <span
+class="math inline">\(0\)</span> fits correctly within the <span
+class="math inline">\(-128\)</span> to <span
+class="math inline">\(+127\)</span> range, and the result is
+mathematically sound. <strong><span
+class="math inline">\(\rightarrow\)</span> OF = 0</strong></li>
+</ul>
+<h3
+id="example-3-0x80--0x80-10000000--10000000--00000000-with-carry">Example
+3: <code>0x80 + 0x80</code> (<code>10000000</code> +
+<code>10000000</code> = <code>00000000</code> with carry)</h3>
+<ul>
+<li><strong>Unsigned Perspective:</strong> <span
+class="math inline">\(128 + 128 = 256\)</span>. The value exceeds <span
+class="math inline">\(255\)</span>, generating a carry-out.
+<strong><span class="math inline">\(\rightarrow\)</span> CF =
+1</strong></li>
+<li><strong>Signed Perspective:</strong> <span
+class="math inline">\((-128) + (-128) = -256\)</span>. The value falls
+below <span class="math inline">\(-128\)</span>, flipping the sign to
+<span class="math inline">\(0\)</span> (positive). <strong><span
+class="math inline">\(\rightarrow\)</span> OF = 1</strong></li>
+</ul>
+<h2 id="summary-rule">Summary Rule</h2>
+<ul>
+<li>Use the <strong>Carry Flag (CF)</strong> when working with unsigned
+types (<code>uint8_t</code>, <code>uint32_t</code>, pointer arithmetic,
+multi-precision math).</li>
+<li>Use the <strong>Overflow Flag (OF)</strong> when working with signed
+types (<code>int8_t</code>, <code>int32_t</code>, two's complement
+calculations).</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

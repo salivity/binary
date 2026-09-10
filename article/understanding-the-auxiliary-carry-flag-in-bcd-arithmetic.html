@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding the Auxiliary Carry Flag in BCD Arithmetic - binary</title>
+    <meta name="description" content="This article provides an overview of the Auxiliary Carry Flag (AF), its operational mechanism within processor architecture, and its specialized role in Binary-Coded Decimal (BCD) operations. You will learn how central processing units (CPUs) monitor ari">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/understanding-the-auxiliary-carry-flag-in-bcd-arithmetic">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Understanding the Auxiliary Carry Flag in BCD Arithmetic - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/understanding-the-auxiliary-carry-flag-in-bcd-arithmetic" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article provides an overview of the Auxiliary Carry Flag (AF), its operational mechanism within processor architecture, and its specialized role in Binary-Coded Decimal (BCD) operations. You will learn how central processing units (CPUs) monitor ari" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1
+id="understanding-the-auxiliary-carry-flag-in-bcd-arithmetic">Understanding
+the Auxiliary Carry Flag in BCD Arithmetic</h1>
+<p>This article provides an overview of the Auxiliary Carry Flag (AF),
+its operational mechanism within processor architecture, and its
+specialized role in Binary-Coded Decimal (BCD) operations. You will
+learn how central processing units (CPUs) monitor arithmetic transitions
+between 4-bit nibbles, how hardware detects intermediate carries, and
+how assembly instructions utilize the AF flag to ensure accurate decimal
+representations within the binary number system.</p>
+<h2 id="what-is-the-auxiliary-carry-flag">What Is the Auxiliary Carry
+Flag?</h2>
+<p>The Auxiliary Carry Flag (AF), also known as the Half-Carry Flag in
+architectures such as ARM or the 8080/Z80, is a single-bit status
+indicator located in a CPU's status register (such as the FLAGS or
+EFLAGS register in x86 architectures).</p>
+<p>Unlike the standard Carry Flag (CF), which tracks overflow or borrow
+conditions at the most significant bit (MSB) of an entire byte, word, or
+doubleword, the Auxiliary Carry Flag specifically tracks carry and
+borrow conditions at the nibble level. A nibble consists of 4 bits. In
+an 8-bit byte (bits 0 through 7):</p>
+<ul>
+<li><strong>Lower Nibble:</strong> Bits 0, 1, 2, and 3</li>
+<li><strong>Upper Nibble:</strong> Bits 4, 5, 6, and 7</li>
+</ul>
+<p>The AF is set to <code>1</code> if an arithmetic operation generates
+a carry out of bit 3 into bit 4 during addition, or requires a borrow
+from bit 4 to bit 3 during subtraction. If no carry or borrow occurs
+across this 4-bit boundary, the AF is cleared to <code>0</code>.</p>
+<h2 id="the-nibble-level-detection-mechanism">The Nibble-Level Detection
+Mechanism</h2>
+<p>Binary arithmetic operates strictly in base-2. When adding two binary
+numbers, each bit column adds corresponding bits along with any carry
+generated by the previous column:</p>
+<p><span class="math display">\[\text{Bit } 3 \text{ sum} = A_3 + B_3 +
+\text{Carry}_2\]</span></p>
+<p>If the resulting value of the bit 3 addition equals or exceeds 2 (in
+base-10), a carry bit is produced and fed directly into the bit 4
+calculation:</p>
+<p><span class="math display">\[\text{Carry}_3 = (A_3 \land B_3) \lor
+(\text{Carry}_2 \land (A_3 \oplus B_3))\]</span></p>
+<p>The processor's Arithmetic Logic Unit (ALU) directly samples this
+intermediate carry line (<span
+class="math inline">\(\text{Carry}_3\)</span>). When <span
+class="math inline">\(\text{Carry}_3 = 1\)</span>, the hardware
+automatically asserts the Auxiliary Carry Flag.</p>
+<h2 id="how-bcd-uses-the-auxiliary-carry-flag">How BCD Uses the
+Auxiliary Carry Flag</h2>
+<p>Binary-Coded Decimal (BCD) is an encoding scheme where each decimal
+digit (<span class="math inline">\(0\)</span> through <span
+class="math inline">\(9\)</span>) is represented by a dedicated 4-bit
+binary sequence (<span class="math inline">\(0000_2\)</span> through
+<span class="math inline">\(1001_2\)</span>). Values from <span
+class="math inline">\(1010_2\)</span> (<span
+class="math inline">\(10_{10}\)</span>) through <span
+class="math inline">\(1111_2\)</span> (<span
+class="math inline">\(15_{10}\)</span>) are invalid in standard BCD.</p>
+<p>When adding two BCD numbers using standard binary addition, two types
+of errors can occur in the lower nibble:</p>
+<ol type="1">
+<li><strong>The sum of the nibble exceeds <span
+class="math inline">\(15_{10}\)</span>:</strong> A carry is generated
+into bit 4. The lower nibble wraps around, and the AF is set to
+<code>1</code>.</li>
+<li><strong>The sum falls between <span
+class="math inline">\(10_{10}\)</span> and <span
+class="math inline">\(15_{10}\)</span>:</strong> No carry is generated
+into bit 4 (AF remains <code>0</code>), but the nibble contains an
+invalid BCD digit.</li>
+</ol>
+<p>Because standard binary addition does not automatically handle
+base-10 modular arithmetic, processors provide adjustment instructions
+(such as <code>DAA</code>—Decimal Adjust AL after Addition in x86).
+These instructions inspect both the value of the lower nibble and the
+state of the Auxiliary Carry Flag to apply a correction factor:</p>
+<ul>
+<li><strong>Correction Rule:</strong> If the lower nibble contains a
+value greater than <span class="math inline">\(9\)</span>, or if the
+Auxiliary Carry Flag is set (<code>AF = 1</code>), the processor adds
+<span class="math inline">\(6\)</span> (<span
+class="math inline">\(0110_2\)</span>) to the lower nibble.</li>
+</ul>
+<p>Adding <span class="math inline">\(6\)</span> skips the six invalid
+states (<span class="math inline">\(1010_2\)</span> to <span
+class="math inline">\(1111_2\)</span>), forcing the lower nibble to
+retain the correct decimal unit digit and properly propagating the carry
+into the upper decimal digit (the upper nibble).</p>
+<h2 id="step-by-step-example">Step-by-Step Example</h2>
+<p>Consider the addition of two packed BCD digits: <span
+class="math inline">\(8\)</span> (<span class="math inline">\(0000\
+1000_2\)</span>) and <span class="math inline">\(9\)</span> (<span
+class="math inline">\(0000\ 1001_2\)</span>). In decimal, <span
+class="math inline">\(8 + 9 = 17\)</span> (represented in packed BCD as
+<span class="math inline">\(0001\ 0111_2\)</span>).</p>
+<ol type="1">
+<li><p><strong>Binary Addition:</strong> $$\begin{array}{r@{\quad}l}
+0000\ 1000_2 &amp; (8) \</p>
+<ul>
+<li>0000\ 1001_2 &amp; (9) \ \hline 0001\ 0001_2 &amp; (17_{10} \text{
+in pure binary, or } 11_{16}) \end{array}$$</li>
+</ul></li>
+<li><p><strong>Flag Evaluation:</strong> During the addition of bit 3
+(<span class="math inline">\(1 + 1 = 10_2\)</span>), a carry is passed
+to bit 4. The ALU sets the Auxiliary Carry Flag:
+<code>AF = 1</code>.</p></li>
+<li><p><strong>BCD Adjustment (<code>DAA</code>):</strong> The processor
+executes the adjustment routine. Even though the lower nibble contains
+<code>0001</code> (which is <span class="math inline">\(\le 9\)</span>),
+the CPU sees that <code>AF = 1</code>.</p>
+<p>The CPU adds <span class="math inline">\(0110_2\)</span> (<span
+class="math inline">\(6\)</span>) to the result:
+$$\begin{array}{r@{\quad}l} 0001\ 0001_2 \</p>
+<ul>
+<li>0000\ 0110_2 \ \hline 0001\ 0111_2 \end{array}$$</li>
+</ul></li>
+<li><p><strong>Final Result:</strong> The upper nibble is
+<code>0001</code> (<span class="math inline">\(1_{10}\)</span>) and the
+lower nibble is <code>0111</code> (<span
+class="math inline">\(7_{10}\)</span>), yielding the correct packed BCD
+representation for <span class="math inline">\(17\)</span>.</p></li>
+</ol></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modeling Vector Types in Verilog and VHDL - binary</title>
+    <meta name="description" content="Hardware Description Languages (HDLs) like Verilog and VHDL bridge abstract mathematical concepts and physical digital circuitry by modeling multi-bit data paths as vector types. Grounded in the binary number system ($0$ and $1$), these languages provide">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/modeling-vector-types-in-verilog-and-vhdl">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Modeling Vector Types in Verilog and VHDL - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/modeling-vector-types-in-verilog-and-vhdl" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Hardware Description Languages (HDLs) like Verilog and VHDL bridge abstract mathematical concepts and physical digital circuitry by modeling multi-bit data paths as vector types. Grounded in the binary number system ($0$ and $1$), these languages provide" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="modeling-vector-types-in-verilog-and-vhdl">Modeling Vector Types
+in Verilog and VHDL</h1>
+<p>Hardware Description Languages (HDLs) like Verilog and VHDL bridge
+abstract mathematical concepts and physical digital circuitry by
+modeling multi-bit data paths as vector types. Grounded in the binary
+number system (<span class="math inline">\(0\)</span> and <span
+class="math inline">\(1\)</span>), these languages provide constructs to
+define bit-widths, signal directionality (endianness), multi-state logic
+values, and numerical interpretations such as signed and unsigned
+representations. This article explains how Verilog and VHDL structure,
+manipulate, and synthesize binary vector types into physical digital
+logic.</p>
+<h3 id="the-binary-foundation-and-multi-valued-logic">The Binary
+Foundation and Multi-Valued Logic</h3>
+<p>At the hardware level, digital systems process information using
+binary voltages. To accurately simulate physical circuit behaviors, both
+Verilog and VHDL extend pure binary mathematics (<span
+class="math inline">\(0\)</span> and <span
+class="math inline">\(1\)</span>) into multi-valued logic systems that
+account for uninitialized states, high-impedance states, and signal
+conflicts.</p>
+<ul>
+<li><strong>Verilog:</strong> Uses a 4-state logic model containing
+<code>0</code> (logic zero/ground), <code>1</code> (logic one/Vdd),
+<code>X</code> (unknown or contention), and <code>Z</code>
+(high-impedance/floating).</li>
+<li><strong>VHDL:</strong> Uses the IEEE 1164 standard
+<code>std_ulogic</code> and <code>std_logic</code> 9-state system, which
+includes values like <code>'U'</code> (uninitialized), <code>'X'</code>
+(forcing unknown), <code>'0'</code> (forcing zero), <code>'1'</code>
+(forcing one), and <code>'Z'</code> (high impedance).</li>
+</ul>
+<p>Vector types in both languages are ordered collections of these
+individual logic elements, representing physical collections of parallel
+wires (busses) or storage elements (registers).</p>
+<h3 id="vector-modeling-in-verilog">Vector Modeling in Verilog</h3>
+<p>Verilog treats vectors primarily as packed arrays of bits,
+representing continuous physical lines.</p>
+<h4 id="declaration-and-bit-ordering">Declaration and Bit Ordering</h4>
+<p>Vectors are declared by specifying a range <code>[MSB:LSB]</code> or
+<code>[LSB:MSB]</code>:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode verilog"><code class="sourceCode verilog"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">wire</span> <span class="op">[</span><span class="dv">7</span><span class="op">:</span><span class="dv">0</span><span class="op">]</span> data_bus<span class="op">;</span> <span class="co">// 8-bit bus, bit 7 is MSB (Little-Endian / downto)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">reg</span>  <span class="op">[</span><span class="dv">0</span><span class="op">:</span><span class="dv">3</span><span class="op">]</span> nibble<span class="op">;</span>   <span class="co">// 4-bit register, bit 0 is MSB (Big-Endian / to)</span></span></code></pre></div>
+<p>The range defines both the bit-width and the indexing scheme. The
+index <code>[7:0]</code> explicitly states that index 7 represents the
+most significant bit (MSB) with a binary weight of <span
+class="math inline">\(2^7\)</span>, while index 0 represents the least
+significant bit (LSB) with a binary weight of <span
+class="math inline">\(2^0\)</span>.</p>
+<h4 id="operations-and-arithmetic-interpretation">Operations and
+Arithmetic Interpretation</h4>
+<p>Verilog vectors are untyped by default regarding arithmetic; they are
+treated as raw binary values.</p>
+<ul>
+<li><strong>Bit Slicing:</strong> Subsets of vectors can be extracted
+directly (e.g., <code>data_bus[3:0]</code>).</li>
+<li><strong>Concatenation and Replication:</strong> Vectors can be
+assembled using braces <code>{}</code> (e.g.,
+<code>{nibble, data_bus[3:0]}</code>).</li>
+<li><strong>Signedness:</strong> By default, Verilog interprets vectors
+as unsigned binary numbers. SystemVerilog and Verilog-2001 introduced
+the <code>signed</code> keyword (e.g.,
+<code>wire signed [7:0] s_data;</code>), directing synthesis tools and
+simulators to use two's complement binary arithmetic for relational and
+arithmetic operations.</li>
+</ul>
+<h3 id="vector-modeling-in-vhdl">Vector Modeling in VHDL</h3>
+<p>VHDL enforces strong typing, distinguishing clearly between a
+collection of logic bits without numeric meaning and an actual binary
+number.</p>
+<h4 id="logic-vectors-vs-numeric-vectors">Logic Vectors vs. Numeric
+Vectors</h4>
+<p>VHDL separates vectors into standard arrays and arithmetic types:</p>
+<ul>
+<li><strong><code>std_logic_vector</code>:</strong> An array of
+<code>std_logic</code> elements representing a digital bus. It has no
+intrinsic numerical value; mathematical operations like addition or
+subtraction cannot be performed directly on it without type
+casting.</li>
+<li><strong><code>unsigned</code> and <code>signed</code>:</strong>
+Defined in the <code>ieee.numeric_std</code> package. These vectors are
+also arrays of <code>std_logic</code>, but they carry explicit
+mathematical definitions. <code>unsigned</code> models standard
+positional binary numbers (<span class="math inline">\(B = \sum b_i
+2^i\)</span>), while <code>signed</code> represents two's complement
+binary numbers.</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode vhdl"><code class="sourceCode vhdl"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">signal</span> raw_bus <span class="ot">:</span> <span class="dt">std_logic_vector</span>(<span class="dv">7</span> <span class="ot">downto</span> <span class="dv">0</span>);</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ot">signal</span> u_data  <span class="ot">:</span> <span class="dt">unsigned</span>(<span class="dv">7</span> <span class="ot">downto</span> <span class="dv">0</span>);</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ot">signal</span> s_data  <span class="ot">:</span> <span class="dt">signed</span>(<span class="dv">7</span> <span class="ot">downto</span> <span class="dv">0</span>);</span></code></pre></div>
+<h4 id="directionality-downto-vs-to">Directionality: <code>downto</code>
+vs. <code>to</code></h4>
+<p>VHDL requires specifying vector range direction:</p>
+<ul>
+<li><code>(7 downto 0)</code>: The leftmost index (7) is the MSB,
+matching standard binary positional notation.</li>
+<li><code>(0 to 7)</code>: The leftmost index (0) is the MSB, often used
+for protocol-specific serialization formats.</li>
+</ul>
+<h3 id="hardware-mapping-and-synthesis">Hardware Mapping and
+Synthesis</h3>
+<p>When an HDL compiler synthesizes vector models into hardware:</p>
+<ol type="1">
+<li><strong>Parallel Wiring:</strong> An <span
+class="math inline">\(N\)</span>-bit vector maps directly to <span
+class="math inline">\(N\)</span> discrete physical conductors on the
+chip or FPGA.</li>
+<li><strong>Registers:</strong> A vector assigned sequentially maps to
+an array of <span class="math inline">\(N\)</span> flip-flops sharing a
+common clock and enable line.</li>
+<li><strong>Arithmetic Units:</strong> Unsigned vector operations
+instantiate binary ripple-carry, carry-lookahead, or tree adders. Signed
+vector operations synthesize two's complement logic gates (e.g.,
+sign-extension hardware and subtractors with inverted bit-inputs and
+carry-in set to 1).</li>
+</ol></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero-Extend vs Sign-Extend: Integer Widening - binary</title>
+    <meta name="description" content="When working with binary data, widening an integer involves converting a value from a smaller bit-width to a larger bit-width, such as converting an 8-bit byte into a 16-bit word or a 32-bit integer. The fundamental difference between a zero-extend instr">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/zero-extend-vs-sign-extend-integer-widening">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Zero-Extend vs Sign-Extend: Integer Widening - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/zero-extend-vs-sign-extend-integer-widening" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="When working with binary data, widening an integer involves converting a value from a smaller bit-width to a larger bit-width, such as converting an 8-bit byte into a 16-bit word or a 32-bit integer. The fundamental difference between a zero-extend instr" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="zero-extend-vs-sign-extend-integer-widening">Zero-Extend vs
+Sign-Extend: Integer Widening</h1>
+<p>When working with binary data, widening an integer involves
+converting a value from a smaller bit-width to a larger bit-width, such
+as converting an 8-bit byte into a 16-bit word or a 32-bit integer. The
+fundamental difference between a zero-extend instruction and a
+sign-extend instruction lies in how the newly created higher-order bits
+are populated: zero-extension fills the extra bits entirely with zeros
+to preserve unsigned values, whereas sign-extension replicates the
+original value's sign bit across the new bits to maintain the correct
+numeric value of signed two's complement integers.</p>
+<h3 id="what-is-zero-extension">What is Zero-Extension?</h3>
+<p>Zero-extension (often abbreviated as <code>MOVZX</code> in x86
+assembly) is designed specifically for <strong>unsigned
+integers</strong>. In an unsigned integer system, all bits contribute
+directly to the magnitude of the number, with no bit designated for a
+negative sign.</p>
+<p>When an unsigned integer is widened, zero-extension appends binary
+zeros (<code>0</code>) to all the newly added higher-order positions.
+This ensures that the original magnitude of the number remains
+unchanged.</p>
+<ul>
+<li><strong>Example:</strong> Widening an 8-bit unsigned integer to 16
+bits:
+<ul>
+<li>8-bit binary: <code>1001 1100</code> (Decimal value: 156)</li>
+<li>16-bit zero-extended: <code>0000 0000 1001 1100</code> (Decimal
+value: 156)</li>
+</ul></li>
+</ul>
+<p>Because the upper bits are zeros, they add zero value to the binary
+weighting, keeping the unsigned decimal value identical.</p>
+<h3 id="what-is-sign-extension">What is Sign-Extension?</h3>
+<p>Sign-extension (often abbreviated as <code>MOVSX</code> in x86
+assembly) is designed for <strong>signed integers</strong> represented
+in two's complement format. In two's complement, the most significant
+bit (MSB) acts as the sign bit: a <code>0</code> denotes a non-negative
+number, while a <code>1</code> denotes a negative number.</p>
+<p>When widening a signed integer, sign-extension copies the original
+MSB into every newly added higher-order bit position.</p>
+<ul>
+<li><p><strong>Positive Value Example:</strong></p>
+<ul>
+<li>8-bit signed binary: <code>0011 0100</code> (MSB is <code>0</code>,
+Decimal value: +52)</li>
+<li>16-bit sign-extended: <code>0000 0000 0011 0100</code> (Decimal
+value: +52)</li>
+</ul></li>
+<li><p><strong>Negative Value Example:</strong></p>
+<ul>
+<li>8-bit signed binary: <code>1111 0000</code> (MSB is <code>1</code>,
+Decimal value: -16)</li>
+<li>16-bit sign-extended: <code>1111 1111 1111 0000</code> (Decimal
+value: -16)</li>
+</ul></li>
+</ul>
+<p>In the negative example, filling the upper bits with <code>1</code>s
+is necessary because the new MSB represents a larger negative weight
+(e.g., <span class="math inline">\(-2^{15}\)</span> in a 16-bit
+integer). The series of leading <code>1</code>s mathematically offsets
+this higher negative base to preserve the exact negative value of <span
+class="math inline">\(-16\)</span>. If zero-extension were applied to
+<code>1111 0000</code>, it would result in
+<code>0000 0000 1111 0000</code>, unintentionally converting <span
+class="math inline">\(-16\)</span> into <span
+class="math inline">\(+240\)</span>.</p>
+<h3 id="key-comparison">Key Comparison</h3>
+<ul>
+<li><strong>Intended Data Type:</strong> Zero-extension is used for
+unsigned data types; sign-extension is used for signed two's complement
+data types.</li>
+<li><strong>Bit Filling Rule:</strong> Zero-extension always writes
+<code>0</code>s to the new upper bits; sign-extension writes copies of
+the original MSB (<code>0</code>s for positive, <code>1</code>s for
+negative).</li>
+<li><strong>Arithmetic Correctness:</strong> Choosing the wrong
+instruction leads to value corruption—zero-extending a negative number
+turns it into a large positive number, while sign-extending an unsigned
+number where the MSB is <code>1</code> mistakenly converts a large
+positive value into a negative value.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

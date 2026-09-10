@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-Magnitude Representation in Binary - binary</title>
+    <meta name="description" content="Sign-magnitude representation is one of the simplest methods used in digital computing to encode both positive and negative integers in the binary number system. By dedicating the most significant bit solely to indicating the sign of the number, this for">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/sign-magnitude-representation-in-binary">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Sign-Magnitude Representation in Binary - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/sign-magnitude-representation-in-binary" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Sign-magnitude representation is one of the simplest methods used in digital computing to encode both positive and negative integers in the binary number system. By dedicating the most significant bit solely to indicating the sign of the number, this for" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="sign-magnitude-representation-in-binary">Sign-Magnitude
+Representation in Binary</h1>
+<p>Sign-magnitude representation is one of the simplest methods used in
+digital computing to encode both positive and negative integers in the
+binary number system. By dedicating the most significant bit solely to
+indicating the sign of the number, this format allows systems to
+represent signed values while keeping the absolute value directly
+readable in standard binary notation. This article explains the
+structure of sign-magnitude representation, provides conversion
+examples, outlines its mathematical range, and examines its limitations
+in computer hardware.</p>
+<h2 id="structure-of-sign-magnitude-representation">Structure of
+Sign-Magnitude Representation</h2>
+<p>In a sign-magnitude system, a fixed number of bits is divided into
+two distinct parts:</p>
+<ol type="1">
+<li><strong>The Sign Bit (Most Significant Bit):</strong> The leftmost
+bit indicates whether the number is positive or negative.
+<ul>
+<li><code>0</code> represents a positive value (<span
+class="math inline">\(+\)</span>).</li>
+<li><code>1</code> represents a negative value (<span
+class="math inline">\(-\)</span>).</li>
+</ul></li>
+<li><strong>The Magnitude Bits:</strong> The remaining bits represent
+the absolute magnitude (numerical value) of the integer, expressed in
+standard unsigned binary.</li>
+</ol>
+<h2 id="step-by-step-encoding-example">Step-by-Step Encoding
+Example</h2>
+<p>Using an 8-bit byte as an example, the leftmost bit serves as the
+sign indicator, leaving 7 bits for the magnitude.</p>
+<ul>
+<li><p><strong>Encoding <span
+class="math inline">\(+25\)</span>:</strong></p>
+<ul>
+<li>Determine the sign bit: Positive <span
+class="math inline">\(\rightarrow\)</span> <code>0</code></li>
+<li>Convert <span class="math inline">\(25\)</span> into 7-bit binary:
+<span class="math inline">\(16 + 8 + 1 \rightarrow\)</span>
+<code>0011001</code></li>
+<li>Combine sign and magnitude: <code>00011001</code></li>
+</ul></li>
+<li><p><strong>Encoding <span
+class="math inline">\(-25\)</span>:</strong></p>
+<ul>
+<li>Determine the sign bit: Negative <span
+class="math inline">\(\rightarrow\)</span> <code>1</code></li>
+<li>Convert <span class="math inline">\(25\)</span> into 7-bit binary:
+<code>0011001</code></li>
+<li>Combine sign and magnitude: <code>10011001</code></li>
+</ul></li>
+</ul>
+<p>To decode an unknown binary sequence, such as
+<code>10001100</code>:</p>
+<ol type="1">
+<li>Check the sign bit: The leading bit is <code>1</code>, meaning the
+result is negative.</li>
+<li>Read the magnitude: The remaining bits <code>0001100</code> equal
+<span class="math inline">\(8 + 4 = 12\)</span>.</li>
+<li>Combine: The represented value is <span
+class="math inline">\(-12\)</span>.</li>
+</ol>
+<h2 id="range-of-values">Range of Values</h2>
+<p>For an <span class="math inline">\(n\)</span>-bit binary integer in
+sign-magnitude format, one bit is reserved for the sign, leaving <span
+class="math inline">\(n - 1\)</span> bits for the value. The total range
+of representable numbers is:</p>
+<p><span class="math display">\[\left[-(2^{n-1} - 1), +(2^{n-1} -
+1)\right]\]</span></p>
+<p>For an 8-bit system (<span class="math inline">\(n = 8\)</span>):</p>
+<ul>
+<li>Maximum positive value: <span class="math inline">\(+127\)</span>
+(<code>01111111</code>)</li>
+<li>Minimum negative value: <span class="math inline">\(-127\)</span>
+(<code>11111111</code>)</li>
+</ul>
+<h2 id="key-limitations">Key Limitations</h2>
+<p>Although conceptually straightforward, sign-magnitude representation
+is rarely used for standard integer arithmetic in modern central
+processing units (CPUs) due to two major drawbacks:</p>
+<ul>
+<li><strong>Dual Representation of Zero:</strong> The format produces
+two distinct bit patterns for zero:
+<ul>
+<li>Positive zero (<span class="math inline">\(+0\)</span>):
+<code>00000000</code></li>
+<li>Negative zero (<span class="math inline">\(-0\)</span>):
+<code>10000000</code> This redundancy requires extra logic to ensure
+that <span class="math inline">\(+0\)</span> and <span
+class="math inline">\(-0\)</span> evaluate as equal.</li>
+</ul></li>
+<li><strong>Complex Arithmetic Logic:</strong> Standard binary adders
+cannot add sign-magnitude numbers directly. For example, adding <span
+class="math inline">\(+5\)</span> (<code>00000101</code>) and <span
+class="math inline">\(-5\)</span> (<code>10000101</code>) via standard
+binary addition yields <code>10001010</code> (<span
+class="math inline">\(-10\)</span>), which is incorrect. Digital
+circuits must inspect the signs and magnitudes separately before
+executing addition or subtraction, increasing processor complexity and
+latency compared to two's complement arithmetic.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

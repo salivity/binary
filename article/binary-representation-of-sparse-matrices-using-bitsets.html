@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Representation of Sparse Matrices Using Bitsets - binary</title>
+    <meta name="description" content="This article explains how the binary number system represents the structural patterns of sparse matrices using bit vectors and compressed bitset architectures. By decoupling matrix topology from numerical data, binary bit vectors map zero and non-zero st">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/binary-representation-of-sparse-matrices-using-bitsets">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Binary Representation of Sparse Matrices Using Bitsets - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/binary-representation-of-sparse-matrices-using-bitsets" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explains how the binary number system represents the structural patterns of sparse matrices using bit vectors and compressed bitset architectures. By decoupling matrix topology from numerical data, binary bit vectors map zero and non-zero st" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="binary-representation-of-sparse-matrices-using-bitsets">Binary
+Representation of Sparse Matrices Using Bitsets</h1>
+<p>This article explains how the binary number system represents the
+structural patterns of sparse matrices using bit vectors and compressed
+bitset architectures. By decoupling matrix topology from numerical data,
+binary bit vectors map zero and non-zero states to single bits. Readers
+will learn the mechanics of uncompressed bit vectors, advanced
+compression techniques like Run-Length Encoding and Roaring Bitmaps, and
+how hardware-level bitwise operations optimize sparse linear algebra
+computations.</p>
+<h2 id="the-principle-of-binary-sparsity-mapping">The Principle of
+Binary Sparsity Mapping</h2>
+<p>A sparse matrix consists predominantly of zero elements. Traditional
+sparse storage formats, such as Coordinate List (COO) or Compressed
+Sparse Row (CSR), store the explicit row and column indices of non-zero
+elements using 32-bit or 64-bit integers.</p>
+<p>Binary representation optimizes this by stripping away numerical
+values and modeling only the matrix's structural topology (the "sparsity
+pattern"). In this paradigm:</p>
+<ul>
+<li><code>1</code> represents the presence of a non-zero element.</li>
+<li><code>0</code> represents a zero element (absence of data).</li>
+</ul>
+<p>The numerical values are stored in a contiguous, separate
+one-dimensional array. The binary representation serves as an index mask
+that maps each value in the array to its exact coordinates in the
+matrix.</p>
+<h2 id="uncompressed-bit-vectors">Uncompressed Bit Vectors</h2>
+<p>An uncompressed bit vector represents a sparse matrix as a dense
+sequence of bits. A matrix of dimensions <span class="math inline">\(M
+\times N\)</span> is flattened into a single bit vector of length <span
+class="math inline">\(M \times N\)</span>, or into <span
+class="math inline">\(M\)</span> distinct bit vectors, each of length
+<span class="math inline">\(N\)</span> representing a single row.</p>
+<pre><code>Original Matrix (4x4):
+[ 5.0   0.0   0.0   2.1 ]
+[ 0.0   0.0   0.0   0.0 ]
+[ 0.0   8.4   0.0   0.0 ]
+[ 1.2   0.0   0.0   3.7 ]
+
+Row Bit Vectors:
+Row 0: 1 0 0 1  (Hex: 0x9)
+Row 1: 0 0 0 0  (Hex: 0x0)
+Row 2: 0 1 0 0  (Hex: 0x4)
+Row 3: 1 0 0 1  (Hex: 0x9)
+
+Flattened Vector (16 bits):
+1001 0000 0100 1001
+
+Values Array:
+[ 5.0, 2.1, 8.4, 1.2, 3.7 ]</code></pre>
+<h3 id="memory-efficiency">Memory Efficiency</h3>
+<p>Compared to dense storage (which requires 32 or 64 bits per element
+regardless of value), a bit vector uses exactly 1 bit per entry.
+Compared to CSR, an uncompressed bit vector is more memory-efficient
+when the matrix density exceeds roughly 1% to 3%, depending on the
+architecture's pointer size.</p>
+<h2 id="compressed-bitsets">Compressed Bitsets</h2>
+<p>When matrices scale into millions of rows and columns with densities
+below 0.01%, uncompressed bit vectors waste substantial memory storing
+long sequences of <code>0</code> bits. Compressed bitset algorithms
+compress these binary streams without losing the ability to perform fast
+indexing.</p>
+<h3 id="1-word-aligned-hybrid-wah-and-run-length-encoding-rle">1.
+Word-Aligned Hybrid (WAH) and Run-Length Encoding (RLE)</h3>
+<p>Run-Length Encoding compresses long sequences of identical bits into
+pairs: the bit value and its repeat count. Word-Aligned Hybrid (WAH)
+encoding adapts RLE to machine-word boundaries (32-bit or 64-bit words).
+A word's most significant bit indicates whether the word contains:</p>
+<ul>
+<li><strong>A Literal Word:</strong> The remaining 31 or 63 bits are raw
+bit patterns.</li>
+<li><strong>A Fill Word:</strong> The word encodes a run of consecutive
+<code>0</code>s or <code>1</code>s, storing the length of the run.</li>
+</ul>
+<p>This allows entire blocks of empty matrix space to be represented by
+a single machine word.</p>
+<h3 id="2-roaring-bitmaps">2. Roaring Bitmaps</h3>
+<p>Roaring Bitmaps partition the 32-bit integer index space into chunks
+of <span class="math inline">\(2^{16}\)</span> (65,536) integers based
+on the most significant 16 bits. The least significant 16 bits are
+stored in one of three container types depending on local density:</p>
+<ul>
+<li><strong>Array Container:</strong> Used when a chunk contains fewer
+than 4,096 non-zero entries. Stores raw 16-bit indices.</li>
+<li><strong>Bitset Container:</strong> Used when a chunk contains
+between 4,096 and 61,440 entries. Stores a fixed 8 KB uncompressed
+bitset (65,536 bits).</li>
+<li><strong>Run Container:</strong> Used when entries form contiguous
+sequences. Stores run-length encoded start and length pairs.</li>
+</ul>
+<p>This dynamic partitioning ensures optimal space and retrieval speeds
+across heterogeneous sparsity distributions.</p>
+<h2 id="arithmetic-and-algorithmic-operations">Arithmetic and
+Algorithmic Operations</h2>
+<p>Binary representation allows sparse matrix operations to leverage
+low-level CPU instructions:</p>
+<h3 id="logical-intersections-and-unions">Logical Intersections and
+Unions</h3>
+<ul>
+<li><strong>Matrix Addition Structure:</strong> The non-zero pattern of
+<span class="math inline">\(A + B\)</span> is computed using a bitwise
+<code>OR</code> between the bitsets of <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>.</li>
+<li><strong>Hadamard (Element-Wise) Product:</strong> The pattern of
+<span class="math inline">\(A \circ B\)</span> is computed using a
+bitwise <code>AND</code>.</li>
+<li><strong>Matrix Subtraction Structure:</strong> The pattern is
+resolved using a bitwise <code>XOR</code> or <code>OR</code>.</li>
+</ul>
+<p>Because these operations run on 64-bit words or 256/512-bit SIMD
+registers (AVX-512), the CPU processes 64 to 512 matrix cells in a
+single clock cycle.</p>
+<h3 id="fast-index-calculation-via-hardware-instructions">Fast Index
+Calculation via Hardware Instructions</h3>
+<p>To map a bit to its corresponding position in the dense numerical
+values array, processors use dedicated instructions:</p>
+<ul>
+<li><strong>Population Count (<code>popcount</code>):</strong> Computes
+the total number of set bits (<code>1</code>s) before a specific
+position. The result yields the exact offset index in the numerical
+values array.</li>
+<li><strong>Count Trailing Zeros (<code>ctz</code> /
+<code>clz</code>):</strong> Quickly finds the next non-zero column index
+without scanning every intermediate <code>0</code> bit
+individually.</li>
+</ul>
+<p>Combining bitsets with hardware-accelerated instructions minimizes
+memory bandwidth bottlenecks and accelerates structural operations in
+sparse matrix computation.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Rotary Encoders Use Gray Code Instead of Binary - binary</title>
+    <meta name="description" content="Mechanical rotary encoders convert angular position into digital signals, and Gray code is preferred over standard binary to prevent read errors caused by physical switching delays. In standard binary systems, multiple bits often change simultaneously be">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/why-rotary-encoders-use-gray-code-instead-of-binary">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Rotary Encoders Use Gray Code Instead of Binary - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/why-rotary-encoders-use-gray-code-instead-of-binary" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Mechanical rotary encoders convert angular position into digital signals, and Gray code is preferred over standard binary to prevent read errors caused by physical switching delays. In standard binary systems, multiple bits often change simultaneously be" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="why-rotary-encoders-use-gray-code-instead-of-binary">Why Rotary
+Encoders Use Gray Code Instead of Binary</h1>
+<p>Mechanical rotary encoders convert angular position into digital
+signals, and Gray code is preferred over standard binary to prevent read
+errors caused by physical switching delays. In standard binary systems,
+multiple bits often change simultaneously between adjacent states, which
+creates temporary false readings due to microscopic mechanical
+misalignments. Gray code solves this issue by ensuring that only one bit
+changes at any given transition, guaranteeing reliable and error-free
+positional tracking.</p>
+<h3 id="the-multi-bit-switching-problem-in-binary">The Multi-Bit
+Switching Problem in Binary</h3>
+<p>In standard binary counting, transitioning from one position to the
+next frequently requires multiple bits to flip at the same time. For
+example, moving from 3 (011 in binary) to 4 (100 in binary) requires all
+three bits to change state.</p>
+<p>In a physical rotary encoder, reading these bits relies on mechanical
+contacts or optical tracks passing over sensors. Because of mechanical
+tolerances, contact wear, and micro-imperfections, it is physically
+impossible for all electrical switches to make or break contact at the
+exact same microsecond.</p>
+<p>If one contact switches slightly faster than the others, the encoder
+temporarily outputs intermediate, incorrect values known as "ghost
+states" or "glitches." During the shift from 011 to 100, the system
+might briefly read 010 (2), 000 (0), or 111 (7). Even if these erroneous
+states last for only a fraction of a millisecond, a digital controller
+sampling at high speeds will register them as massive, erratic jumps in
+position.</p>
+<h3 id="how-gray-code-prevents-read-errors">How Gray Code Prevents Read
+Errors</h3>
+<p>Gray code is a non-weighted, cyclic binary system designed
+specifically to eliminate transition errors. Its defining characteristic
+is that between any two consecutive values, only one bit ever changes
+state.</p>
+<p>For instance, the decimal sequence 0, 1, 2, 3 in 2-bit Gray code is
+represented as:</p>
+<ul>
+<li>0: <code>00</code></li>
+<li>1: <code>01</code></li>
+<li>2: <code>11</code></li>
+<li>3: <code>10</code></li>
+</ul>
+<p>Because only a single bit changes at each step, there are no other
+bits that need to synchronize. If the sensor is positioned directly on
+the boundary between two sectors, the only possible readings are either
+the current position or the adjacent position. A transition from
+<code>01</code> to <code>11</code> can only be read as <code>01</code>
+or <code>11</code>—it is physically impossible to output a wildly
+inaccurate intermediate value.</p>
+<h3 id="handling-mechanical-bounce-and-wear">Handling Mechanical Bounce
+and Wear</h3>
+<p>Mechanical encoders suffer from contact bounce, where an electrical
+contact rapidly oscillates between open and closed states before
+settling. In standard binary, contact bounce during a multi-bit switch
+can introduce severe data corruption and false movement vectors.</p>
+<p>With Gray code, contact bounce on a boundary simply toggles the
+single changing bit back and forth. The receiving processor interprets
+this merely as tiny jitter between two adjacent positions (<span
+class="math inline">\(N\)</span> and <span
+class="math inline">\(N+1\)</span>), preventing catastrophic position
+loss or false triggers in motion-control systems.</p>
+<h3 id="system-integration">System Integration</h3>
+<p>While microcontrollers and digital computers process arithmetic using
+standard binary, the conversion from Gray code to binary is
+computationally inexpensive and easily executed in software or with
+simple logic gates (XOR circuits). Using Gray code at the physical
+measurement layer provides hardware-level fault tolerance, while the
+downstream system converts the data into standard binary for
+calculation.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

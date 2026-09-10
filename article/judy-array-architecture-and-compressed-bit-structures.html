@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Judy Array Architecture and Compressed Bit Structures - binary</title>
+    <meta name="description" content="This article provides an overview of how Judy arrays achieve near-optimal memory scaling and high computational performance in binary mapping. By dynamically switching between compressed and uncompressed bit structures across a hierarchical digital tree">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/judy-array-architecture-and-compressed-bit-structures">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Judy Array Architecture and Compressed Bit Structures - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/judy-array-architecture-and-compressed-bit-structures" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article provides an overview of how Judy arrays achieve near-optimal memory scaling and high computational performance in binary mapping. By dynamically switching between compressed and uncompressed bit structures across a hierarchical digital tree" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="judy-array-architecture-and-compressed-bit-structures">Judy
+Array Architecture and Compressed Bit Structures</h1>
+<p>This article provides an overview of how Judy arrays achieve
+near-optimal memory scaling and high computational performance in binary
+mapping. By dynamically switching between compressed and uncompressed
+bit structures across a hierarchical digital tree (trie), the Judy array
+architecture minimizes CPU cache misses, avoids dynamic memory
+allocation overhead for sparse domains, and delivers fast associative
+array operations for integer keys.</p>
+<h3 id="the-foundation-256-way-digital-trees">The Foundation: 256-Way
+Digital Trees</h3>
+<p>At its core, a Judy array is a highly optimized, 256-ary digital tree
+(trie). Keys, typically 32-bit or 64-bit unsigned integers, are
+partitioned into consecutive bytes (8-bit chunks). Each level of the
+tree resolves one byte of the key, spanning values from
+<code>0x00</code> to <code>0xFF</code>.</p>
+<p>Standard 256-way tries suffer from massive memory waste because
+allocating 256 pointers per node for sparsely populated data consumes
+excessive memory. Judy arrays solve this by refusing to use a uniform
+node representation. Instead, each node dynamically adapts its internal
+memory layout based on the number of keys it currently holds.</p>
+<h3 id="adaptive-node-types-compressed-vs-uncompressed">Adaptive Node
+Types: Compressed vs. Uncompressed</h3>
+<p>A Judy array transitions through several internal node structures as
+the population of a byte branch grows:</p>
+<ol type="1">
+<li><p><strong>Linear and Indirect Nodes (Sparse Key
+Densities):</strong> When a node contains only a few keys (e.g., fewer
+than 32 entries), it stores keys in a tightly packed linear array.
+Lookups use linear or binary search directly over CPU registers. No full
+256-entry pointer table is allocated, maximizing data density within a
+single CPU cache line.</p></li>
+<li><p><strong>Bitmap and Compressed Bit Nodes (Moderate
+Densities):</strong> As the number of keys grows, the node transitions
+to a bitmap structure. A 256-bit vector (typically four 64-bit words)
+represents the presence or absence of sub-branches. Rather than
+allocating 256 full pointers, the node maintains a compressed pointer
+array matching only the set bits in the bitmask. To find the location of
+a child pointer:</p>
+<ul>
+<li>The system checks if the bit corresponding to the key byte is
+set.</li>
+<li>If set, it calculates the bit's population count (popcount) prior to
+that position to compute the direct index into the compressed child
+pointer array. This compressed structure avoids the memory overhead of
+null pointers while retaining deterministic <span
+class="math inline">\(O(1)\)</span> indexing.</li>
+</ul></li>
+<li><p><strong>Uncompressed Direct Nodes (Full Densities):</strong> When
+a node is densely populated (approaching 256 entries), the overhead of
+bit-counting and indirect indexing outweighs direct memory addressing.
+The node automatically expands into a direct, uncompressed 256-element
+array of pointers. In this state, the byte value directly indexes into
+the array, offering maximum lookup speed at the cost of a fixed memory
+footprint.</p></li>
+</ol>
+<h3 id="judy1-vs-judyl-in-the-binary-number-system">Judy1 vs. JudyL in
+the Binary Number System</h3>
+<p>The architecture applies these bit structures to two primary array
+types:</p>
+<ul>
+<li><strong>Judy1 (Bit Arrays):</strong> Acts as an expandable bitset
+where the existence of an integer key represents a boolean state
+(<code>true</code>). Judy1 eliminates leaf pointer allocations entirely;
+terminal nodes pack remaining key bytes directly as bit structures,
+allowing dense clusters of integers to be represented with minimal
+memory.</li>
+<li><strong>JudyL (Key-to-Value Maps):</strong> Maps an integer key to a
+word-sized value (such as a pointer or another integer). Terminal leaves
+store paired key-remainder and value arrays, utilizing the same
+compressed bitmask strategies to omit unassigned keys.</li>
+</ul>
+<h3 id="cpu-cache-alignment-and-high-performance">CPU Cache Alignment
+and High Performance</h3>
+<p>The performance of Judy arrays in binary systems is directly tied to
+modern hardware design. Dynamic transitions between compressed and
+uncompressed bit formats ensure that most node operations fit entirely
+within a single L1 or L2 CPU cache line (64 bytes). By minimizing memory
+bandwidth consumption and utilizing fast native bitwise instructions
+(such as population count and bit scans), the architecture reduces
+pointer chasing and keeps execution pipelines saturated.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

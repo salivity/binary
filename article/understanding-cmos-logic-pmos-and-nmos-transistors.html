@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding CMOS Logic: PMOS and NMOS Transistors - binary</title>
+    <meta name="description" content="Complementary Metal-Oxide-Semiconductor (CMOS) logic is the foundational technology behind modern integrated circuits, microprocessors, and digital systems. This article explores how CMOS technology utilizes complementary pairs of p-channel (PMOS) and n-">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/understanding-cmos-logic-pmos-and-nmos-transistors">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Understanding CMOS Logic: PMOS and NMOS Transistors - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/understanding-cmos-logic-pmos-and-nmos-transistors" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Complementary Metal-Oxide-Semiconductor (CMOS) logic is the foundational technology behind modern integrated circuits, microprocessors, and digital systems. This article explores how CMOS technology utilizes complementary pairs of p-channel (PMOS) and n-" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1
+id="understanding-cmos-logic-pmos-and-nmos-transistors">Understanding
+CMOS Logic: PMOS and NMOS Transistors</h1>
+<p>Complementary Metal-Oxide-Semiconductor (CMOS) logic is the
+foundational technology behind modern integrated circuits,
+microprocessors, and digital systems. This article explores how CMOS
+technology utilizes complementary pairs of p-channel (PMOS) and
+n-channel (NMOS) field-effect transistors to represent and manipulate
+the binary number system. By examining the fundamental switching
+behaviors of these transistors and their complementary configurations,
+you will understand how digital circuits achieve reliable binary state
+transitions with minimal power consumption.</p>
+<h3 id="the-core-components-nmos-and-pmos-transistors">The Core
+Components: NMOS and PMOS Transistors</h3>
+<p>At the physical level, digital electronics rely on transistors acting
+as electronic switches. CMOS technology utilizes two distinct types of
+Metal-Oxide-Semiconductor Field-Effect Transistors (MOSFETs):</p>
+<ul>
+<li><strong>NMOS (N-channel MOSFET):</strong> An NMOS transistor
+conducts current (turns ON) when a high voltage (logic '1') is applied
+to its gate terminal relative to its source. When a low voltage (logic
+'0') is applied, it does not conduct (turns OFF). Because it connects
+efficiently to the ground rail (GND), NMOS is primarily used to pull an
+output down to logic '0'.</li>
+<li><strong>PMOS (P-channel MOSFET):</strong> A PMOS transistor behaves
+in the exact opposite manner. It conducts current (turns ON) when a low
+voltage (logic '0') is applied to its gate relative to its source. It
+turns OFF when a high voltage (logic '1') is applied. Because it
+connects efficiently to the power supply rail (<span
+class="math inline">\(V_{DD}\)</span>), PMOS is primarily used to pull
+an output up to logic '1'.</li>
+</ul>
+<h3 id="the-complementary-operating-principle">The Complementary
+Operating Principle</h3>
+<p>The defining characteristic of CMOS is the pairing of these two
+transistor types into a single functional unit. A CMOS gate is divided
+into two distinct networks connected to a common output:</p>
+<ol type="1">
+<li><strong>Pull-Up Network (PUN):</strong> Composed entirely of PMOS
+transistors connected between the positive supply voltage (<span
+class="math inline">\(V_{DD}\)</span>) and the output node.</li>
+<li><strong>Pull-Down Network (PDN):</strong> Composed entirely of NMOS
+transistors connected between the output node and ground (<span
+class="math inline">\(GND\)</span>).</li>
+</ol>
+<p>These networks are wired in a mutually exclusive, or complementary,
+configuration. For any valid digital input condition, exactly one
+network is active (conducting) while the other is inactive
+(non-conducting).</p>
+<p>When the PUN is active, the PDN is open, connecting the output
+directly to <span class="math inline">\(V_{DD}\)</span> without
+establishing a direct current path to ground. Conversely, when the PDN
+is active, the PUN is open, connecting the output directly to <span
+class="math inline">\(GND\)</span>. Because there is almost never a
+direct, low-resistance path between <span
+class="math inline">\(V_{DD}\)</span> and <span
+class="math inline">\(GND\)</span> in a steady state, CMOS circuits
+consume virtually no static power, drawing significant current only
+during the brief moments when switching states.</p>
+<h3 id="representing-binary-states-the-cmos-inverter">Representing
+Binary States: The CMOS Inverter</h3>
+<p>The fundamental building block of CMOS logic is the inverter (NOT
+gate), which directly demonstrates the mapping of voltage levels to
+binary values:</p>
+<ul>
+<li><strong>Binary '0' (Low Voltage / <span
+class="math inline">\(GND\)</span>):</strong> Represents the low logic
+level (typically 0V).</li>
+<li><strong>Binary '1' (High Voltage / <span
+class="math inline">\(V_{DD}\)</span>):</strong> Represents the high
+logic level (typically 1.2V, 3.3V, or 5V depending on the
+technology).</li>
+</ul>
+<p>In a CMOS inverter, the input signal connects simultaneously to the
+gates of one PMOS and one NMOS transistor:</p>
+<ul>
+<li><strong>Applying an input of '0' (0V):</strong> The PMOS transistor
+turns ON, while the NMOS transistor turns OFF. The output connects to
+<span class="math inline">\(V_{DD}\)</span> through the PMOS, resulting
+in an output of binary '1'.</li>
+<li><strong>Applying an input of '1' (<span
+class="math inline">\(V_{DD}\)</span>):</strong> The PMOS transistor
+turns OFF, while the NMOS transistor turns ON. The output connects to
+<span class="math inline">\(GND\)</span> through the NMOS, resulting in
+an output of binary '0'.</li>
+</ul>
+<h3 id="scaling-to-complex-binary-operations">Scaling to Complex Binary
+Operations</h3>
+<p>By arranging multiple PMOS transistors in series or parallel within
+the pull-up network and complementary NMOS transistors in parallel or
+series within the pull-down network, CMOS technology implements basic
+logic functions such as NAND and NOR:</p>
+<ul>
+<li><strong>CMOS NAND Gate:</strong> PMOS transistors in parallel in the
+PUN, paired with NMOS transistors in series in the PDN. The output drops
+to binary '0' only if all inputs are binary '1'.</li>
+<li><strong>CMOS NOR Gate:</strong> PMOS transistors in series in the
+PUN, paired with NMOS transistors in parallel in the PDN. The output
+rises to binary '1' only if all inputs are binary '0'.</li>
+</ul>
+<p>These fundamental logic gates serve as the building blocks for
+arithmetic logic units (ALUs), binary adders, registers, and memory
+elements. Through symmetrical push-pull transistor networks, CMOS
+provides steep voltage transitions, high noise immunity, and
+deterministic switching necessary to execute complex binary arithmetic
+reliably.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

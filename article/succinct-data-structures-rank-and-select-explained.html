@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Succinct Data Structures: Rank and Select Explained - binary</title>
+    <meta name="description" content="Succinct data structures represent data using space that approaches the information-theoretic lower bound while still supporting fast, efficient algorithmic queries in-place without full decompression. This article explains how succinct design minimizes">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/succinct-data-structures-rank-and-select-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Succinct Data Structures: Rank and Select Explained - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/succinct-data-structures-rank-and-select-explained" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Succinct data structures represent data using space that approaches the information-theoretic lower bound while still supporting fast, efficient algorithmic queries in-place without full decompression. This article explains how succinct design minimizes" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="succinct-data-structures-rank-and-select-explained">Succinct
+Data Structures: Rank and Select Explained</h1>
+<p>Succinct data structures represent data using space that approaches
+the information-theoretic lower bound while still supporting fast,
+efficient algorithmic queries in-place without full decompression. This
+article explains how succinct design minimizes bit usage in binary
+systems and explores the mechanics behind the fundamental <span
+class="math inline">\(\text{rank}\)</span> and <span
+class="math inline">\(\text{select}\)</span> operations that make these
+structures fast and practical.</p>
+<h3 id="understanding-succinct-data-structures">Understanding Succinct
+Data Structures</h3>
+<p>In traditional computer science, data structures use extra pointers
+and word-aligned memory blocks to achieve optimal query speeds, often
+consuming significantly more memory than the raw data requires. An
+information-theoretic minimum, denoted as <span
+class="math inline">\(L\)</span>, represents the fewest number of bits
+mathematically required to distinguish all possible states of a
+dataset.</p>
+<p>A data structure is defined as:</p>
+<ul>
+<li><strong>Implicit:</strong> Uses <span class="math inline">\(L +
+O(1)\)</span> bits of space (e.g., a standard binary heap).</li>
+<li><strong>Succinct:</strong> Uses <span class="math inline">\(L +
+o(L)\)</span> bits of space, adding only a sublinear overhead.</li>
+<li><strong>Compact:</strong> Uses <span
+class="math inline">\(O(L)\)</span> bits of space.</li>
+</ul>
+<p>Succinct design allows complex structures such as trees, graphs, and
+text indexes to be encoded as compact bit arrays, allowing massive
+datasets to fit directly into RAM or CPU cache.</p>
+<h3 id="binary-bitvectors-as-the-foundation">Binary Bitvectors as the
+Foundation</h3>
+<p>At the core of succinct design is the bitvector (a static sequence of
+0s and 1s). By encoding structural properties into binary—such as tree
+traversals represented by opening and closing parentheses or node
+degrees—any arbitrary discrete structure can be linearized into a bit
+array of length <span class="math inline">\(n\)</span>.</p>
+<p>To manipulate and navigate this raw bit sequence without decoding it
+entirely, systems rely on two foundational primitive operations:
+<strong><span class="math inline">\(\text{rank}\)</span></strong> and
+<strong><span class="math inline">\(\text{select}\)</span></strong>.</p>
+<h3 id="the-rank-operation">The Rank Operation</h3>
+<p>The <span class="math inline">\(\text{rank}\)</span> operation counts
+occurrences of a specific bit up to a given position:</p>
+<ul>
+<li><span class="math inline">\(\text{rank}_1(i)\)</span>: Returns the
+number of <code>1</code> bits in the range <span
+class="math inline">\([0, i]\)</span>.</li>
+<li><span class="math inline">\(\text{rank}_0(i)\)</span>: Returns the
+number of <code>0</code> bits in the range <span
+class="math inline">\([0, i]\)</span> (calculated as <span
+class="math inline">\((i + 1) - \text{rank}_1(i)\)</span>).</li>
+</ul>
+<h4 id="achieving-o1-rank-time-with-on-bits">Achieving <span
+class="math inline">\(O(1)\)</span> Rank Time with <span
+class="math inline">\(o(n)\)</span> Bits</h4>
+<p>To answer <span class="math inline">\(\text{rank}\)</span> in
+constant time <span class="math inline">\(O(1)\)</span> without storing
+full precomputed prefix sums for every index, a two-level indexing
+hierarchy (Jacobson's technique) is used:</p>
+<ol type="1">
+<li><strong>Superblocks:</strong> The bit array of size <span
+class="math inline">\(n\)</span> is divided into large blocks of size
+<span class="math inline">\(s = \lfloor \log^2 n \rfloor\)</span> bits.
+For each superblock, the cumulative count of <code>1</code>s from the
+beginning of the array up to that point is stored. This requires <span
+class="math inline">\(\frac{n}{\log^2 n} \cdot \log n =
+O\left(\frac{n}{\log n}\right) = o(n)\)</span> bits.</li>
+<li><strong>Blocks (Sub-blocks):</strong> Each superblock is divided
+into smaller blocks of size <span class="math inline">\(b = \lfloor
+\frac{1}{2} \log n \rfloor\)</span> bits. Each block stores the relative
+count of <code>1</code>s from the start of its parent superblock.
+Storing relative counts requires <span class="math inline">\(\log s =
+\log(\log^2 n) = 2 \log \log n\)</span> bits per block. The total space
+for all blocks is <span class="math inline">\(\frac{n}{b} \cdot 2 \log
+\log n = O\left(\frac{n \log \log n}{\log n}\right) = o(n)\)</span>
+bits.</li>
+<li><strong>Lookup Tables:</strong> Within an individual sub-block, the
+remaining bits are resolved using a precomputed universal lookup table
+that maps every possible bit pattern of length <span
+class="math inline">\(b\)</span> and offset to its internal rank count.
+Since <span class="math inline">\(b = \frac{1}{2} \log n\)</span>, the
+table contains <span class="math inline">\(2^b = \sqrt{n}\)</span>
+entries, using negligible space (<span
+class="math inline">\(o(n)\)</span> bits).</li>
+</ol>
+<p>To compute <span class="math inline">\(\text{rank}_1(i)\)</span>, the
+system sums: <span class="math display">\[\text{rank}_1(i) =
+\text{Superblock Count} + \text{Block Count} + \text{Lookup Table
+Value}\]</span> This requires three memory lookups and basic arithmetic,
+executing in <span class="math inline">\(O(1)\)</span> time using only
+<span class="math inline">\(o(n)\)</span> auxiliary bits.</p>
+<h3 id="the-select-operation">The Select Operation</h3>
+<p>The <span class="math inline">\(\text{select}\)</span> operation is
+the inverse of rank:</p>
+<ul>
+<li><span class="math inline">\(\text{select}_1(j)\)</span>: Finds the
+index of the <span class="math inline">\(j\)</span>-th occurrence of bit
+<code>1</code>.</li>
+<li><span class="math inline">\(\text{select}_0(j)\)</span>: Finds the
+index of the <span class="math inline">\(j\)</span>-th occurrence of bit
+<code>0</code>.</li>
+</ul>
+<h4 id="achieving-o1-select-time">Achieving <span
+class="math inline">\(O(1)\)</span> Select Time</h4>
+<p>While <span class="math inline">\(\text{select}\)</span> can be
+answered in <span class="math inline">\(O(\log \log n)\)</span> time
+using binary search over the <span
+class="math inline">\(\text{rank}\)</span> structure, true <span
+class="math inline">\(O(1)\)</span> time is achieved by partitioning
+occurrences rather than indices:</p>
+<ol type="1">
+<li><strong>Super-select Blocks:</strong> The array is partitioned based
+on fixed counts of <code>1</code>s (e.g., every <span
+class="math inline">\(\log n \log \log n\)</span>-th
+<code>1</code>).</li>
+<li><strong>Density Handling:</strong> If the span of indices between
+two markers is wide (sparse bits), the exact positions are stored
+explicitly in an array. If the span is small (dense bits), a second
+level of sub-blocks and precomputed lookup tables is used, mirroring the
+sublinear space logic of the rank structure.</li>
+</ol>
+<p>This ensures that finding the index of the <span
+class="math inline">\(j\)</span>-th bit requires constant time <span
+class="math inline">\(O(1)\)</span> while maintaining a total auxiliary
+footprint of <span class="math inline">\(o(n)\)</span> bits.</p>
+<h3 id="practical-applications">Practical Applications</h3>
+<p>By combining bit arrays with <span
+class="math inline">\(O(1)\)</span> <span
+class="math inline">\(\text{rank}\)</span> and <span
+class="math inline">\(\text{select}\)</span> primitives, developers can
+build:</p>
+<ul>
+<li><strong>Succinct Trees:</strong> Binary trees and ordinal trees
+represented in <span class="math inline">\(2n + o(n)\)</span> bits
+(compared to <span class="math inline">\(O(n \log n)\)</span> bits for
+pointer-based trees) using schemes like LOUDS (Level-Order Unary Degree
+Sequence) or Balanced Parentheses.</li>
+<li><strong>Compressed Text Indexes:</strong> The FM-index and
+Burrows-Wheeler Transform (BWT), which allow full-text pattern searching
+in compressed space.</li>
+<li><strong>Compact Graphs and Dictionaries:</strong> Minimal perfect
+hash tables and sparse sets optimized for in-memory graph traversals and
+large database keys.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How IEEE 754 Rounding Modes Affect Binary Output - binary</title>
+    <meta name="description" content="The IEEE 754 floating-point standard governs how computer hardware represents and calculates real numbers in binary formats. Because infinite precision arithmetic must fit into finite bit fields, intermediate calculations produce extra precision bits tha">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-ieee-754-rounding-modes-affect-binary-output">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How IEEE 754 Rounding Modes Affect Binary Output - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-ieee-754-rounding-modes-affect-binary-output" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The IEEE 754 floating-point standard governs how computer hardware represents and calculates real numbers in binary formats. Because infinite precision arithmetic must fit into finite bit fields, intermediate calculations produce extra precision bits tha" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-ieee-754-rounding-modes-affect-binary-output">How IEEE 754
+Rounding Modes Affect Binary Output</h1>
+<p>The IEEE 754 floating-point standard governs how computer hardware
+represents and calculates real numbers in binary formats. Because
+infinite precision arithmetic must fit into finite bit fields,
+intermediate calculations produce extra precision bits that must be
+rounded off to fit the target significand. IEEE 754 defines specific
+rounding modes—Round to Nearest, Round Toward Zero, Round Toward
+Positive Infinity, and Round Toward Negative Infinity—each altering the
+final binary significand differently based on the state of the trailing
+Guard, Round, and Sticky bits.</p>
+<h3 id="the-mechanism-of-binary-rounding">The Mechanism of Binary
+Rounding</h3>
+<p>When a floating-point operation is computed, hardware registers
+maintain extra bits beyond the precision of the standard target format
+(e.g., 23 bits for single precision, 52 bits for double precision). The
+three primary helper bits are:</p>
+<ul>
+<li><strong>Guard bit (<span class="math inline">\(G\)</span>):</strong>
+The first bit beyond the target significand.</li>
+<li><strong>Round bit (<span class="math inline">\(R\)</span>):</strong>
+The second bit beyond the target significand.</li>
+<li><strong>Sticky bit (<span
+class="math inline">\(S\)</span>):</strong> A single bit set to
+<code>1</code> if any nonzero bit exists past the Round bit; otherwise
+<code>0</code>.</li>
+</ul>
+<p>The combination of the sign bit, the Least Significant Bit (LSB) of
+the target significand, and these <span
+class="math inline">\(GRS\)</span> bits determines whether the
+significand is incremented by 1 at the LSB position or left unchanged
+(truncated).</p>
+<hr />
+<h3 id="1-round-to-nearest-ties-to-even-default-mode">1. Round to
+Nearest, Ties to Even (Default Mode)</h3>
+<p>This mode rounds the binary value to the closest representable
+floating-point number.</p>
+<ul>
+<li><strong>Fraction <span class="math inline">\(&lt; 0.5\)</span> in
+binary (<span class="math inline">\(G = 0\)</span>):</strong> The <span
+class="math inline">\(GRS\)</span> bits are discarded. The target
+significand remains unchanged.</li>
+<li><strong>Fraction <span class="math inline">\(&gt; 0.5\)</span> in
+binary (<span class="math inline">\(G = 1\)</span> and (<span
+class="math inline">\(R = 1\)</span> or <span class="math inline">\(S =
+1\)</span>)):</strong> The target significand is incremented by adding 1
+to the LSB.</li>
+<li><strong>Exact Halfway Tie (<span class="math inline">\(G = 1, R = 0,
+S = 0\)</span>):</strong> The standard resolves ties by forcing the LSB
+of the significand to <code>0</code> (even). If the LSB is already
+<code>0</code>, the result truncates; if the LSB is <code>1</code>, 1 is
+added to the LSB to make it <code>0</code> (with carry
+propagation).</li>
+</ul>
+<p><strong>Effect on Output:</strong> Prevents statistical bias and
+drift in long calculation chains because ties round up 50% of the time
+and round down 50% of the time.</p>
+<hr />
+<h3 id="2-round-toward-zero-truncation">2. Round Toward Zero
+(Truncation)</h3>
+<p>Round Toward Zero directly discards all fractional bits beyond the
+target significand, regardless of their values.</p>
+<ul>
+<li><strong>Positive Numbers:</strong> The <span
+class="math inline">\(GRS\)</span> bits are discarded. The value
+decreases toward zero.</li>
+<li><strong>Negative Numbers:</strong> The <span
+class="math inline">\(GRS\)</span> bits are discarded. The magnitude
+decreases, moving the value closer to zero (increasing
+mathematically).</li>
+</ul>
+<p><strong>Effect on Output:</strong> The LSB is never incremented. This
+matches integer casting behaviors in most programming languages (e.g.,
+converting a float to an int in C or Java) and produces consistent
+downward bias for magnitudes.</p>
+<hr />
+<h3 id="3-round-toward-positive-infinity-round-up">3. Round Toward
+Positive Infinity (Round Up)</h3>
+<p>This mode rounds the result toward <span
+class="math inline">\(+\infty\)</span>, always producing a number
+greater than or equal to the unrounded mathematical result.</p>
+<ul>
+<li><strong>Positive Numbers:</strong> If any of <span
+class="math inline">\(G\)</span>, <span
+class="math inline">\(R\)</span>, or <span
+class="math inline">\(S\)</span> is <code>1</code>, the target
+significand is incremented by 1 at the LSB. If an overflow occurs, the
+exponent increments.</li>
+<li><strong>Negative Numbers:</strong> All <span
+class="math inline">\(GRS\)</span> bits are discarded (truncation),
+because discarding them makes the negative magnitude smaller, which is
+mathematically larger (closer to <span
+class="math inline">\(+\infty\)</span>).</li>
+</ul>
+<p><strong>Effect on Output:</strong> Ensures that the output is never
+smaller than the true mathematical result. This is a foundational mode
+for interval arithmetic to determine rigorous upper bounds.</p>
+<hr />
+<h3 id="4-round-toward-negative-infinity-round-down">4. Round Toward
+Negative Infinity (Round Down)</h3>
+<p>This mode rounds the result toward <span
+class="math inline">\(-\infty\)</span>, always producing a number less
+than or equal to the unrounded mathematical result.</p>
+<ul>
+<li><strong>Positive Numbers:</strong> All <span
+class="math inline">\(GRS\)</span> bits are discarded (truncation),
+lowering the value toward <span
+class="math inline">\(-\infty\)</span>.</li>
+<li><strong>Negative Numbers:</strong> If any of <span
+class="math inline">\(G\)</span>, <span
+class="math inline">\(R\)</span>, or <span
+class="math inline">\(S\)</span> is <code>1</code>, the magnitude is
+incremented by adding 1 to the LSB, making the negative number more
+negative.</li>
+</ul>
+<p><strong>Effect on Output:</strong> Guarantees that the output is
+never larger than the true mathematical result, functioning as the
+complement to Round Toward Positive Infinity for establishing lower
+bounds in interval arithmetic.</p>
+<hr />
+<h3 id="summary-of-binary-bit-modification">Summary of Binary Bit
+Modification</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Rounding Mode</th>
+<th style="text-align: left;">Positive Condition to Add 1 to LSB</th>
+<th style="text-align: left;">Negative Condition to Add 1 to LSB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Round to Nearest
+(Even)</strong></td>
+<td style="text-align: left;"><span class="math inline">\(G=1 \land (R=1
+\lor S=1 \lor \text{LSB}=1)\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(G=1 \land (R=1
+\lor S=1 \lor \text{LSB}=1)\)</span></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Round Toward Zero</strong></td>
+<td style="text-align: left;">Never</td>
+<td style="text-align: left;">Never</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Round Toward <span
+class="math inline">\(+\infty\)</span></strong></td>
+<td style="text-align: left;"><span class="math inline">\(G=1 \lor R=1
+\lor S=1\)</span></td>
+<td style="text-align: left;">Never</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Round Toward <span
+class="math inline">\(-\infty\)</span></strong></td>
+<td style="text-align: left;">Never</td>
+<td style="text-align: left;"><span class="math inline">\(G=1 \lor R=1
+\lor S=1\)</span></td>
+</tr>
+</tbody>
+</table></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

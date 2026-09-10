@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smallest Normalized Single-Precision Float Value - binary</title>
+    <meta name="description" content="This article explains the exact value of the smallest positive normalized single-precision floating-point number defined by the IEEE 754 standard. It covers the underlying binary representation, the formula used to calculate its magnitude, and both its e">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/smallest-normalized-single-precision-float-value">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Smallest Normalized Single-Precision Float Value - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/smallest-normalized-single-precision-float-value" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explains the exact value of the smallest positive normalized single-precision floating-point number defined by the IEEE 754 standard. It covers the underlying binary representation, the formula used to calculate its magnitude, and both its e" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="smallest-normalized-single-precision-float-value">Smallest
+Normalized Single-Precision Float Value</h1>
+<p>This article explains the exact value of the smallest positive
+normalized single-precision floating-point number defined by the IEEE
+754 standard. It covers the underlying binary representation, the
+formula used to calculate its magnitude, and both its exact mathematical
+formulation and standard decimal representations.</p>
+<h2 id="ieee-754-single-precision-format">IEEE 754 Single-Precision
+Format</h2>
+<p>In the IEEE 754 standard, a 32-bit single-precision binary
+floating-point value is divided into three distinct components:</p>
+<ul>
+<li><strong>Sign bit (<span class="math inline">\(S\)</span>):</strong>
+1 bit (0 for positive, 1 for negative)</li>
+<li><strong>Exponent field (<span
+class="math inline">\(E\)</span>):</strong> 8 bits (with an exponent
+bias of 127)</li>
+<li><strong>Fraction/Mantissa (<span
+class="math inline">\(M\)</span>):</strong> 23 bits</li>
+</ul>
+<p>For a number to be considered <strong>normalized</strong>, the
+exponent field cannot be all zeros (which is reserved for subnormal
+numbers and zero) or all ones (which is reserved for infinities and
+NaN).</p>
+<h2 id="derivation-of-the-smallest-normalized-float">Derivation of the
+Smallest Normalized Float</h2>
+<p>To determine the smallest positive normalized float:</p>
+<ol type="1">
+<li><strong>Sign bit:</strong> Set to <code>0</code> for a positive
+number.</li>
+<li><strong>Exponent:</strong> The minimum non-zero exponent field value
+is <span class="math inline">\(E = 1\)</span> (in binary:
+<code>00000001</code>). Subtracting the bias yields an effective
+exponent of <span class="math inline">\(1 - 127 = -126\)</span>.</li>
+<li><strong>Mantissa:</strong> Normalized numbers have an implicit
+leading bit of <code>1</code>. To minimize the value, all 23 explicit
+fraction bits are set to <code>0</code>.</li>
+</ol>
+<p>The binary representation is:</p>
+<pre class="text"><code>0 00000001 00000000000000000000000</code></pre>
+<p>In hexadecimal, this is represented as <code>0x00800000</code>.</p>
+<h2 id="mathematical-and-exact-decimal-value">Mathematical and Exact
+Decimal Value</h2>
+<p>The mathematical value of this binary configuration is:</p>
+<p><span class="math display">\[\text{Value} = 1.0 \times 2^{-126} =
+2^{-126}\]</span></p>
+<p>Because <span class="math inline">\(2^{-126} =
+\frac{5^{126}}{10^{126}}\)</span>, it terminates into an exact finite
+decimal.</p>
+<h3 id="standard-decimal-approximations">Standard Decimal
+Approximations</h3>
+<ul>
+<li><strong>Standard scientific notation:</strong> <span
+class="math inline">\(\approx 1.1754943508222875 \times
+10^{-38}\)</span></li>
+<li><strong>Single-precision float representation:</strong> <span
+class="math inline">\(\approx 1.1754944 \times 10^{-38}\)</span> (known
+as <code>FLT_MIN</code> in C/C++)</li>
+</ul>
+<h3 id="exact-full-decimal-expansion">Exact Full Decimal Expansion</h3>
+<p>The complete, unrounded decimal value is:</p>
+<p><span
+class="math display">\[0.\underbrace{0000000000000000000000000000000000000}_{37\text{
+zeros}}11754943508222875079687365372222456778186655567724734125740068424659970863720703125\]</span></p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

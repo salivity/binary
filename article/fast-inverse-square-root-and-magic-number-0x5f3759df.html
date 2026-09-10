@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Inverse Square Root and Magic Number 0x5f3759df - binary</title>
+    <meta name="description" content="This article explores the magic constant 0x5f3759df, made famous by the source code of the video game Quake III Arena, which enables the rapid computation of the inverse square root ($1/\sqrt{x}$) of a 32-bit floating-point number. Below, we break down h">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/fast-inverse-square-root-and-magic-number-0x5f3759df">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Fast Inverse Square Root and Magic Number 0x5f3759df - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/fast-inverse-square-root-and-magic-number-0x5f3759df" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores the magic constant 0x5f3759df, made famous by the source code of the video game Quake III Arena, which enables the rapid computation of the inverse square root ($1/\sqrt{x}$) of a 32-bit floating-point number. Below, we break down h" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="fast-inverse-square-root-and-magic-number-0x5f3759df">Fast
+Inverse Square Root and Magic Number 0x5f3759df</h1>
+<p>This article explores the magic constant <code>0x5f3759df</code>,
+made famous by the source code of the video game <em>Quake III
+Arena</em>, which enables the rapid computation of the inverse square
+root (<span class="math inline">\(1/\sqrt{x}\)</span>) of a 32-bit
+floating-point number. Below, we break down how the algorithm leverages
+the structure of IEEE 754 floating-point numbers in binary to
+approximate a logarithmic transformation using integer arithmetic, and
+how it refines the result using Newton's method.</p>
+<h3 id="the-purpose-of-fast-inverse-square-root">The Purpose of Fast
+Inverse Square Root</h3>
+<p>In 3D computer graphics, calculating vector lengths and normalizing
+them is a fundamental operation required for lighting, physics, and
+camera transformations. Normalizing a vector <span
+class="math inline">\((x, y, z)\)</span> requires computing:</p>
+<p><span class="math display">\[\frac{1}{\sqrt{x^2 + y^2 +
+z^2}}\]</span></p>
+<p>In the 1990s, division and square root operations were
+computationally expensive at the hardware level. The fast inverse square
+root algorithm bypasses traditional division and root extraction by
+using bit manipulation and integer subtraction to produce an initial
+guess accurate to within a few percent, requiring only a fraction of the
+clock cycles.</p>
+<h3 id="ieee-754-floating-point-binary-structure">IEEE 754
+Floating-Point Binary Structure</h3>
+<p>To understand why the constant works, one must look at how 32-bit
+single-precision floating-point numbers are represented in the IEEE 754
+standard:</p>
+<ul>
+<li><strong>1 sign bit</strong> (<span
+class="math inline">\(S\)</span>)</li>
+<li><strong>8 exponent bits</strong> (<span
+class="math inline">\(E\)</span>)</li>
+<li><strong>23 mantissa/fraction bits</strong> (<span
+class="math inline">\(M\)</span>)</li>
+</ul>
+<p>The mathematical value represented by these bits is:</p>
+<p><span class="math display">\[x = (1 + m) \times 2^{e}\]</span></p>
+<p>Where <span class="math inline">\(m = \frac{M}{2^{23}}\)</span> and
+<span class="math inline">\(e = E - 127\)</span> (using the 127 exponent
+bias).</p>
+<h3 id="turning-floating-point-numbers-into-logarithms">Turning
+Floating-Point Numbers into Logarithms</h3>
+<p>If you interpret the exact same 32 bits of a float as a 32-bit
+integer (<span class="math inline">\(I_x\)</span>), the integer's value
+is:</p>
+<p><span class="math display">\[I_x = E \times 2^{23} + M = 2^{23}(E +
+m) = 2^{23}(e + 127 + m)\]</span></p>
+<p>Taking the base-2 logarithm of the floating-point value <span
+class="math inline">\(x\)</span>:</p>
+<p><span class="math display">\[\log_2(x) = \log_2((1 + m) \times 2^e) =
+e + \log_2(1 + m)\]</span></p>
+<p>Because <span class="math inline">\(m\)</span> lies between <span
+class="math inline">\(0\)</span> and <span
+class="math inline">\(1\)</span>, the function <span
+class="math inline">\(\log_2(1 + m)\)</span> can be approximated as a
+linear function <span class="math inline">\(m + \mu\)</span>, where
+<span class="math inline">\(\mu\)</span> is a chosen tuning constant
+(<span class="math inline">\(\approx 0.0450465\)</span>) that minimizes
+error. Substituting this back gives:</p>
+<p><span class="math display">\[\log_2(x) \approx e + m +
+\mu\]</span></p>
+<p>Comparing this to the integer representation <span
+class="math inline">\(I_x\)</span>:</p>
+<p><span class="math display">\[I_x \approx 2^{23}(\log_2(x) + 127 -
+\mu)\]</span></p>
+<p>This reveals that <strong>reinterpreting a float's raw bits as an
+integer automatically computes a scaled and shifted approximation of its
+base-2 logarithm.</strong></p>
+<h3 id="deriving-the-magic-constant">Deriving the Magic Constant</h3>
+<p>The goal is to compute <span class="math inline">\(y =
+\frac{1}{\sqrt{x}} = x^{-1/2}\)</span>. Taking the base-2 logarithm of
+both sides:</p>
+<p><span class="math display">\[\log_2(y) =
+-\frac{1}{2}\log_2(x)\]</span></p>
+<p>Using the linear relationship between the integer interpretation and
+the logarithm:</p>
+<p><span class="math display">\[\frac{I_y}{2^{23}} - (127 - \mu) \approx
+-\frac{1}{2}\left(\frac{I_x}{2^{23}} - (127 - \mu)\right)\]</span></p>
+<p>Multiplying through and solving for <span
+class="math inline">\(I_y\)</span>:</p>
+<p><span class="math display">\[I_y \approx \frac{3}{2} 2^{23}(127 -
+\mu) - \frac{1}{2}I_x\]</span></p>
+<p>The term <span class="math inline">\(\frac{3}{2} 2^{23}(127 -
+\mu)\)</span> is a fixed constant. When evaluated with the optimal
+error-minimizing value of <span class="math inline">\(\mu\)</span>, this
+decimal value converts directly in hexadecimal to:</p>
+<p><span class="math display">\[\text{Constant} \approx
+\text{0x5f3759df}\]</span></p>
+<p>The division <span class="math inline">\(-\frac{1}{2}I_x\)</span> is
+computed in binary using a simple right shift
+(<code>i &gt;&gt; 1</code>). Thus, the core step of the algorithm:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> <span class="bn">0x5f3759df</span> <span class="op">-</span> <span class="op">(</span> i <span class="op">&gt;&gt;</span> <span class="dv">1</span> <span class="op">);</span></span></code></pre></div>
+<p>performs an approximate base-2 logarithm, multiplies it by <span
+class="math inline">\(-0.5\)</span> (inverting and halving the
+exponent), and converts it back from logarithmic space to linear
+floating-point space in a single integer instruction.</p>
+<h3 id="error-correction-with-newton-raphson">Error Correction with
+Newton-Raphson</h3>
+<p>The integer subtraction produces an initial approximation with
+roughly 3% to 4% error. To achieve production accuracy, the algorithm
+finishes by running one iteration of the Newton-Raphson method for
+finding roots of <span class="math inline">\(f(y) = \frac{1}{y^2} - x =
+0\)</span>:</p>
+<p><span class="math display">\[y_{new} = y\left(\frac{3}{2} -
+\frac{x}{2}y^2\right)\]</span></p>
+<p>In C, this is implemented as:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> y <span class="op">*</span> <span class="op">(</span> <span class="fl">1.5</span><span class="bu">F</span> <span class="op">-</span> <span class="op">(</span> xhalf <span class="op">*</span> y <span class="op">*</span> y <span class="op">)</span> <span class="op">);</span></span></code></pre></div>
+<p>A single iteration brings the maximum relative error down to
+approximately <span class="math inline">\(0.175\%\)</span>, making it
+sufficiently precise for computer graphics while running significantly
+faster than traditional hardware division routines of its era.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

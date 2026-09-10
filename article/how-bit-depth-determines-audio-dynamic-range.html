@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Bit Depth Determines Audio Dynamic Range - binary</title>
+    <meta name="description" content="In digital audio recording, bit depth defines the resolution of each audio sample's amplitude, directly establishing the system's theoretical dynamic range. Because digital systems rely on binary code, the number of bits allocated per sample limits the m">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-bit-depth-determines-audio-dynamic-range">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Bit Depth Determines Audio Dynamic Range - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-bit-depth-determines-audio-dynamic-range" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In digital audio recording, bit depth defines the resolution of each audio sample's amplitude, directly establishing the system's theoretical dynamic range. Because digital systems rely on binary code, the number of bits allocated per sample limits the m" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-bit-depth-determines-audio-dynamic-range">How Bit Depth
+Determines Audio Dynamic Range</h1>
+<p>In digital audio recording, bit depth defines the resolution of each
+audio sample's amplitude, directly establishing the system's theoretical
+dynamic range. Because digital systems rely on binary code, the number
+of bits allocated per sample limits the maximum number of discrete
+amplitude values that can be represented. Through logarithmic decibel
+calculations, the mathematical bounds of binary representation show that
+every additional bit of resolution provides roughly 6.02 dB of dynamic
+range, setting the exact performance threshold between peak signal
+capacity and the underlying quantization noise floor.</p>
+<h3 id="binary-representation-of-audio-amplitude">Binary Representation
+of Audio Amplitude</h3>
+<p>When an analog signal is digitized through Pulse Code Modulation
+(PCM), it is sampled at regular time intervals and quantized into
+discrete voltage values. Bit depth (<span
+class="math inline">\(n\)</span>) determines the number of binary digits
+used to store the amplitude value of each sample.</p>
+<p>Because binary is a base-2 system, an <span
+class="math inline">\(n\)</span>-bit system provides <span
+class="math inline">\(2^n\)</span> distinct quantization levels:</p>
+<ul>
+<li><strong>8-bit:</strong> <span class="math inline">\(2^8 =
+256\)</span> levels</li>
+<li><strong>16-bit:</strong> <span class="math inline">\(2^{16} =
+65,536\)</span> levels</li>
+<li><strong>24-bit:</strong> <span class="math inline">\(2^{24} =
+16,777,216\)</span> levels</li>
+<li><strong>32-bit (fixed-point):</strong> <span
+class="math inline">\(2^{32} = 4,294,967,296\)</span> levels</li>
+</ul>
+<p>The largest value representable by an integer system corresponds to
+full-scale digital level (0 dBFS), while the smallest possible non-zero
+step is represented by the Least Significant Bit (LSB).</p>
+<h3 id="quantization-error-and-the-noise-floor">Quantization Error and
+the Noise Floor</h3>
+<p>Quantization forces a continuous analog voltage into the nearest
+discrete digital step. The difference between the actual analog
+amplitude and the assigned digital value is the quantization error.</p>
+<p>This error creates a low-level, broadband signal known as the
+quantization noise floor. The amplitude of this noise floor corresponds
+to the magnitude of the LSB. Therefore, dynamic range in digital audio
+is defined as the ratio between the maximum possible peak signal before
+clipping and the root-mean-square (RMS) level of the quantization noise
+floor.</p>
+<h3 id="the-mathematical-derivation-of-dynamic-range">The Mathematical
+Derivation of Dynamic Range</h3>
+<p>Dynamic range is expressed in decibels (dB), a logarithmic scale
+measuring the ratio of two values. Because audio amplitude is measured
+in units of voltage or pressure (field quantities), the decibel
+conversion formula uses a multiplier of 20:</p>
+<p><span class="math display">\[\text{Dynamic Range (dB)} = 20 \times
+\log_{10}(\text{Ratio})\]</span></p>
+<p>In an <span class="math inline">\(n\)</span>-bit binary system, the
+ratio between the maximum representable amplitude (<span
+class="math inline">\(2^n\)</span>) and the smallest quantization step
+(<span class="math inline">\(1\)</span>) is:</p>
+<p><span class="math display">\[\text{Ratio} = \frac{2^n}{1} =
+2^n\]</span></p>
+<p>Substituting this ratio into the decibel formula yields:</p>
+<p><span class="math display">\[\text{Dynamic Range (dB)} = 20 \times
+\log_{10}(2^n)\]</span></p>
+<p>Using the logarithmic identity <span class="math inline">\(\log(x^y)
+= y \times \log(x)\)</span>:</p>
+<p><span class="math display">\[\text{Dynamic Range (dB)} = 20 \times n
+\times \log_{10}(2)\]</span></p>
+<p>Since <span class="math inline">\(\log_{10}(2) \approx
+0.30103\)</span>:</p>
+<p><span class="math display">\[\text{Dynamic Range (dB)} = 20 \times
+0.30103 \times n \approx 6.0206 \times n\]</span></p>
+<p>This derivation yields the fundamental rule of digital audio:
+<strong>each additional bit yields approximately 6.02 dB of dynamic
+range.</strong></p>
+<p>When factoring in full-scale sine wave calculations alongside the
+theoretical root-mean-square (RMS) quantization noise of an idealized
+un-dithered system, the precise Signal-to-Quantization-Noise Ratio
+(SQNR) is expressed as:</p>
+<p><span class="math display">\[\text{SQNR} = 6.02n + 1.76 \text{
+dB}\]</span></p>
+<h3 id="practical-dynamic-range-across-formats">Practical Dynamic Range
+Across Formats</h3>
+<p>Applying the <span class="math inline">\(6.02 \times n\)</span>
+calculation demonstrates how common audio formats perform:</p>
+<ul>
+<li><p><strong>16-bit Audio (Standard CD Quality):</strong> <span
+class="math display">\[16 \times 6.02 \approx 96.3 \text{ dB}\]</span> A
+16-bit recording offers approximately 96 dB of dynamic range, sufficient
+for consumer listening environments.</p></li>
+<li><p><strong>24-bit Audio (Professional Studio Standard):</strong>
+<span class="math display">\[24 \times 6.02 \approx 144.5 \text{
+dB}\]</span> A 24-bit recording provides 144 dB of dynamic range. This
+exceeds the analog dynamic range capabilities of modern
+analog-to-digital converters and the physical threshold of human
+hearing, making it ideal for tracking and mixing without digital
+clipping or audible noise.</p></li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

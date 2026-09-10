@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How x & -x Extracts the Lowest Set Bit in Binary - binary</title>
+    <meta name="description" content="In low-level bitwise manipulation, the expression x & -x is an efficient technique used to isolate the least significant set bit (the rightmost bit equal to 1) of an integer. This operation works because modern computers represent negative integers using">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-x-x-extracts-the-lowest-set-bit-in-binary">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How x & -x Extracts the Lowest Set Bit in Binary - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-x-x-extracts-the-lowest-set-bit-in-binary" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In low-level bitwise manipulation, the expression x & -x is an efficient technique used to isolate the least significant set bit (the rightmost bit equal to 1) of an integer. This operation works because modern computers represent negative integers using" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-x---x-extracts-the-lowest-set-bit-in-binary">How x &amp; -x
+Extracts the Lowest Set Bit in Binary</h1>
+<p>In low-level bitwise manipulation, the expression
+<code>x &amp; -x</code> is an efficient technique used to isolate the
+least significant set bit (the rightmost bit equal to <code>1</code>) of
+an integer. This operation works because modern computers represent
+negative integers using the Two's Complement system. By inverting the
+bits and adding one, Two's Complement preserves the lowest set bit and
+its trailing zeros while inverting every bit to its left, allowing the
+bitwise AND operation (<code>&amp;</code>) to cancel out all other bits
+except the lowest <code>1</code>.</p>
+<h3 id="understanding-the-structure-of-an-integer">Understanding the
+Structure of an Integer</h3>
+<p>Any non-zero integer <span class="math inline">\(x\)</span> in binary
+can be conceptually divided into three distinct segments from left to
+right:</p>
+<ol type="1">
+<li><strong>Prefix:</strong> The arbitrary pattern of bits to the left
+of the lowest set bit.</li>
+<li><strong>Lowest Set Bit:</strong> The rightmost <code>1</code>.</li>
+<li><strong>Suffix:</strong> Zero or more trailing <code>0</code>s to
+the right of the lowest set bit.</li>
+</ol>
+<p>Represented abstractly: <span class="math display">\[\text{x} =
+\text{[Prefix]} \; 1 \; [00\dots0]\]</span></p>
+<hr />
+<h3 id="step-1-generating--x-with-twos-complement">Step 1: Generating
+<code>-x</code> with Two's Complement</h3>
+<p>To negate a number in Two's Complement arithmetic, you invert all
+bits (apply the bitwise NOT, <code>~</code>) and then add
+<code>1</code>:</p>
+<p><span class="math display">\[\text{-x} = \sim\text{x} +
+1\]</span></p>
+<ol type="1">
+<li><p><strong>Invert the bits (<span
+class="math inline">\(\sim\text{x}\)</span>):</strong></p>
+<ul>
+<li>The <code>[Prefix]</code> becomes <code>[~Prefix]</code>.</li>
+<li>The lowest set bit <code>1</code> becomes <code>0</code>.</li>
+<li>The trailing <code>[00...0]</code> become trailing
+<code>[11...1]</code>.</li>
+</ul>
+<p><span class="math display">\[\sim\text{x} = [\sim\text{Prefix}] \; 0
+\; [11\dots1]\]</span></p></li>
+<li><p><strong>Add 1 (<span class="math inline">\(\sim\text{x} +
+1\)</span>):</strong></p>
+<ul>
+<li>Adding <code>1</code> to the trailing <code>[11...1]</code> flips
+them all back to <code>[00...0]</code>.</li>
+<li>This addition generates a carry bit that propagates upward until it
+reaches the <code>0</code> (the former position of the lowest set bit),
+turning it into a <code>1</code>.</li>
+<li>The carry stops here, leaving <code>[~Prefix]</code> completely
+unchanged.</li>
+</ul>
+<p><span class="math display">\[\text{-x} = [\sim\text{Prefix}] \; 1 \;
+[00\dots0]\]</span></p></li>
+</ol>
+<hr />
+<h3 id="step-2-applying-the-bitwise-and-x---x">Step 2: Applying the
+Bitwise AND (<code>x &amp; -x</code>)</h3>
+<p>When you perform the bitwise AND operation between <span
+class="math inline">\(x\)</span> and <span
+class="math inline">\(-x\)</span>, each segment interacts as
+follows:</p>
+<ul>
+<li><strong>Prefix:</strong> <span class="math inline">\(\text{[Prefix]}
+\ \&amp; \ [\sim\text{Prefix}] = \mathbf{00\dots0}\)</span> (a bit ANDed
+with its inverse always equals <code>0</code>).</li>
+<li><strong>Lowest Set Bit:</strong> <span class="math inline">\(1 \
+\&amp; \ 1 = \mathbf{1}\)</span>.</li>
+<li><strong>Suffix:</strong> <span class="math inline">\([00\dots0] \
+\&amp; \ [00\dots0] = \mathbf{00\dots0}\)</span>.</li>
+</ul>
+<p>Combining these segments yields: <span class="math display">\[\text{x
+\&amp; -x} = [00\dots0] \; 1 \; [00\dots0]\]</span></p>
+<p>Every bit in the number is cleared to <code>0</code> except for the
+original lowest set bit.</p>
+<hr />
+<h3 id="step-by-step-example">Step-by-Step Example</h3>
+<p>Consider the integer <span class="math inline">\(x = 12\)</span> in
+an 8-bit binary representation:</p>
+<ol type="1">
+<li><p><strong>Binary of <span class="math inline">\(x\)</span>
+(12):</strong> <code>00001100</code> (The lowest set bit is at position
+2, representing <span class="math inline">\(2^2 = 4\)</span>).</p></li>
+<li><p><strong>Bitwise NOT (<span class="math inline">\(\sim
+x\)</span>):</strong> <code>11110011</code></p></li>
+<li><p><strong>Two's Complement (<span class="math inline">\(-x = \sim x
++ 1\)</span>):</strong> <code>11110100</code> (which is -12 in
+decimal).</p></li>
+<li><p><strong>Bitwise AND (<span class="math inline">\(x \ \&amp; \
+-x\)</span>):</strong></p>
+<pre class="text"><code>  00001100  ( 12)
+&amp; 11110100  (-12)
+----------
+  00000100  (  4)</code></pre></li>
+</ol>
+<p>The result is <code>00000100</code> (decimal <code>4</code>), which
+is the isolated lowest set bit of <code>12</code>. If <span
+class="math inline">\(x = 0\)</span>, the expression safely evaluates to
+<code>0</code> because <code>0 &amp; 0</code> produces
+<code>0</code>.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

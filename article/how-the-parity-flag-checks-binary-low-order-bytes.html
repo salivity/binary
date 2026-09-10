@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How the Parity Flag Checks Binary Low-Order Bytes - binary</title>
+    <meta name="description" content="The Parity Flag (PF) is a dedicated processor status flag found in computer architectures like x86 that reflects whether the lowest 8 bits of an operation's result contain an even or odd number of set bits (binary 1s). This article explains how the proce">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-the-parity-flag-checks-binary-low-order-bytes">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How the Parity Flag Checks Binary Low-Order Bytes - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-the-parity-flag-checks-binary-low-order-bytes" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Parity Flag (PF) is a dedicated processor status flag found in computer architectures like x86 that reflects whether the lowest 8 bits of an operation's result contain an even or odd number of set bits (binary 1s). This article explains how the proce" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-the-parity-flag-checks-binary-low-order-bytes">How the
+Parity Flag Checks Binary Low-Order Bytes</h1>
+<p>The Parity Flag (PF) is a dedicated processor status flag found in
+computer architectures like x86 that reflects whether the lowest 8 bits
+of an operation's result contain an even or odd number of set bits
+(binary 1s). This article explains how the processor inspects the
+low-order byte, the binary logic and gate operations used to determine
+parity, and how the flag behaves across different operand sizes.</p>
+<h2 id="what-is-the-parity-flag">What is the Parity Flag?</h2>
+<p>The Parity Flag is a single bit located in a processor's status
+register (such as the FLAGS or EFLAGS register in x86). It is updated
+automatically following most arithmetic, logical, and shift
+instructions.</p>
+<p>In binary architecture, the Parity Flag is set based on the rule of
+<strong>even parity</strong>:</p>
+<ul>
+<li><strong>PF = 1 (Set):</strong> The least significant byte contains
+an <strong>even</strong> number of set bits (1s).</li>
+<li><strong>PF = 0 (Cleared):</strong> The least significant byte
+contains an <strong>odd</strong> number of set bits (1s).</li>
+</ul>
+<h2 id="why-only-the-low-order-byte">Why Only the Low-Order Byte?</h2>
+<p>Regardless of the processor's register size (16-bit, 32-bit, or
+64-bit), the Parity Flag historically and architecturally evaluates only
+the <strong>low-order byte</strong> (bits 0 through 7, or the least
+significant 8 bits).</p>
+<p>This design choice originates from early 8-bit processors, such as
+the Intel 8080, where data bytes transmitted over serial communication
+lines required error-checking. Modern processors maintain this 8-bit
+evaluation strictly for backward compatibility. Higher-order bytes in
+larger operations (such as bits 8 through 63) are ignored when
+calculating the Parity Flag.</p>
+<h2 id="how-the-hardware-evaluates-parity">How the Hardware Evaluates
+Parity</h2>
+<p>At the hardware level, evaluating whether an 8-bit value has an even
+or odd number of set bits is performed using Exclusive-OR (XOR) and
+Exclusive-NOR (XNOR) logic gates.</p>
+<p>An XOR operation between two bits outputs <code>1</code> if the
+number of set bits is odd, and <code>0</code> if the number of set bits
+is even. By chaining XOR gates across all 8 bits of the low byte, the
+processor computes odd parity:</p>
+<p><span class="math display">\[\text{Odd Parity} = b_7 \oplus b_6
+\oplus b_5 \oplus b_4 \oplus b_3 \oplus b_2 \oplus b_1 \oplus
+b_0\]</span></p>
+<p>Because the Parity Flag represents <strong>even parity</strong>, the
+final result is inverted using a NOT gate (or computed via XNOR):</p>
+<p><span class="math display">\[\text{PF} = \neg (b_7 \oplus b_6 \oplus
+b_5 \oplus b_4 \oplus b_3 \oplus b_2 \oplus b_1 \oplus b_0)\]</span></p>
+<p>Because this logic tree operates in parallel across the 8 bits, the
+parity is calculated in a fraction of a clock cycle alongside the
+primary operation.</p>
+<h2 id="binary-calculation-examples">Binary Calculation Examples</h2>
+<p>To see how the calculation functions in practice, consider the
+following examples using 8-bit binary patterns:</p>
+<h3 id="example-1-even-number-of-1s">Example 1: Even Number of 1s</h3>
+<ul>
+<li><strong>Byte Result:</strong> <code>0011 0101</code></li>
+<li><strong>Count of 1s:</strong> 4 (an even number)</li>
+<li><strong>Parity Flag State:</strong> <code>PF = 1</code></li>
+</ul>
+<h3 id="example-2-odd-number-of-1s">Example 2: Odd Number of 1s</h3>
+<ul>
+<li><strong>Byte Result:</strong> <code>1001 0100</code></li>
+<li><strong>Count of 1s:</strong> 3 (an odd number)</li>
+<li><strong>Parity Flag State:</strong> <code>PF = 0</code></li>
+</ul>
+<h3 id="example-3-zero-set-bits">Example 3: Zero Set Bits</h3>
+<ul>
+<li><strong>Byte Result:</strong> <code>0000 0000</code></li>
+<li><strong>Count of 1s:</strong> 0 (zero is mathematically even)</li>
+<li><strong>Parity Flag State:</strong> <code>PF = 1</code></li>
+</ul>
+<h3 id="example-4-truncated-16-bit-value">Example 4: Truncated 16-Bit
+Value</h3>
+<ul>
+<li><strong>16-Bit Result:</strong>
+<code>1111 1111 0000 0011</code></li>
+<li><strong>Low-Order Byte (bits 0–7):</strong> <code>0000 0011</code>
+(Count of 1s = 2)</li>
+<li><strong>High-Order Byte (bits 8–15):</strong> <code>1111 1111</code>
+(Ignored)</li>
+<li><strong>Parity Flag State:</strong> <code>PF = 1</code></li>
+</ul>
+<h2 id="practical-usage">Practical Usage</h2>
+<p>Software can inspect the Parity Flag using conditional jump
+instructions:</p>
+<ul>
+<li><strong><code>JP</code> / <code>JPE</code> (Jump if Parity / Jump if
+Parity Even):</strong> Triggers a branch if <code>PF = 1</code>.</li>
+<li><strong><code>JNP</code> / <code>JPO</code> (Jump if No Parity /
+Jump if Parity Odd):</strong> Triggers a branch if
+<code>PF = 0</code>.</li>
+</ul>
+<p>While modern protocols use advanced cyclic redundancy checks (CRC)
+and hashing algorithms for error detection, the Parity Flag remains
+actively utilized in low-level drivers, legacy serial port operations,
+and certain optimization algorithms that count bits.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

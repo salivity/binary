@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Digits in One Hexadecimal Digit - binary</title>
+    <meta name="description" content="Exactly four binary digits (bits) correspond to one digit in the hexadecimal numbering system. This article explains the mathematical basis behind this direct 4-to-1 relationship, demonstrates how binary and hexadecimal values align, and details why this">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/binary-digits-in-one-hexadecimal-digit">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Binary Digits in One Hexadecimal Digit - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/binary-digits-in-one-hexadecimal-digit" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Exactly four binary digits (bits) correspond to one digit in the hexadecimal numbering system. This article explains the mathematical basis behind this direct 4-to-1 relationship, demonstrates how binary and hexadecimal values align, and details why this" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="binary-digits-in-one-hexadecimal-digit">Binary Digits in One
+Hexadecimal Digit</h1>
+<p>Exactly four binary digits (bits) correspond to one digit in the
+hexadecimal numbering system. This article explains the mathematical
+basis behind this direct 4-to-1 relationship, demonstrates how binary
+and hexadecimal values align, and details why this conversion is a
+fundamental standard in modern computer science and digital
+electronics.</p>
+<h2 id="the-mathematical-relationship">The Mathematical
+Relationship</h2>
+<p>The relationship between binary (base-2) and hexadecimal (base-16) is
+purely exponential:</p>
+<p><span class="math display">\[2^4 = 16\]</span></p>
+<p>In the binary system, each digit has two possible states:
+<code>0</code> or <code>1</code>. A group of 4 binary digits produces
+<span class="math inline">\(2 \times 2 \times 2 \times 2 = 16\)</span>
+unique permutations (from <code>0000</code> to <code>1111</code>).</p>
+<p>The hexadecimal system uses 16 distinct symbols: the numbers
+<code>0</code> through <code>9</code> followed by the letters
+<code>A</code> through <code>F</code> (representing values 10 through
+15). Because both systems describe 16 unique states, one hexadecimal
+character represents the exact same amount of data as a 4-bit binary
+sequence, commonly referred to as a <strong>nibble</strong> (or
+nybble).</p>
+<h2 id="binary-to-hexadecimal-conversion-table">Binary to Hexadecimal
+Conversion Table</h2>
+<p>Every single hexadecimal character maps directly to a 4-bit binary
+pattern:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Hexadecimal</th>
+<th style="text-align: left;">Decimal</th>
+<th style="text-align: left;">Binary (4 bits)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>0</strong></td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0000</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>1</strong></td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">0001</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>2</strong></td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">0010</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>3</strong></td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">0011</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>4</strong></td>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">0100</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>5</strong></td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">0101</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>6</strong></td>
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">0110</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>7</strong></td>
+<td style="text-align: left;">7</td>
+<td style="text-align: left;">0111</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>8</strong></td>
+<td style="text-align: left;">8</td>
+<td style="text-align: left;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>9</strong></td>
+<td style="text-align: left;">9</td>
+<td style="text-align: left;">1001</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>A</strong></td>
+<td style="text-align: left;">10</td>
+<td style="text-align: left;">1010</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>B</strong></td>
+<td style="text-align: left;">11</td>
+<td style="text-align: left;">1011</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>C</strong></td>
+<td style="text-align: left;">12</td>
+<td style="text-align: left;">1100</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>D</strong></td>
+<td style="text-align: left;">13</td>
+<td style="text-align: left;">1101</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>E</strong></td>
+<td style="text-align: left;">14</td>
+<td style="text-align: left;">1110</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>F</strong></td>
+<td style="text-align: left;">15</td>
+<td style="text-align: left;">1111</td>
+</tr>
+</tbody>
+</table>
+<h2 id="practical-example-of-conversion">Practical Example of
+Conversion</h2>
+<p>Converting between binary and hexadecimal requires grouping binary
+numbers into sets of four, starting from the right (least significant
+bit).</p>
+<p>For example, convert the 8-bit binary number
+<code>11011011</code>:</p>
+<ol type="1">
+<li>Divide into 4-bit groups: <code>1101</code> and
+<code>1011</code></li>
+<li>Convert <code>1101</code> to hex: <code>D</code></li>
+<li>Convert <code>1011</code> to hex: <code>B</code></li>
+<li>Result: <code>DB</code></li>
+</ol>
+<h2 id="why-this-4-bit-standard-matters">Why This 4-Bit Standard
+Matters</h2>
+<p>Computers process data in standard 8-bit units called
+<strong>bytes</strong>. Because 4 bits equal 1 hexadecimal digit,
+exactly two hexadecimal digits make up one full byte (ranging from
+<code>00</code> to <code>FF</code>, or 0 to 255 in decimal). This makes
+hexadecimal a concise, human-readable shorthand for representing raw
+binary memory addresses, network MAC addresses, and digital color codes
+(such as <code>#FFFFFF</code>).</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

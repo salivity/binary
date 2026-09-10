@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is Bit-Level Differential Cryptanalysis? - binary</title>
+    <meta name="description" content="Bit-level differential cryptanalysis is a cryptanalytic technique used to analyze how specific differences between pairs of binary inputs propagate through the rounds of a cryptographic algorithm at the granularity of individual bits. By tracking the pro">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-bit-level-differential-cryptanalysis">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is Bit-Level Differential Cryptanalysis? - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-bit-level-differential-cryptanalysis" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Bit-level differential cryptanalysis is a cryptanalytic technique used to analyze how specific differences between pairs of binary inputs propagate through the rounds of a cryptographic algorithm at the granularity of individual bits. By tracking the pro" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-bit-level-differential-cryptanalysis">What Is Bit-Level
+Differential Cryptanalysis?</h1>
+<p>Bit-level differential cryptanalysis is a cryptanalytic technique
+used to analyze how specific differences between pairs of binary inputs
+propagate through the rounds of a cryptographic algorithm at the
+granularity of individual bits. By tracking the probabilistic behavior
+of these bitwise differences across linear and non-linear cryptographic
+operations, cryptanalysts can identify non-random patterns, extract
+secret keys, or distinguish a cipher from a truly random
+permutation.</p>
+<h3 id="core-concepts-of-bit-level-differences">Core Concepts of
+Bit-Level Differences</h3>
+<p>Standard differential cryptanalysis examines differences between
+pairs of plaintexts <span class="math inline">\((P, P^*)\)</span> and
+their corresponding ciphertexts. In bit-level differential
+cryptanalysis, this difference is typically defined using the bitwise
+XOR operation:</p>
+<p><span class="math display">\[\Delta X = X \oplus X^*\]</span></p>
+<p>For an <span class="math inline">\(n\)</span>-bit state, <span
+class="math inline">\(\Delta X\)</span> is an <span
+class="math inline">\(n\)</span>-bit vector where:</p>
+<ul>
+<li>A bit value of <code>0</code> indicates that the corresponding bits
+in <span class="math inline">\(X\)</span> and <span
+class="math inline">\(X^*\)</span> are identical (an inactive bit).</li>
+<li>A bit value of <code>1</code> indicates that the corresponding bits
+in <span class="math inline">\(X\)</span> and <span
+class="math inline">\(X^*\)</span> differ (an active bit).</li>
+</ul>
+<p>Analyzing at the bit level allows cryptanalysts to model fine-grained
+structures within ciphers, especially in bit-oriented designs, small
+Substitution-Boxes (S-boxes), and Addition-Rotation-XOR (ARX)
+primitives.</p>
+<h3
+id="tracing-difference-propagation-through-binary-operations">Tracing
+Difference Propagation Through Binary Operations</h3>
+<p>Cryptographic algorithms consist of fundamental algebraic and Boolean
+operations. Bit-level differential cryptanalysis evaluates how a
+difference vector <span class="math inline">\(\Delta X\)</span>
+transforms into an output difference vector <span
+class="math inline">\(\Delta Y\)</span> through each of these
+operations.</p>
+<h4 id="1-linear-operations-xor-bit-shifts-permutations">1. Linear
+Operations (XOR, Bit Shifts, Permutations)</h4>
+<p>Linear operations preserve differences deterministically with a
+probability of 1 (<span class="math inline">\(p = 1\)</span>):</p>
+<ul>
+<li><strong>Bitwise XOR (<span
+class="math inline">\(\oplus\)</span>):</strong> When two distinct
+states with differences <span class="math inline">\(\Delta A\)</span>
+and <span class="math inline">\(\Delta B\)</span> are XORed, the output
+difference is simply <span class="math inline">\(\Delta C = \Delta A
+\oplus \Delta B\)</span>.</li>
+<li><strong>Bitwise Rotations and Shifts (<span
+class="math inline">\(\lll, \gg\)</span>):</strong> A shift or rotation
+applied to a binary state shifts or rotates the difference vector
+identically (<span class="math inline">\(\Delta Y = \Delta X \lll
+k\)</span>).</li>
+<li><strong>Bit Permutations:</strong> Rearranging the order of bits
+moves the difference bits to predetermined new positions without
+altering their values.</li>
+</ul>
+<h4 id="2-non-linear-boolean-functions-and-s-boxes">2. Non-Linear
+Boolean Functions and S-Boxes</h4>
+<p>Substitution layers provide confusion by mapping binary inputs
+non-linearly to outputs. At the bit level, a single-bit input difference
+can cause multiple output bits to flip.</p>
+<p>The probability of an input difference <span
+class="math inline">\(\Delta X\)</span> producing an output difference
+<span class="math inline">\(\Delta Y\)</span> through an S-box <span
+class="math inline">\(S\)</span> is quantified using a Difference
+Distribution Table (DDT):</p>
+<p><span class="math display">\[DDT(\Delta X, \Delta Y) = \# \{ X \mid
+S(X) \oplus S(X \oplus \Delta X) = \Delta Y \}\]</span></p>
+<p>The transition probability is given by:</p>
+<p><span class="math display">\[P(\Delta X \to \Delta Y) =
+\frac{DDT(\Delta X, \Delta Y)}{2^n}\]</span></p>
+<p>In bit-level analysis, cryptanalysts search for specific single-bit
+or low-weight input differences that result in low-weight output
+differences with high probability.</p>
+<h4 id="3-modular-addition-and-carry-chains">3. Modular Addition and
+Carry Chains</h4>
+<p>In ARX-based algorithms, modular addition (<span
+class="math inline">\(+\)</span> mod <span
+class="math inline">\(2^n\)</span>) introduces non-linearity due to the
+carry mechanism. A difference introduced at bit position <span
+class="math inline">\(i\)</span> can propagate to higher-order bit
+positions (<span class="math inline">\(i+1, i+2, \dots\)</span>) through
+the carry bit.</p>
+<p>The propagation of a bit difference through modular addition depends
+on the exact values of the inputs:</p>
+<ul>
+<li><strong>Absorption:</strong> A carry difference can be absorbed if
+the operand bits prevent the carry from propagating further.</li>
+<li><strong>Propagation:</strong> A carry difference can travel across
+multiple positions, flipping consecutive higher-order bits.</li>
+</ul>
+<p>Cryptanalysts model these transitions using automated tools (such as
+SAT/SMT solvers or Mixed-Integer Linear Programming) to compute the
+exact probability of bit-level carry-propagation paths.</p>
+<h3 id="constructing-differential-trails">Constructing Differential
+Trails</h3>
+<p>To analyze an entire cipher, individual bit-level transitions are
+chained together across consecutive rounds to form a differential trail
+or characteristic:</p>
+<p><span class="math display">\[\Delta X_0 \xrightarrow{p_1} \Delta X_1
+\xrightarrow{p_2} \Delta X_2 \xrightarrow{\dots} \Delta X_r\]</span></p>
+<p>Assuming independence between round operations, the total probability
+of the bit-level trail is the product of the probabilities at each
+round:</p>
+<p><span class="math display">\[P_{total} = \prod_{i=1}^{r}
+p_i\]</span></p>
+<p>If a trail exists where <span
+class="math inline">\(P_{total}\)</span> is significantly higher than
+the probability expected from a random permutation (<span
+class="math inline">\(2^{-n}\)</span> for an <span
+class="math inline">\(n\)</span>-bit block), an attacker can feed chosen
+plaintext pairs into the cipher and observe the output differences to
+filter out incorrect key candidates and recover the secret key.</p>
+<h3 id="significance-in-modern-cryptography">Significance in Modern
+Cryptography</h3>
+<p>Bit-level differential cryptanalysis provides the foundation for
+assessing the avalanche effect and diffusion efficiency in modern block
+ciphers, stream ciphers, and cryptographic hash functions. It is
+essential for determining the minimum number of rounds required for a
+cryptographic primitive to be secure against chosen-plaintext
+attacks.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

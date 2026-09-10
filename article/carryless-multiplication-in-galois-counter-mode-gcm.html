@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carryless Multiplication in Galois Counter Mode GCM - binary</title>
+    <meta name="description" content="Carryless multiplication is the foundational operation that enables high-throughput, hardware-accelerated authenticated encryption in Galois/Counter Mode (GCM). By eliminating the standard carry propagation found in traditional integer arithmetic, carryl">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/carryless-multiplication-in-galois-counter-mode-gcm">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Carryless Multiplication in Galois Counter Mode GCM - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/carryless-multiplication-in-galois-counter-mode-gcm" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Carryless multiplication is the foundational operation that enables high-throughput, hardware-accelerated authenticated encryption in Galois/Counter Mode (GCM). By eliminating the standard carry propagation found in traditional integer arithmetic, carryl" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="carryless-multiplication-in-galois-counter-mode-gcm">Carryless
+Multiplication in Galois Counter Mode GCM</h1>
+<p>Carryless multiplication is the foundational operation that enables
+high-throughput, hardware-accelerated authenticated encryption in
+Galois/Counter Mode (GCM). By eliminating the standard carry propagation
+found in traditional integer arithmetic, carryless multiplication allows
+systems to efficiently evaluate polynomial products in the binary Galois
+field <span class="math inline">\(\text{GF}(2^{128})\)</span>. This
+operation directly accelerates the GHASH authentication function inside
+GCM, ensuring both high performance and constant-time execution against
+timing side-channel attacks.</p>
+<h3 id="the-role-of-ghash-in-galoiscounter-mode">The Role of GHASH in
+Galois/Counter Mode</h3>
+<p>Galois/Counter Mode (GCM) combines the counter mode (CTR) for
+confidentiality with the GHASH universal hash function for
+authentication. While the underlying block cipher (typically AES)
+encrypts the plaintext, GHASH computes an authentication tag over the
+ciphertext and any associated data.</p>
+<p>GHASH processes data in 128-bit blocks by treating each block as an
+element of the Galois field <span
+class="math inline">\(\text{GF}(2^{128})\)</span>. For every incoming
+block, GHASH adds the block to the current state using bitwise XOR and
+multiplies the result by a fixed hash subkey <span
+class="math inline">\(H\)</span> within <span
+class="math inline">\(\text{GF}(2^{128})\)</span>. Because this field
+multiplication occurs once for every 128 bits of data, it is the primary
+computational bottleneck of the authentication process.</p>
+<h3 id="how-carryless-multiplication-works">How Carryless Multiplication
+Works</h3>
+<p>In standard binary integer multiplication, when two bits are
+multiplied and added, any overflow triggers a "carry" to the next most
+significant bit position. This carry-chain creates a sequential
+dependency that slows down execution in hardware and software.</p>
+<p>In contrast, carryless multiplication operates on polynomials over
+the binary field <span class="math inline">\(\text{GF}(2)\)</span>,
+where coefficients can only be 0 or 1:</p>
+<ol type="1">
+<li><strong>Addition is XOR:</strong> Adding two bits produces their XOR
+sum (<span class="math inline">\(1 + 1 = 0\)</span>, <span
+class="math inline">\(1 + 0 = 1\)</span>, <span class="math inline">\(0
++ 0 = 0\)</span>) with no carry generated.</li>
+<li><strong>Multiplication is Shift-and-XOR:</strong> The multiplication
+of two polynomials is equivalent to shifting the multiplicand for every
+set bit in the multiplier and combining the results using bitwise
+XOR.</li>
+</ol>
+<h3 id="accelerating-textgf2128-field-arithmetic">Accelerating <span
+class="math inline">\(\text{GF}(2^{128})\)</span> Field Arithmetic</h3>
+<p>Multiplication within <span
+class="math inline">\(\text{GF}(2^{128})\)</span> requires two steps: a
+128-bit carryless multiplication yielding a 255-bit intermediate
+polynomial, followed by modular reduction using a predefined irreducible
+polynomial, specifically <span class="math inline">\(f(x) = x^{128} +
+x^7 + x^2 + x + 1\)</span>.</p>
+<p>Carryless multiplication accelerates this pipeline in two primary
+ways:</p>
+<ul>
+<li><strong>Hardware Parallelism:</strong> Because there are no carries
+to wait for, hardware units can compute partial products in parallel
+using straightforward XOR trees. Modern processor architectures provide
+dedicated carryless multiplication instructions (such as
+<code>PCLMULQDQ</code> on x86/x64 and <code>PMULL</code> on ARM) that
+execute a 64-bit carryless multiplication in just a few clock
+cycles.</li>
+<li><strong>Fast Modular Reduction:</strong> The reduction step itself
+can be rewritten as a series of shifts and carryless multiplications
+using the specific structure of the irreducible polynomial. This avoids
+expensive division operations entirely.</li>
+</ul>
+<h3 id="elimination-of-timing-side-channels">Elimination of Timing
+Side-Channels</h3>
+<p>Before hardware-level carryless multiplication instructions were
+widely available, implementations relied on precomputed lookup tables
+(such as 4-bit or 8-bit table strategies) to speed up field
+multiplication. These software lookups often introduced variable memory
+access patterns vulnerable to cache-timing attacks.</p>
+<p>Hardware-based carryless multiplication executes in fixed,
+predictable cycles regardless of the input data. This guarantees
+constant-time computation, securing the authentication tag generation
+against side-channel analysis while maintaining multi-gigabit-per-second
+encryption throughput.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

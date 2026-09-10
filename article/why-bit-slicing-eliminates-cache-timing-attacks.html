@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Bit-Slicing Eliminates Cache Timing Attacks - binary</title>
+    <meta name="description" content="Bit-slicing is a software technique that reconstructs algorithms entirely out of bitwise Boolean logic, eliminating data-dependent memory lookup latencies in cryptographic operations. By replacing memory-based lookup tables (such as S-boxes) with purely">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/why-bit-slicing-eliminates-cache-timing-attacks">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Bit-Slicing Eliminates Cache Timing Attacks - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/why-bit-slicing-eliminates-cache-timing-attacks" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Bit-slicing is a software technique that reconstructs algorithms entirely out of bitwise Boolean logic, eliminating data-dependent memory lookup latencies in cryptographic operations. By replacing memory-based lookup tables (such as S-boxes) with purely" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="why-bit-slicing-eliminates-cache-timing-attacks">Why Bit-Slicing
+Eliminates Cache Timing Attacks</h1>
+<p>Bit-slicing is a software technique that reconstructs algorithms
+entirely out of bitwise Boolean logic, eliminating data-dependent memory
+lookup latencies in cryptographic operations. By replacing memory-based
+lookup tables (such as S-boxes) with purely logical instructions
+executed across CPU registers, bit-slicing ensures that execution time
+remains constant regardless of the input data or secret key, effectively
+neutralizing cache-timing side-channel attacks.</p>
+<h3 id="the-problem-with-data-dependent-memory-lookups">The Problem with
+Data-Dependent Memory Lookups</h3>
+<p>In standard cryptographic implementations, non-linear
+transformations—such as the substitution boxes (S-boxes) in AES or
+DES—are traditionally implemented as lookup tables stored in memory.
+When an algorithm accesses a table element, the memory address depends
+directly on sensitive data, such as a combination of the plaintext and
+the secret key.</p>
+<p>Modern CPUs rely on complex memory hierarchies, including L1, L2, and
+L3 caches. If a requested memory address is already in the cache, the
+CPU retrieves it quickly (a cache hit). If it is not, the CPU incurs a
+delay while fetching the data from main memory (a cache miss). Attackers
+can measure these slight timing variations to infer which memory
+addresses were accessed, ultimately reconstructing the secret
+cryptographic key.</p>
+<h3 id="how-bit-slicing-replaces-memory-accesses">How Bit-Slicing
+Replaces Memory Accesses</h3>
+<p>Introduced by Eli Biham in 1997, bit-slicing views an <span
+class="math inline">\(N\)</span>-bit processor register not as a single
+integer, but as a vector of <span class="math inline">\(N\)</span>
+single-bit values. Data is transposed so that the <span
+class="math inline">\(i\)</span>-th bits of <span
+class="math inline">\(N\)</span> different blocks (or internal state
+variables) are stored across parallel registers.</p>
+<p>Under this model:</p>
+<ol type="1">
+<li><strong>Substitution via Boolean Logic:</strong> Instead of querying
+an array in RAM or cache, mathematical transformations are synthesized
+into a combinatorial logic circuit composed strictly of basic Boolean
+operations: <code>AND</code>, <code>OR</code>, <code>XOR</code>, and
+<code>NOT</code>.</li>
+<li><strong>Execution in Registers:</strong> Every operation occurs
+directly inside CPU registers and the Arithmetic Logic Unit (ALU),
+entirely bypassing the memory subsystem during computation.</li>
+<li><strong>Implicit Parallelism:</strong> Because standard registers
+operate on 64, 128, 256, or 512 bits simultaneously (such as with AVX or
+NEON extensions), the bit-sliced circuit computes operations for
+multiple data blocks in parallel.</li>
+</ol>
+<h3 id="why-latency-becomes-deterministic">Why Latency Becomes
+Deterministic</h3>
+<p>Bit-slicing achieves constant-time execution due to the
+hardware-level characteristics of modern ALUs:</p>
+<ul>
+<li><strong>Instruction Timing Invariance:</strong> On virtually all CPU
+architectures, bitwise logic instructions (<code>AND</code>,
+<code>XOR</code>, etc.) execute in a fixed number of clock cycles
+(typically one cycle). The execution time does not depend on whether the
+bits are <code>0</code> or <code>1</code>.</li>
+<li><strong>Absence of Memory Addresses:</strong> Because secret data is
+never converted into memory addresses, memory access patterns cannot
+leak information. There are no table reads to produce variable cache
+hits or misses.</li>
+<li><strong>Branch-Free Control Flow:</strong> Bit-sliced
+implementations do not use data-dependent branches or conditional jumps,
+removing timing variations caused by CPU branch predictors.</li>
+</ul>
+<p>By reducing state transformations to uniform sequences of
+hardware-level logic gates, bit-slicing decouples execution latency from
+the values of the processed binary data, guaranteeing constant-time
+performance and robust resistance against timing attacks.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

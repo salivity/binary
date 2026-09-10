@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Protobuf Encodes Varints Using MSB - binary</title>
+    <meta name="description" content="Protocol Buffers (Protobuf) uses variable-length quantities, known as varints, to serialize integers efficiently by using fewer bytes for smaller numeric values. By dividing binary representations into 7-bit payloads and using the Most Significant Bit (M">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-protobuf-encodes-varints-using-msb">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Protobuf Encodes Varints Using MSB - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-protobuf-encodes-varints-using-msb" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Protocol Buffers (Protobuf) uses variable-length quantities, known as varints, to serialize integers efficiently by using fewer bytes for smaller numeric values. By dividing binary representations into 7-bit payloads and using the Most Significant Bit (M" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-protobuf-encodes-varints-using-msb">How Protobuf Encodes
+Varints Using MSB</h1>
+<p>Protocol Buffers (Protobuf) uses variable-length quantities, known as
+varints, to serialize integers efficiently by using fewer bytes for
+smaller numeric values. By dividing binary representations into 7-bit
+payloads and using the Most Significant Bit (MSB) as a stream
+continuation flag, Protobuf allows 32-bit or 64-bit integers to occupy
+anywhere from one to ten bytes depending on their magnitude. This
+article breaks down the binary mechanics of varint encoding, the role of
+the MSB, and walks through a concrete step-by-step example.</p>
+<h3 id="the-role-of-the-most-significant-bit">The Role of the Most
+Significant Bit</h3>
+<p>In standard binary representations, all 8 bits of a byte are used to
+represent data. Protobuf varints modify this structure by splitting each
+byte into two components:</p>
+<ol type="1">
+<li><strong>The Most Significant Bit (MSB):</strong> The eighth bit (bit
+index 7) serves as a control flag or "continuation bit."
+<ul>
+<li><strong><code>1</code></strong>: Indicates that further bytes follow
+in the stream for the current integer.</li>
+<li><strong><code>0</code></strong>: Indicates that this is the final
+byte of the integer.</li>
+</ul></li>
+<li><strong>The Payload Bits:</strong> The remaining 7 lower bits
+contain the actual binary data of the number.</li>
+</ol>
+<p>Because only 7 bits per byte carry integer data, numbers are grouped
+into 7-bit chunks rather than standard 8-bit octets.</p>
+<h3 id="endianness-and-bit-ordering">Endianness and Bit Ordering</h3>
+<p>Protobuf stores varints in <strong>little-endian</strong> order. This
+means that the least significant 7-bit group of the original integer is
+placed in the first serialized byte, and subsequent higher-order 7-bit
+groups follow in later bytes.</p>
+<h3 id="step-by-step-encoding-process">Step-by-Step Encoding
+Process</h3>
+<p>To encode any non-negative integer into a Protobuf varint:</p>
+<ol type="1">
+<li>Write the integer in standard binary format.</li>
+<li>Pad the binary string so its length is a multiple of 7 bits.</li>
+<li>Split the binary sequence into 7-bit chunks.</li>
+<li>Reverse the order of the 7-bit chunks (least significant chunk comes
+first).</li>
+<li>Attach the MSB to each chunk:
+<ul>
+<li>Set MSB to <code>1</code> for all chunks except the last one.</li>
+<li>Set MSB to <code>0</code> for the final chunk.</li>
+</ul></li>
+<li>Convert each resulting 8-bit byte into hexadecimal or binary bytes
+for transmission.</li>
+</ol>
+<hr />
+<h3 id="step-by-step-example-encoding-the-number-300">Step-by-Step
+Example: Encoding the Number 300</h3>
+<p>To illustrate the mechanism, consider serializing the integer
+<code>300</code>.</p>
+<h4 id="step-1-binary-conversion">Step 1: Binary Conversion</h4>
+<p>The decimal number <code>300</code> in standard binary is:
+<code>100101100</code> (9 bits)</p>
+<h4 id="step-2-split-into-7-bit-groups">Step 2: Split into 7-Bit
+Groups</h4>
+<p>Group the binary digits into 7-bit chunks, padding the front with
+zeros:</p>
+<ul>
+<li>Most Significant Group: <code>0000010</code></li>
+<li>Least Significant Group: <code>0101100</code></li>
+</ul>
+<h4 id="step-3-reorder-in-little-endian-format">Step 3: Reorder in
+Little-Endian Format</h4>
+<p>Place the least significant group first:</p>
+<ol type="1">
+<li>First 7-bit group: <code>0101100</code></li>
+<li>Second 7-bit group: <code>0000010</code></li>
+</ol>
+<h4 id="step-4-apply-the-msb-continuation-flag">Step 4: Apply the MSB
+Continuation Flag</h4>
+<ul>
+<li><strong>First Byte:</strong> Since another byte follows, prepend an
+MSB of <code>1</code>:
+<ul>
+<li><code>1</code> + <code>0101100</code> = <code>10101100</code>
+(<code>0xAC</code> in hex)</li>
+</ul></li>
+<li><strong>Second Byte:</strong> Since this is the terminating byte,
+prepend an MSB of <code>0</code>:
+<ul>
+<li><code>0</code> + <code>0000010</code> = <code>00000010</code>
+(<code>0x02</code> in hex)</li>
+</ul></li>
+</ul>
+<h4 id="result">Result</h4>
+<p>The integer <code>300</code> is encoded into two bytes:
+<code>10101100 00000010</code> (or <code>0xAC 0x02</code>).</p>
+<hr />
+<h3 id="decoding-a-varint">Decoding a Varint</h3>
+<p>To decode a varint, the parser reads bytes sequentially:</p>
+<ol type="1">
+<li>Read a byte from the stream.</li>
+<li>Check the MSB. If it is <code>1</code>, strip the MSB, append the 7
+payload bits to the output buffer, and proceed to the next byte.</li>
+<li>If the MSB is <code>0</code>, strip the MSB, append the 7 payload
+bits, and stop reading.</li>
+<li>Shift and combine the 7-bit groups according to their little-endian
+positions to reconstruct the original integer.</li>
+</ol>
+<h3 id="efficiency-and-considerations">Efficiency and
+Considerations</h3>
+<p>Varint encoding provides substantial space savings for systems where
+smaller integer values are common, reducing a 4-byte standard integer to
+just 1 byte for values between 0 and 127. However, because each byte
+incurs a 1-bit overhead for the MSB, very large numbers (such as values
+requiring all 32 or 64 bits) require slightly more space than their
+fixed-width equivalents (e.g., up to 5 bytes for a 32-bit integer and 10
+bytes for a 64-bit integer).</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

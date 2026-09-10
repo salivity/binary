@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How the Zero Flag Evaluates Low Binary Outputs - binary</title>
+    <meta name="description" content="The Zero Flag (ZF) is a dedicated single-bit register inside a Central Processing Unit (CPU) status register that indicates whether the result of the most recent arithmetic or logical operation is zero. In digital logic, a result of zero means that every">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-the-zero-flag-evaluates-low-binary-outputs">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How the Zero Flag Evaluates Low Binary Outputs - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-the-zero-flag-evaluates-low-binary-outputs" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Zero Flag (ZF) is a dedicated single-bit register inside a Central Processing Unit (CPU) status register that indicates whether the result of the most recent arithmetic or logical operation is zero. In digital logic, a result of zero means that every" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-the-zero-flag-evaluates-low-binary-outputs">How the Zero
+Flag Evaluates Low Binary Outputs</h1>
+<p>The Zero Flag (ZF) is a dedicated single-bit register inside a
+Central Processing Unit (CPU) status register that indicates whether the
+result of the most recent arithmetic or logical operation is zero. In
+digital logic, a result of zero means that every output line on the data
+bus is in a low-voltage state (binary <code>0</code>). This article
+explains the underlying digital hardware mechanisms—specifically logic
+gate configurations—used by the Arithmetic Logic Unit (ALU) to evaluate
+whether all output lines are low and subsequently set or clear the Zero
+Flag.</p>
+<p>In a binary system, digital circuits represent data as high
+(<code>1</code>) and low (<code>0</code>) voltage levels across parallel
+output lines. For an <span class="math inline">\(n\)</span>-bit
+processor (such as 8-bit, 32-bit, or 64-bit), a zero result requires
+that all <span class="math inline">\(n\)</span> data lines
+simultaneously register a low state. For instance, in an 8-bit system,
+the condition is met only when the output bus matches
+<code>00000000</code>.</p>
+<p>To evaluate this condition instantly in hardware, the ALU uses a wide
+NOR gate or an equivalent tree of OR gates connected to an inverter (NOT
+gate). The logic works through the fundamental truth table of Boolean
+algebra:</p>
+<ol type="1">
+<li><strong>OR Stage:</strong> All output lines from the ALU operation
+are fed as inputs into an OR circuit. If any single line carries a high
+signal (<code>1</code>), the output of the OR stage becomes
+<code>1</code>. The OR stage only outputs a <code>0</code> if every
+single input line is low (<code>0</code>).</li>
+<li><strong>Inversion Stage:</strong> The output from the OR stage
+passes through an inverter. If the OR stage output is <code>0</code>
+(meaning all lines are low), the inverter flips the signal to
+<code>1</code>.</li>
+</ol>
+<p>Because a NOR gate performs both the OR and NOT operations
+simultaneously, its output is logic high (<code>1</code>) exclusively
+when all inputs are logic low (<code>0</code>). The output of this NOR
+gate connects directly to the Zero Flag flip-flop.</p>
+<p>When an ALU operation finishes:</p>
+<ul>
+<li><strong>All output lines low (<code>0</code>):</strong> The NOR gate
+evaluates to <code>1</code>, and the Zero Flag is set
+(<code>ZF = 1</code>).</li>
+<li><strong>Any output line high (<code>1</code>):</strong> The NOR gate
+evaluates to <code>0</code>, and the Zero Flag is cleared
+(<code>ZF = 0</code>).</li>
+</ul>
+<p>This evaluation occurs passively at the hardware level during the
+execution cycle without requiring iterative software checks. CPU control
+units rely on the state of the ZF to execute conditional branching
+instructions, such as jump-if-zero (<code>JZ</code>), jump-if-not-zero
+(<code>JNZ</code>), and comparison operations (<code>CMP</code>), which
+internally subtract two values to test if the result is zero.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

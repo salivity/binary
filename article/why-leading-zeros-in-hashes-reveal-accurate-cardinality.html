@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Leading Zeros in Hashes Reveal Accurate Cardinality - binary</title>
+    <meta name="description" content="This article explains how probabilistic data structures, such as HyperLogLog, leverage the distribution of leading zeros in binary hash values to approximate the number of unique elements (cardinality) in massive datasets. By converting arbitrary input i">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/why-leading-zeros-in-hashes-reveal-accurate-cardinality">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Leading Zeros in Hashes Reveal Accurate Cardinality - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/why-leading-zeros-in-hashes-reveal-accurate-cardinality" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explains how probabilistic data structures, such as HyperLogLog, leverage the distribution of leading zeros in binary hash values to approximate the number of unique elements (cardinality) in massive datasets. By converting arbitrary input i" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="why-leading-zeros-in-hashes-reveal-accurate-cardinality">Why
+Leading Zeros in Hashes Reveal Accurate Cardinality</h1>
+<p>This article explains how probabilistic data structures, such as
+HyperLogLog, leverage the distribution of leading zeros in binary hash
+values to approximate the number of unique elements (cardinality) in
+massive datasets. By converting arbitrary input items into uniformly
+distributed binary strings, the frequency and occurrence of rare bit
+patterns directly correspond to the total volume of distinct items
+processed, allowing high-precision estimation using minimal memory.</p>
+<h3 id="the-uniform-distribution-of-hash-bits">The Uniform Distribution
+of Hash Bits</h3>
+<p>A uniform cryptographic or non-cryptographic hash function maps any
+arbitrary input to an integer whose binary representation acts like a
+series of independent coin tosses. For any given bit position in the
+generated binary string, the probability of obtaining a <code>0</code>
+is exactly 50% (<span class="math inline">\(P = 0.5\)</span>), and the
+probability of obtaining a <code>1</code> is 50% (<span
+class="math inline">\(P = 0.5\)</span>).</p>
+<p>Because the bits are independent and identically distributed:</p>
+<ul>
+<li>The probability of a hash starting with at least <span
+class="math inline">\(1\)</span> zero (<code>0...</code>) is <span
+class="math inline">\(\frac{1}{2^1} = \frac{1}{2}\)</span>.</li>
+<li>The probability of a hash starting with at least <span
+class="math inline">\(2\)</span> zeros (<code>00...</code>) is <span
+class="math inline">\(\frac{1}{2^2} = \frac{1}{4}\)</span>.</li>
+<li>The probability of a hash starting with at least <span
+class="math inline">\(k\)</span> zeros is <span
+class="math inline">\(\frac{1}{2^k}\)</span>.</li>
+</ul>
+<h3 id="the-connection-between-rare-events-and-cardinality">The
+Connection Between Rare Events and Cardinality</h3>
+<p>The occurrence of <span class="math inline">\(k\)</span> consecutive
+leading zeros is a geometrically distributed random variable. Because an
+event with probability <span
+class="math inline">\(\frac{1}{2^k}\)</span> occurs on average once
+every <span class="math inline">\(2^k\)</span> trials, observing a
+maximum run of <span class="math inline">\(k\)</span> leading zeros in a
+stream of hashes implies that the system has likely processed
+approximately <span class="math inline">\(2^k\)</span> distinct
+items.</p>
+<p>For example, observing a hash value starting with <span
+class="math inline">\(10\)</span> consecutive zeros is rare; it has an
+occurrence probability of <span
+class="math inline">\(\frac{1}{1024}\)</span>. If you observe this
+pattern, it indicates you have likely sampled roughly <span
+class="math inline">\(1,024\)</span> unique items. If the maximum run
+observed is <span class="math inline">\(20\)</span> zeros, the stream
+likely contains roughly <span class="math inline">\(2^{20}\)</span>
+(about one million) distinct elements.</p>
+<h3 id="inherent-handling-of-duplicate-elements">Inherent Handling of
+Duplicate Elements</h3>
+<p>A deterministic hash function guarantees that identical inputs always
+produce the exact same binary hash value. Consequently, repeating the
+same input millions of times will never increase the observed maximum
+count of leading zeros beyond what that specific element generates. This
+idempotence allows the metric to naturally count distinct elements
+rather than total events.</p>
+<h3 id="reducing-variance-for-high-accuracy">Reducing Variance for High
+Accuracy</h3>
+<p>While the maximum number of leading zeros (<span
+class="math inline">\(k\)</span>) provides an order-of-magnitude
+estimate (<span class="math inline">\(2^k\)</span>), relying on a single
+observation carries high statistical variance. Production algorithms
+such as LogLog and HyperLogLog overcome this variance through specific
+techniques:</p>
+<ol type="1">
+<li><strong>Bucket Division (Stochastic Averaging):</strong> The first
+few bits of each hash are used to assign the item to one of <span
+class="math inline">\(m\)</span> separate registers (buckets), while the
+remaining bits are evaluated for leading zeros.</li>
+<li><strong>Harmonic Mean:</strong> Instead of a simple arithmetic mean,
+algorithms calculate the harmonic mean across all registers to discount
+extreme outliers.</li>
+<li><strong>Bias Correction:</strong> Mathematical constants and
+small/large range corrections are applied to scale the harmonic mean
+into an accurate cardinality figure.</li>
+</ol>
+<p>By combining the predictable decay rate of leading zeros in a binary
+system with statistical averaging across multiple buckets, systems can
+estimate cardinalities in the billions with standard errors under 1%
+using only a few kilobytes of memory.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

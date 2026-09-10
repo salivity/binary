@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How the CMP Instruction Updates CPU Flags - binary</title>
+    <meta name="description" content="The CMP (Compare) instruction evaluates the relationship between two operands by performing an internal, implicit subtraction without saving the mathematical result to any destination register. Instead of overwriting register contents, the processor rout">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-the-cmp-instruction-updates-cpu-flags">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How the CMP Instruction Updates CPU Flags - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-the-cmp-instruction-updates-cpu-flags" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The CMP (Compare) instruction evaluates the relationship between two operands by performing an internal, implicit subtraction without saving the mathematical result to any destination register. Instead of overwriting register contents, the processor rout" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-the-cmp-instruction-updates-cpu-flags">How the CMP
+Instruction Updates CPU Flags</h1>
+<p>The <code>CMP</code> (Compare) instruction evaluates the relationship
+between two operands by performing an internal, implicit subtraction
+without saving the mathematical result to any destination register.
+Instead of overwriting register contents, the processor routes the
+output of the Arithmetic Logic Unit (ALU) directly to the status
+register (such as the FLAGS or EFLAGS register in x86 architecture). By
+observing the resulting status flags—primarily the Zero Flag (ZF), Sign
+Flag (SF), Carry Flag (CF), and Overflow Flag (OF)—subsequent
+conditional jump instructions can determine whether the first operand
+was equal to, greater than, or less than the second operand while
+keeping the original binary data intact.</p>
+<h3 id="the-binary-subtraction-mechanism">The Binary Subtraction
+Mechanism</h3>
+<p>At the hardware level, the ALU performs subtraction using two's
+complement arithmetic. When a program executes <code>CMP A, B</code>,
+the processor calculates <span class="math inline">\(A - B\)</span> by
+converting <span class="math inline">\(B\)</span> into its two's
+complement form (inverting all bits of <span
+class="math inline">\(B\)</span> and adding <span
+class="math inline">\(1\)</span>) and then adding that value to <span
+class="math inline">\(A\)</span>:</p>
+<p><span class="math display">\[\text{Result} = A + (\sim B +
+1)\]</span></p>
+<p>During a standard <code>SUB A, B</code> instruction, the ALU
+completes this operation and writes the resulting binary value back into
+the register holding operand <span class="math inline">\(A\)</span>. The
+<code>CMP</code> instruction uses the identical ALU circuitry to perform
+this exact binary addition, but it disables the write-back stage of the
+CPU pipeline. The output data bus simply discards the arithmetic result,
+leaving operand <span class="math inline">\(A\)</span> and operand <span
+class="math inline">\(B\)</span> completely unmodified.</p>
+<h3 id="evaluating-and-updating-status-flags">Evaluating and Updating
+Status Flags</h3>
+<p>Even though the numerical difference is discarded, the
+characteristics of the calculation are captured and latched into the
+processor's flag register. The primary flags updated by the implicit
+subtraction include:</p>
+<ul>
+<li><strong>Zero Flag (ZF):</strong> The ALU sets <code>ZF = 1</code> if
+every bit of the subtraction result is zero, which occurs exclusively
+when <span class="math inline">\(A = B\)</span>. If any bit in the
+result is non-zero, <code>ZF = 0</code>.</li>
+<li><strong>Sign Flag (SF):</strong> The processor sets <code>SF</code>
+to match the most significant bit (MSB) of the result. In signed two's
+complement notation, an MSB of <code>1</code> represents a negative
+value (<span class="math inline">\(A &lt; B\)</span>), while an MSB of
+<code>0</code> indicates a non-negative value (<span
+class="math inline">\(A \ge B\)</span>).</li>
+<li><strong>Carry Flag (CF):</strong> Used for unsigned comparisons, the
+Carry Flag acts as an inverted borrow indicator. If <span
+class="math inline">\(A &lt; B\)</span> in an unsigned context, the
+operation requires a borrow, setting <code>CF = 1</code>. If <span
+class="math inline">\(A \ge B\)</span>, no borrow occurs, and
+<code>CF = 0</code>.</li>
+<li><strong>Overflow Flag (OF):</strong> Used for signed comparisons,
+<code>OF</code> is set to <code>1</code> if the subtraction generates a
+result that exceeds the maximum or minimum representable value for the
+signed integer size (e.g., subtracting a negative number from a positive
+number produces a negative result due to wraparound).</li>
+</ul>
+<h3 id="execution-flow-and-conditional-branching">Execution Flow and
+Conditional Branching</h3>
+<p>By altering only the status flags, <code>CMP</code> acts as a
+non-destructive probe into the system's state. Conditional jump
+instructions (such as <code>JE</code> for Jump if Equal, <code>JL</code>
+for Jump if Less, or <code>JA</code> for Jump if Above) immediately
+evaluate these flag combinations to alter execution flow. For example,
+<code>JE</code> branches if <code>ZF = 1</code>, while <code>JL</code>
+branches if the Sign Flag does not equal the Overflow Flag (<span
+class="math inline">\(SF \neq OF\)</span>). This separation of
+arithmetic evaluation from data modification allows programs to make
+control-flow decisions efficiently without requiring temporary registers
+to store calculation results.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

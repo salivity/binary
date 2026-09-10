@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How MessagePack Uses Binary Formats Over JSON - binary</title>
+    <meta name="description" content="MessagePack is an efficient binary serialization format that serves as a high-performance alternative to JSON. While it retains JSON's flexible data model of objects, arrays, numbers, and strings, it converts this information into compact binary layouts">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-messagepack-uses-binary-formats-over-json">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How MessagePack Uses Binary Formats Over JSON - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-messagepack-uses-binary-formats-over-json" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="MessagePack is an efficient binary serialization format that serves as a high-performance alternative to JSON. While it retains JSON's flexible data model of objects, arrays, numbers, and strings, it converts this information into compact binary layouts" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-messagepack-uses-binary-formats-over-json">How MessagePack
+Uses Binary Formats Over JSON</h1>
+<p>MessagePack is an efficient binary serialization format that serves
+as a high-performance alternative to JSON. While it retains JSON's
+flexible data model of objects, arrays, numbers, and strings, it
+converts this information into compact binary layouts rather than
+human-readable text. By leveraging the binary number system to encode
+data types, lengths, and numerical values at the bit level, MessagePack
+dramatically reduces payload sizes and speeds up processing time across
+network services.</p>
+<h3 id="the-inefficiencies-of-text-based-json">The Inefficiencies of
+Text-Based JSON</h3>
+<p>JSON represents all data, including numbers and structural tokens, as
+character strings using UTF-8 encoding. For example, the integer
+<code>1000000</code> is represented as seven distinct ASCII/UTF-8
+character bytes (<code>0x31</code>, <code>0x30</code>,
+<code>0x30</code>, <code>0x30</code>, <code>0x30</code>,
+<code>0x30</code>, <code>0x30</code>). Additionally, JSON relies on
+structural delimiters such as quotation marks, commas, curly braces, and
+colons. To read this data, a parser must sequentially scan every single
+byte, handle escape characters, and execute string-to-number parsing
+algorithms, which consumes substantial CPU cycles and memory.</p>
+<h3 id="how-messagepack-leverages-binary-representation">How MessagePack
+Leverages Binary Representation</h3>
+<p>MessagePack eliminates textual overhead by mapping data directly to
+compact binary formats:</p>
+<ul>
+<li><strong>Direct Binary Encoding of Integers:</strong> Instead of
+storing digits as characters, MessagePack stores numbers in their native
+base-2 binary representation. The integer <code>1000000</code> can be
+stored in binary as a 32-bit integer (<code>0x000F4240</code>), taking
+up only 4 bytes of data plus a 1-byte type prefix, compared to 7 bytes
+in JSON.</li>
+<li><strong>FixNum Bit Packing:</strong> For small integers, MessagePack
+packs both the data type indicator and the actual value into a single
+8-bit byte. For instance, positive integers from 0 to 127 are
+represented in a single byte where the most significant bit is
+<code>0</code> (<code>0xxxxxxx</code>). This means numbers below 128
+consume only one byte—saving space compared to JSON when delimiters and
+quotes are factored in.</li>
+<li><strong>Binary Length Headers:</strong> JSON uses opening and
+closing delimiters (like <code>"</code> for strings or <code>[</code>
+and <code>]</code> for arrays) that require continuous byte scanning to
+locate the end of a field. MessagePack instead prefixes strings, arrays,
+and maps with their exact byte length stored as a binary integer. A
+parser reads the length header and immediately knows how many subsequent
+bytes to read or skip in memory, eliminating string scanning.</li>
+<li><strong>Type Prefixing:</strong> Every structure in MessagePack
+begins with an opcode/prefix byte that explicitly defines the data type
+and format (e.g., float, double, raw bytes, unsigned int). This allows
+parsers to jump directly to fixed-size memory offsets without
+ambiguity.</li>
+</ul>
+<h3 id="performance-and-network-impact">Performance and Network
+Impact</h3>
+<p>By utilizing the binary system, MessagePack achieves two major
+operational advantages:</p>
+<ol type="1">
+<li><strong>Reduced Payload Size:</strong> Binary packing reduces
+bandwidth consumption, making it particularly useful for IoT devices,
+microservices, and mobile applications operating under constrained
+network conditions.</li>
+<li><strong>Faster Serialization and Deserialization:</strong> Because
+binary-encoded data maps closely to native CPU memory representations,
+computers can read integers and floating-point values directly into
+hardware registers without parsing string characters, leading to lower
+CPU overhead and faster throughput.</li>
+</ol></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

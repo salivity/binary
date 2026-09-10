@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCD vs Pure Binary Representation - binary</title>
+    <meta name="description" content="Binary Coded Decimal (BCD) and pure positional binary representation are two distinct methods used by computing systems to represent numerical values using bits. While pure positional binary converts an entire numerical magnitude into a base-2 sequence b">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/bcd-vs-pure-binary-representation">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="BCD vs Pure Binary Representation - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/bcd-vs-pure-binary-representation" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Binary Coded Decimal (BCD) and pure positional binary representation are two distinct methods used by computing systems to represent numerical values using bits. While pure positional binary converts an entire numerical magnitude into a base-2 sequence b" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="bcd-vs-pure-binary-representation">BCD vs Pure Binary
+Representation</h1>
+<p>Binary Coded Decimal (BCD) and pure positional binary representation
+are two distinct methods used by computing systems to represent
+numerical values using bits. While pure positional binary converts an
+entire numerical magnitude into a base-2 sequence based on powers of
+two, BCD encodes each individual decimal digit of a number into its own
+four-bit binary sequence. This fundamental difference affects how
+numbers are stored, computed, and displayed, creating distinct
+trade-offs between storage efficiency, arithmetic complexity, and
+display convenience.</p>
+<h3 id="fundamental-encoding-differences">Fundamental Encoding
+Differences</h3>
+<p>In a <strong>pure positional binary system</strong>, a number is
+represented directly in base-2 notation. Every bit position represents
+an increasing power of two (<span class="math inline">\(2^0, 2^1, 2^2,
+2^3, \dots\)</span>). The total value of the number is calculated as the
+sum of all active bit weights.</p>
+<p>In <strong>Binary Coded Decimal (BCD)</strong>, the decimal format
+(base-10) is preserved. Each decimal digit from 0 through 9 is
+individually converted into a fixed 4-bit binary pattern (a nibble),
+ranging from <code>0000</code> (0) to <code>1001</code> (9). Because 4
+bits can represent 16 unique values (<span
+class="math inline">\(2^4\)</span>), the remaining six combinations
+(<code>1010</code> through <code>1111</code>) are considered invalid in
+standard BCD.</p>
+<h4 id="example-comparison-the-decimal-number-45">Example Comparison:
+The Decimal Number 45</h4>
+<ul>
+<li><strong>Pure Binary:</strong> <span class="math inline">\(45_{10} =
+32 + 8 + 4 + 1 = 101101_2\)</span> (requires 6 bits)</li>
+<li><strong>BCD:</strong> Digit 4 = <code>0100</code>, Digit 5 =
+<code>0101</code> <span class="math inline">\(\rightarrow\)</span> <span
+class="math inline">\(0100\ 0101_{\text{BCD}}\)</span> (requires 8
+bits)</li>
+</ul>
+<hr />
+<h3 id="key-areas-of-difference">Key Areas of Difference</h3>
+<h4 id="1-storage-and-bit-efficiency">1. Storage and Bit Efficiency</h4>
+<ul>
+<li><strong>Pure Binary:</strong> Highly efficient. Every possible bit
+combination represents a valid number, utilizing 100% of the available
+binary state space.</li>
+<li><strong>BCD:</strong> Less efficient. Because each decimal digit
+requires a 4-bit nibble but only uses states 0 through 9, roughly 37.5%
+of the possible bit patterns per nibble are wasted. Consequently, BCD
+requires more bits and memory to store the same magnitude.</li>
+</ul>
+<h4 id="2-conversion-and-display-interfacing">2. Conversion and Display
+Interfacing</h4>
+<ul>
+<li><strong>Pure Binary:</strong> Converting a pure binary number into
+human-readable decimal characters requires computationally expensive
+division and modulo operations by 10.</li>
+<li><strong>BCD:</strong> Conversion to and from decimal formats or
+hardware displays (such as seven-segment LED displays) is trivial. Each
+4-bit group maps directly to a decimal digit with no division
+required.</li>
+</ul>
+<h4 id="3-arithmetic-complexity">3. Arithmetic Complexity</h4>
+<ul>
+<li><strong>Pure Binary:</strong> Arithmetic operations (addition,
+subtraction, multiplication) are native to digital logic gates, fast,
+and straightforward.</li>
+<li><strong>BCD:</strong> Arithmetic is more complex. When an arithmetic
+operation produces a result greater than 9 in any 4-bit group, or causes
+a carry, the processor must execute a correction step—typically adding 6
+(<code>0110</code>) to skip past the six invalid states and trigger a
+proper carry to the next decimal digit.</li>
+</ul>
+<hr />
+<h3 id="summary-of-differences">Summary of Differences</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">Pure Binary</th>
+<th style="text-align: left;">Binary Coded Decimal (BCD)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Base System</strong></td>
+<td style="text-align: left;">Base-2 (Pure positional)</td>
+<td style="text-align: left;">Base-10 mapped to 4-bit Base-2</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Digit Encoding</strong></td>
+<td style="text-align: left;">Entire number converted as one entity</td>
+<td style="text-align: left;">Each decimal digit encoded separately</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Valid 4-Bit States</strong></td>
+<td style="text-align: left;">All 16 combinations (<code>0000</code> to
+<code>1111</code>)</td>
+<td style="text-align: left;">Only 10 combinations (<code>0000</code> to
+<code>1001</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Memory Efficiency</strong></td>
+<td style="text-align: left;">Optimal</td>
+<td style="text-align: left;">Sub-optimal (wasted bit combinations)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Display Conversion</strong></td>
+<td style="text-align: left;">Slow (requires division by 10)</td>
+<td style="text-align: left;">Fast (direct mapping)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Hardware Arithmetic</strong></td>
+<td style="text-align: left;">Simple, fast, and native</td>
+<td style="text-align: left;">Complex (requires adjustment
+algorithms)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="primary-applications">Primary Applications</h3>
+<ul>
+<li><strong>Pure Binary</strong> is the industry standard for
+general-purpose computing, central processing units (CPUs),
+high-performance graphics, and scientific calculations where speed and
+memory efficiency are paramount.</li>
+<li><strong>BCD</strong> is primarily utilized in electronic systems
+that require frequent, precise interaction with decimal displays, such
+as digital clocks, multimeters, electronic cash registers, and financial
+applications where base-10 rounding errors cannot be tolerated.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

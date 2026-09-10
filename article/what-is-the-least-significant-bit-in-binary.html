@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is the Least Significant Bit in Binary? - binary</title>
+    <meta name="description" content="The Least Significant Bit (LSB) is the rightmost bit in a binary number, representing the lowest positional value and having the smallest effect on the overall magnitude of the number. This article defines the LSB, explains its fundamental mathematical f">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-the-least-significant-bit-in-binary">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is the Least Significant Bit in Binary? - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-the-least-significant-bit-in-binary" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Least Significant Bit (LSB) is the rightmost bit in a binary number, representing the lowest positional value and having the smallest effect on the overall magnitude of the number. This article defines the LSB, explains its fundamental mathematical f" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-the-least-significant-bit-in-binary">What Is the Least
+Significant Bit in Binary?</h1>
+<p>The Least Significant Bit (LSB) is the rightmost bit in a binary
+number, representing the lowest positional value and having the smallest
+effect on the overall magnitude of the number. This article defines the
+LSB, explains its fundamental mathematical functions—including its role
+in determining arithmetic parity and its behavior in bitwise
+operations—and highlights its practical significance in digital
+computing and data encoding.</p>
+<h2 id="definition-of-the-least-significant-bit">Definition of the Least
+Significant Bit</h2>
+<p>In a positional binary numeral system, any integer <span
+class="math inline">\(N\)</span> is represented as a sequence of
+bits:</p>
+<p><span class="math display">\[N = (b_{n-1} b_{n-2} \dots b_1
+b_0)_2\]</span></p>
+<p>The bit located at the far-right position, denoted as <span
+class="math inline">\(b_0\)</span>, is the Least Significant Bit.
+Because binary is a base-2 system, the positional weight of any bit at
+index <span class="math inline">\(i\)</span> is <span
+class="math inline">\(2^i\)</span>. Consequently, the LSB carries a
+weight of:</p>
+<p><span class="math display">\[2^0 = 1\]</span></p>
+<p>Because it carries the smallest weight, flipping the LSB causes the
+smallest possible change in the value of the number (an increase or
+decrease of exactly 1).</p>
+<h2 id="mathematical-functions-of-the-lsb">Mathematical Functions of the
+LSB</h2>
+<p>The LSB serves several key mathematical functions in binary
+arithmetic and digital logic:</p>
+<h3 id="1-parity-and-modulo-arithmetic">1. Parity and Modulo
+Arithmetic</h3>
+<p>The most critical arithmetic function of the LSB in integer
+representation is determining whether a number is even or odd. Since
+every higher power of 2 (<span class="math inline">\(2^1, 2^2, \dots,
+2^n\)</span>) is an even number, the parity of the entire integer
+depends exclusively on the value of <span
+class="math inline">\(b_0\)</span>:</p>
+<p><span class="math display">\[\text{LSB}(N) = N \pmod 2\]</span></p>
+<ul>
+<li>If <span class="math inline">\(\text{LSB} = 0\)</span>, the number
+is <strong>even</strong>.</li>
+<li>If <span class="math inline">\(\text{LSB} = 1\)</span>, the number
+is <strong>odd</strong>.</li>
+</ul>
+<h3 id="2-bitwise-masking-and-extraction">2. Bitwise Masking and
+Extraction</h3>
+<p>In computer science and digital circuit design, the LSB is extracted
+using a bitwise AND operation with a mask of 1:</p>
+<p><span class="math display">\[f(N) = N \ \&amp; \ 1\]</span></p>
+<p>To isolate the value representing the lowest set bit in two's
+complement arithmetic, the following mathematical identity is used:</p>
+<p><span class="math display">\[\text{Lowest Set Bit} = N \ \&amp; \
+(-N)\]</span></p>
+<h3 id="3-precision-and-quantization-in-fixed-point-systems">3.
+Precision and Quantization in Fixed-Point Systems</h3>
+<p>In fractional or fixed-point binary representations, where a number
+contains <span class="math inline">\(k\)</span> fractional bits:</p>
+<p><span class="math display">\[N = (b_m \dots b_0 . b_{-1} \dots
+b_{-k})_2\]</span></p>
+<p>The LSB is the bit at the <span class="math inline">\(b_{-k}\)</span>
+position. In this context, the mathematical function of the LSB is to
+define the resolution or the quantization step size (<span
+class="math inline">\(Q\)</span>) of the system:</p>
+<p><span class="math display">\[Q = 2^{-k}\]</span></p>
+<p>The value of the LSB represents the smallest measurable increment or
+difference between two consecutive values in digital signal processing
+and analog-to-digital conversion.</p>
+<h2 id="common-applications">Common Applications</h2>
+<ul>
+<li><strong>Digital Steganography:</strong> Replacing the LSB of pixel
+or audio data with encrypted data bits enables information hiding
+without perceptibly altering the original file.</li>
+<li><strong>Error Detection:</strong> Parity bits use the LSB concept to
+detect single-bit transmission errors.</li>
+<li><strong>Hash Functions and PRNGs:</strong> Algorithms evaluate the
+LSB for fast state changes and uniform distribution testing.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

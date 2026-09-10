@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is Integer Quantization? INT8 and INT4 Guide - binary</title>
+    <meta name="description" content="Integer quantization is a model optimization technique that compresses deep learning neural networks by converting high-precision floating-point weights and activations into lower-bit integer representations, such as 8-bit (INT8) or 4-bit (INT4). This ar">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-integer-quantization-int8-and-int4-guide">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is Integer Quantization? INT8 and INT4 Guide - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-integer-quantization-int8-and-int4-guide" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Integer quantization is a model optimization technique that compresses deep learning neural networks by converting high-precision floating-point weights and activations into lower-bit integer representations, such as 8-bit (INT8) or 4-bit (INT4). This ar" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-integer-quantization-int8-and-int4-guide">What Is
+Integer Quantization? INT8 and INT4 Guide</h1>
+<p>Integer quantization is a model optimization technique that
+compresses deep learning neural networks by converting high-precision
+floating-point weights and activations into lower-bit integer
+representations, such as 8-bit (INT8) or 4-bit (INT4). This article
+covers how integer quantization functions, the underlying binary
+mechanics of weight compression, the mathematical mapping required to
+preserve precision, and the trade-offs between computational performance
+and model accuracy.</p>
+<h2 id="the-standard-precision-problem-in-deep-learning">The Standard
+Precision Problem in Deep Learning</h2>
+<p>Deep learning models are traditionally trained using 32-bit
+single-precision floating-point values (FP32). In the IEEE 754 standard,
+each FP32 number consumes 32 bits (4 bytes) of memory, structured
+as:</p>
+<ul>
+<li><strong>1 sign bit:</strong> Determines positive or negative.</li>
+<li><strong>8 exponent bits:</strong> Defines the magnitude range.</li>
+<li><strong>23 mantissa (fraction) bits:</strong> Determines the
+precision.</li>
+</ul>
+<p>While FP32 offers high dynamic range and numerical stability during
+training, it creates substantial bottlenecks during deployment. Large
+Language Models (LLMs) and massive vision models with billions of
+parameters require tens or hundreds of gigabytes of VRAM just to store
+weights, limiting their ability to run efficiently on edge devices or
+standard enterprise hardware.</p>
+<h2 id="how-quantization-compresses-binary-weights">How Quantization
+Compresses Binary Weights</h2>
+<p>Integer quantization replaces 32-bit floating-point weights with
+compact integer formats. This process directly reduces the number of
+bits allocated to each parameter in the binary number system:</p>
+<h3 id="1-int8-quantization-4x-compression">1. INT8 Quantization (4x
+Compression)</h3>
+<p>INT8 utilizes an 8-bit signed integer format capable of representing
+<span class="math inline">\(2^8 = 256\)</span> distinct values (ranging
+from -128 to 127). By reducing the bit-width from 32 bits to 8 bits,
+memory consumption per weight is reduced by a factor of 4. A
+7-billion-parameter FP32 model requiring roughly 28 GB of storage is
+compressed down to approximately 7 GB.</p>
+<h3 id="2-int4-quantization-8x-compression">2. INT4 Quantization (8x
+Compression)</h3>
+<p>INT4 reduces the precision further to a 4-bit integer, representing
+<span class="math inline">\(2^4 = 16\)</span> distinct values (typically
+ranging from -8 to 7, or 0 to 15 if unsigned). Two 4-bit values can be
+packed into a single byte of memory. This achieves an 8x reduction in
+storage and memory bandwidth compared to FP32, allowing a
+7-billion-parameter model to fit into under 4 GB of VRAM.</p>
+<h2 id="the-mathematical-mapping-process">The Mathematical Mapping
+Process</h2>
+<p>To compress continuous floating-point weights into a discrete,
+limited set of integer values, a linear transformation is applied using
+a scale factor (<span class="math inline">\(S\)</span>) and a zero-point
+offset (<span class="math inline">\(Z\)</span>).</p>
+<p>The standard affine quantization formula is:</p>
+<p><span class="math display">\[q = \text{round}\left(\frac{x}{S}\right)
++ Z\]</span></p>
+<p>Where:</p>
+<ul>
+<li><strong><span class="math inline">\(x\)</span></strong> is the
+original floating-point weight or activation.</li>
+<li><strong><span class="math inline">\(S\)</span> (Scale)</strong> is a
+positive floating-point value that defines the step size between
+consecutive integer values: <span class="math inline">\(S =
+\frac{x_{\max} - x_{\min}}{q_{\max} - q_{\min}}\)</span>.</li>
+<li><strong><span class="math inline">\(Z\)</span> (Zero-point)</strong>
+is an integer that maps the real zero to the quantized domain, ensuring
+that exact zero in floating-point maps without error to a representable
+integer.</li>
+<li><strong><span class="math inline">\(q\)</span></strong> is the
+resulting quantized integer.</li>
+</ul>
+<p>To reconstruct the values during computation (dequantization), the
+inverse formula is used:</p>
+<p><span class="math display">\[\tilde{x} = S \cdot (q - Z)\]</span></p>
+<p>In <strong>symmetric quantization</strong>, the zero-point <span
+class="math inline">\(Z\)</span> is set to 0, which simplifies hardware
+arithmetic at the cost of a slightly reduced dynamic range for
+asymmetric distributions.</p>
+<h2 id="hardware-and-performance-advantages">Hardware and Performance
+Advantages</h2>
+<p>Compressing weights into INT8 and INT4 formats provides major
+system-level advantages beyond raw disk storage:</p>
+<ul>
+<li><strong>Reduced Memory Bandwidth:</strong> Deep learning inference
+is frequently memory-bandwidth bound. Transferring 8-bit or 4-bit values
+from memory to compute units requires significantly less time and energy
+than transferring 32-bit floats.</li>
+<li><strong>Faster Integer Arithmetic:</strong> Modern CPUs and GPUs
+(such as NVIDIA Tensor Cores) contain specialized vector units that
+execute integer matrix multiplications (INT8/INT4 GEMM) at multiple
+times the throughput of floating-point operations.</li>
+<li><strong>Lower Power Consumption:</strong> Fixed-point integer
+arithmetic logic units (ALUs) consume significantly less electrical
+power and silicon area compared to complex floating-point units
+(FPUs).</li>
+</ul>
+<h2 id="methods-of-implementation">Methods of Implementation</h2>
+<p>Quantization is typically applied using one of two strategies:</p>
+<ul>
+<li><strong>Post-Training Quantization (PTQ):</strong> Weights are
+quantized after the model is fully trained. This requires minimal
+computation and no retraining, making it fast and easy to apply, though
+INT4 PTQ may cause noticeable degradation without calibration.</li>
+<li><strong>Quantization-Aware Training (QAT):</strong> The network
+models the effects of low-precision rounding during the training or
+fine-tuning phase using "fake quantization" nodes. This allows the
+backpropagation algorithm to adjust remaining weights to compensate for
+precision loss, yielding higher accuracy at low bit-widths like
+INT4.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is End-Around Carry in One's Complement? - binary</title>
+    <meta name="description" content="End-around carry is an arithmetic adjustment technique used in one's complement binary systems, where an overflow carry generated from the most significant bit (MSB) during addition is looped back and added to the least significant bit (LSB). This articl">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-end-around-carry-in-one-s-complement">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is End-Around Carry in One's Complement? - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-end-around-carry-in-one-s-complement" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="End-around carry is an arithmetic adjustment technique used in one's complement binary systems, where an overflow carry generated from the most significant bit (MSB) during addition is looped back and added to the least significant bit (LSB). This articl" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-end-around-carry-in-ones-complement">What Is End-Around
+Carry in One's Complement?</h1>
+<p>End-around carry is an arithmetic adjustment technique used in one's
+complement binary systems, where an overflow carry generated from the
+most significant bit (MSB) during addition is looped back and added to
+the least significant bit (LSB). This article explains the fundamentals
+of one's complement arithmetic, illustrates why standard binary addition
+produces an off-by-one discrepancy when handling negative numbers, and
+details the mathematical necessity of the end-around carry to ensure
+correct results.</p>
+<h2 id="understanding-ones-complement-representation">Understanding
+One's Complement Representation</h2>
+<p>In binary systems, negative numbers can be represented using one's
+complement notation. To find the one's complement of a positive binary
+number, every bit is inverted (0s become 1s, and 1s become 0s).</p>
+<p>A key characteristic of this system is that it possesses two distinct
+representations for zero:</p>
+<ul>
+<li><strong>Positive Zero (+0):</strong> Represented by all
+<code>0</code>s (e.g., <code>0000</code> in a 4-bit system).</li>
+<li><strong>Negative Zero (-0):</strong> Represented by all
+<code>1</code>s (e.g., <code>1111</code> in a 4-bit system).</li>
+</ul>
+<p>Because of these two states for zero, an <span
+class="math inline">\(n\)</span>-bit one's complement system represents
+<span class="math inline">\(2^n - 1\)</span> unique values, ranging from
+<span class="math inline">\(-(2^{n-1} - 1)\)</span> to <span
+class="math inline">\(+(2^{n-1} - 1)\)</span>.</p>
+<h2 id="the-origin-of-the-discrepancy">The Origin of the
+Discrepancy</h2>
+<p>Standard binary adders operate using modulo <span
+class="math inline">\(2^n\)</span> arithmetic. However, because one's
+complement has two representations of zero, true arithmetic in one's
+complement must operate modulo <span class="math inline">\(2^n -
+1\)</span>.</p>
+<p>When you add two numbers in one's complement and the operation
+crosses the zero boundary (such as adding a positive and a negative
+number where the positive magnitude is larger), standard binary addition
+traverses both the positive zero (<code>0000</code>) and the negative
+zero (<code>1111</code>). Because the hardware counts standard
+positional weights, crossing this dual-zero state causes the raw binary
+sum to fall short by exactly <span class="math inline">\(1\)</span>.</p>
+<p>Whenever this zero boundary is crossed in a way that generates a
+carry out of the most significant bit (MSB), that discarded carry
+represents a value of <span class="math inline">\(2^n\)</span>. In
+modulo <span class="math inline">\(2^n - 1\)</span> arithmetic, <span
+class="math inline">\(2^n \equiv 1 \pmod{2^n - 1}\)</span>. Therefore,
+losing the carry out of the MSB effectively subtracts <span
+class="math inline">\(2^n\)</span>, which is one unit too many. To
+balance the equation, that <span class="math inline">\(1\)</span> must
+be re-added to the least significant bit.</p>
+<h2 id="how-end-around-carry-works">How End-Around Carry Works</h2>
+<p>When performing addition in one's complement:</p>
+<ol type="1">
+<li>Add the two binary numbers using standard binary addition.</li>
+<li>Check if a carry bit is produced from the most significant bit (the
+leftmost bit).</li>
+<li>If a carry is generated, remove it from the MSB and add it to the
+least significant bit (the rightmost bit) of the result.</li>
+<li>If no carry is generated, the initial sum is the final answer.</li>
+</ol>
+<h3 id="example-adding-5-and--2-4-bit-system">Example: Adding 5 and -2
+(4-bit System)</h3>
+<ul>
+<li>Positive 5 (<span class="math inline">\(+5\)</span>) in binary:
+<code>0101</code></li>
+<li>Positive 2 (<span class="math inline">\(+2\)</span>) in binary:
+<code>0010</code></li>
+<li>Negative 2 (<span class="math inline">\(-2\)</span>) in one's
+complement: <code>1101</code></li>
+</ul>
+<p><strong>Step 1: Standard Addition</strong></p>
+<pre class="text"><code>   0101  (+5)
++  1101  (-2)
+-------
+ 1 0010  (Intermediate result with a carry-out of 1)</code></pre>
+<p>The raw 4-bit result is <code>0010</code> (decimal <span
+class="math inline">\(2\)</span>), which is incorrect since <span
+class="math inline">\(5 + (-2) = 3\)</span>.</p>
+<p><strong>Step 2: Apply End-Around Carry</strong> Take the carry bit
+(<code>1</code>) from the MSB and add it to the LSB:</p>
+<pre class="text"><code>   0010
++     1
+-------
+   0011  (Final result)</code></pre>
+<p>The binary value <code>0011</code> represents decimal <span
+class="math inline">\(3\)</span>, which is the correct mathematical
+result.</p>
+<h2 id="why-end-around-carry-is-required">Why End-Around Carry Is
+Required</h2>
+<p>End-around carry is required because standard hardware binary
+addition inherently ignores the duplicate zero in one's complement.
+Without wrapping the overflow carry back into the LSB:</p>
+<ul>
+<li>Operations resulting in a carry-out would always be off by <span
+class="math inline">\(-1\)</span>.</li>
+<li>The mathematical relationship <span class="math inline">\(A + (-B) =
+A - B\)</span> would fail whenever <span class="math inline">\(A &gt;
+B\)</span>.</li>
+</ul>
+<p>While effective, the requirement for end-around carry introduces
+extra propagation delay and circuit complexity because the addition
+hardware may need to execute two addition passes. This limitation is one
+of the primary reasons modern computing architectures favor two's
+complement arithmetic, which has a single representation for zero and
+discards the MSB carry without needing correction.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

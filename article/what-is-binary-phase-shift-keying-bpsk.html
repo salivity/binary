@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is Binary Phase Shift Keying (BPSK)? - binary</title>
+    <meta name="description" content="Binary Phase Shift Keying (BPSK) is a foundational digital modulation technique used to transmit digital data wirelessly by altering the phase of a radio frequency carrier wave. This article explains the fundamental principles of BPSK, details how binary">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-binary-phase-shift-keying-bpsk">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is Binary Phase Shift Keying (BPSK)? - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-binary-phase-shift-keying-bpsk" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Binary Phase Shift Keying (BPSK) is a foundational digital modulation technique used to transmit digital data wirelessly by altering the phase of a radio frequency carrier wave. This article explains the fundamental principles of BPSK, details how binary" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-binary-phase-shift-keying-bpsk">What Is Binary Phase
+Shift Keying (BPSK)?</h1>
+<p>Binary Phase Shift Keying (BPSK) is a foundational digital modulation
+technique used to transmit digital data wirelessly by altering the phase
+of a radio frequency carrier wave. This article explains the fundamental
+principles of BPSK, details how binary values (0s and 1s) are mapped
+directly to distinct phase shifts in a carrier wave, and explores the
+advantages and practical applications of this robust modulation
+method.</p>
+<h2 id="understanding-bpsk">Understanding BPSK</h2>
+<p>Binary Phase Shift Keying is the simplest form of Phase Shift Keying
+(PSK). In telecommunications, modulation is the process of modifying a
+continuous radio carrier wave to encode information. While other
+modulation techniques change the amplitude (AM) or frequency (FM) of a
+signal, phase shift keying alters the phase angle of the carrier wave
+while keeping its frequency and amplitude constant.</p>
+<p>The term "Binary" indicates that the system operates using two
+distinct states, directly corresponding to the two digits of the binary
+number system: 0 and 1.</p>
+<h2 id="how-bpsk-modulates-radio-waves">How BPSK Modulates Radio
+Waves</h2>
+<p>A standard unmodulated radio carrier wave can be represented
+mathematically as a continuous sine or cosine wave:</p>
+<p><span class="math display">\[s(t) = A \cos(2\pi f t +
+\phi)\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(A\)</span> is the amplitude</li>
+<li><span class="math inline">\(f\)</span> is the carrier frequency</li>
+<li><span class="math inline">\(t\)</span> is time</li>
+<li><span class="math inline">\(\phi\)</span> is the phase</li>
+</ul>
+<p>In BPSK, the amplitude (<span class="math inline">\(A\)</span>) and
+frequency (<span class="math inline">\(f\)</span>) remain constant,
+while the phase (<span class="math inline">\(\phi\)</span>) switches
+between two distinct values separated by 180 degrees (<span
+class="math inline">\(\pi\)</span> radians).</p>
+<h3 id="binary-mapping">Binary Mapping</h3>
+<p>To encode digital data, each binary digit is assigned a specific
+phase state:</p>
+<ul>
+<li><strong>Binary 0:</strong> Transmitted with a phase shift of <span
+class="math inline">\(0^\circ\)</span> (<span
+class="math inline">\(0\)</span> radians), leaving the carrier wave
+unaltered:<br />
+<span class="math display">\[s_0(t) = A \cos(2\pi f t)\]</span></li>
+<li><strong>Binary 1:</strong> Transmitted with a phase shift of <span
+class="math inline">\(180^\circ\)</span> (<span
+class="math inline">\(\pi\)</span> radians), inverting the carrier
+wave:<br />
+<span class="math display">\[s_1(t) = A \cos(2\pi f t + \pi) = -A
+\cos(2\pi f t)\]</span></li>
+</ul>
+<p>When the data stream changes from a 0 to a 1, or from a 1 to a 0, the
+transmitter abruptly reverses the polarity of the radio wave. On a
+constellation diagram—a visual representation of digital modulation
+schemes—BPSK appears as two points located on the horizontal axis
+directly opposite one another (at <span
+class="math inline">\(+1\)</span> and <span
+class="math inline">\(-1\)</span>).</p>
+<h2 id="demodulation-at-the-receiver">Demodulation at the Receiver</h2>
+<p>To decode the received radio signal, the receiver uses coherent
+demodulation. It compares the phase of the incoming radio wave against a
+locally generated reference carrier synchronized in both frequency and
+phase.</p>
+<ul>
+<li>If the incoming wave is in phase with the reference signal, the
+receiver decodes a <strong>0</strong>.</li>
+<li>If the incoming wave is out of phase by <span
+class="math inline">\(180^\circ\)</span>, the receiver decodes a
+<strong>1</strong>.</li>
+</ul>
+<h2 id="advantages-and-limitations">Advantages and Limitations</h2>
+<h3 id="advantages">Advantages</h3>
+<ul>
+<li><strong>High Noise Immunity:</strong> Because the two states are
+separated by the maximum possible phase difference (<span
+class="math inline">\(180^\circ\)</span>), the receiver can easily
+distinguish between a 0 and a 1, even in environments with heavy
+background noise or weak signal strength.</li>
+<li><strong>Simplicity:</strong> The hardware required to generate and
+decode two-phase states is relatively simple and cost-effective compared
+to higher-order modulation schemes.</li>
+</ul>
+<h3 id="limitations">Limitations</h3>
+<ul>
+<li><strong>Low Data Rate:</strong> BPSK transmits only one bit per
+symbol. Higher-order schemes, like QPSK (Quadrature Phase Shift Keying)
+or 16-QAM, transmit multiple bits per symbol, offering greater data
+throughput within the same bandwidth.</li>
+</ul>
+<h2 id="applications">Applications</h2>
+<p>Due to its resilience against noise and signal degradation, BPSK is
+primarily used in mission-critical, power-constrained, or long-distance
+communication systems. Common use cases include deep-space
+communications (such as NASA's Deep Space Network), GPS satellite
+telemetry, RFID tags, and low-power IoT networks.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

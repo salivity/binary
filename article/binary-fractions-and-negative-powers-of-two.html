@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Fractions and Negative Powers of Two - binary</title>
+    <meta name="description" content="In computing and mathematics, fractional quantities in the binary number system are represented using negative powers of two placed to the right of a binary point (also known as a radix point). Just as the decimal system uses negative powers of ten ($10^">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/binary-fractions-and-negative-powers-of-two">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Binary Fractions and Negative Powers of Two - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/binary-fractions-and-negative-powers-of-two" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In computing and mathematics, fractional quantities in the binary number system are represented using negative powers of two placed to the right of a binary point (also known as a radix point). Just as the decimal system uses negative powers of ten ($10^" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="binary-fractions-and-negative-powers-of-two">Binary Fractions
+and Negative Powers of Two</h1>
+<p>In computing and mathematics, fractional quantities in the binary
+number system are represented using negative powers of two placed to the
+right of a binary point (also known as a radix point). Just as the
+decimal system uses negative powers of ten (<span
+class="math inline">\(10^{-1}, 10^{-2}, 10^{-3}\)</span>) to represent
+tenths, hundredths, and thousandths, the binary system uses negative
+powers of two (<span class="math inline">\(2^{-1}, 2^{-2},
+2^{-3}\)</span>) to represent halves, quarters, and eighths. This
+article explains how negative exponents function in binary positional
+notation, how to calculate binary fractions, and the fundamental
+mechanics of converting between binary and decimal fractional
+values.</p>
+<h3 id="the-binary-radix-point-and-positional-values">The Binary Radix
+Point and Positional Values</h3>
+<p>Positional notation determines the value of a digit based on its
+position relative to a base point. In binary, digits to the left of the
+radix point represent whole numbers using non-negative powers of two
+(<span class="math inline">\(2^0, 2^1, 2^2, \dots\)</span>). Digits to
+the right of the radix point represent fractional parts using negative
+powers of two.</p>
+<p>The place values decrease by a factor of two with each step to the
+right:</p>
+<ul>
+<li><span class="math inline">\(2^{-1} = \frac{1}{2^1} = \frac{1}{2} =
+0.5\)</span></li>
+<li><span class="math inline">\(2^{-2} = \frac{1}{2^2} = \frac{1}{4} =
+0.25\)</span></li>
+<li><span class="math inline">\(2^{-3} = \frac{1}{2^3} = \frac{1}{8} =
+0.125\)</span></li>
+<li><span class="math inline">\(2^{-4} = \frac{1}{2^4} = \frac{1}{16} =
+0.0625\)</span></li>
+<li><span class="math inline">\(2^{-5} = \frac{1}{2^5} = \frac{1}{32} =
+0.03125\)</span></li>
+</ul>
+<h3 id="calculating-binary-fractions">Calculating Binary Fractions</h3>
+<p>To evaluate a binary fraction, you multiply each bit (either <span
+class="math inline">\(0\)</span> or <span
+class="math inline">\(1\)</span>) by its corresponding negative power of
+two and sum the results.</p>
+<h4 id="example-converting-01101_2-to-decimal">Example: Converting <span
+class="math inline">\(0.1101_2\)</span> to Decimal</h4>
+<p>Given the binary fraction <span
+class="math inline">\(0.1101_2\)</span>:</p>
+<p><span class="math display">\[\text{Value} = (1 \times 2^{-1}) + (1
+\times 2^{-2}) + (0 \times 2^{-3}) + (1 \times 2^{-4})\]</span></p>
+<p>Substitute the decimal equivalents:</p>
+<p><span class="math display">\[\text{Value} = (1 \times 0.5) + (1
+\times 0.25) + (0 \times 0.125) + (1 \times 0.0625)\]</span> <span
+class="math display">\[\text{Value} = 0.5 + 0.25 + 0 + 0.0625 =
+0.8125_{10}\]</span></p>
+<p>Thus, <span class="math inline">\(0.1101_2\)</span> equals <span
+class="math inline">\(0.8125_{10}\)</span>.</p>
+<h3 id="converting-decimal-fractions-to-binary">Converting Decimal
+Fractions to Binary</h3>
+<p>To convert a decimal fraction into its binary representation, use the
+repeated multiplication by 2 method:</p>
+<ol type="1">
+<li>Multiply the fractional part by <span
+class="math inline">\(2\)</span>.</li>
+<li>The integer part of the result (<span
+class="math inline">\(0\)</span> or <span
+class="math inline">\(1\)</span>) becomes the next binary digit.</li>
+<li>Take the remaining fractional part and repeat the process until the
+fraction becomes <span class="math inline">\(0\)</span> or the required
+precision is reached.</li>
+</ol>
+<h4 id="example-converting-0625_10-to-binary">Example: Converting <span
+class="math inline">\(0.625_{10}\)</span> to Binary</h4>
+<ul>
+<li><span class="math inline">\(0.625 \times 2 = \mathbf{1}.25\)</span>
+(Record <strong>1</strong>, keep <span
+class="math inline">\(0.25\)</span>)</li>
+<li><span class="math inline">\(0.25 \times 2 = \mathbf{0}.50\)</span>
+(Record <strong>0</strong>, keep <span
+class="math inline">\(0.5\)</span>)</li>
+<li><span class="math inline">\(0.5 \times 2 = \mathbf{1}.00\)</span>
+(Record <strong>1</strong>, fraction is now <span
+class="math inline">\(0\)</span>)</li>
+</ul>
+<p>Reading the recorded integer values from top to bottom yields <span
+class="math inline">\(0.101_2\)</span>.</p>
+<h3 id="limitations-and-repeating-binary-fractions">Limitations and
+Repeating Binary Fractions</h3>
+<p>A decimal fraction can only be represented as a finite (terminating)
+binary fraction if its denominator in lowest terms is a power of two.
+Fractional values such as <span class="math inline">\(0.1_{10}\)</span>
+(<span class="math inline">\(\frac{1}{10}\)</span>) or <span
+class="math inline">\(0.2_{10}\)</span> (<span
+class="math inline">\(\frac{1}{5}\)</span>) cannot be expressed
+precisely with a finite sum of negative powers of two. Instead, they
+result in infinite repeating binary sequences (for example, <span
+class="math inline">\(0.1_{10} = 0.0001100110011\dots_2\)</span>), which
+is the underlying cause of rounding inaccuracies in computer
+floating-point arithmetic.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

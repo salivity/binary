@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RLL 1,7 vs RLL 2,7 Encoding Differences - binary</title>
+    <meta name="description" content="Run-Length Limited (RLL) encoding is a modulation technique used by magnetic disk controllers to store binary data efficiently and reliably on physical media. The two prominent variants, RLL (1,7) and RLL (2,7), differ fundamentally in their code rates,">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/rll-1-7-vs-rll-2-7-encoding-differences">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="RLL 1,7 vs RLL 2,7 Encoding Differences - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/rll-1-7-vs-rll-2-7-encoding-differences" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Run-Length Limited (RLL) encoding is a modulation technique used by magnetic disk controllers to store binary data efficiently and reliably on physical media. The two prominent variants, RLL (1,7) and RLL (2,7), differ fundamentally in their code rates," />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="rll-17-vs-rll-27-encoding-differences">RLL 1,7 vs RLL 2,7
+Encoding Differences</h1>
+<p>Run-Length Limited (RLL) encoding is a modulation technique used by
+magnetic disk controllers to store binary data efficiently and reliably
+on physical media. The two prominent variants, RLL (1,7) and RLL (2,7),
+differ fundamentally in their code rates, minimum and maximum run
+lengths of zeros, data density, and timing jitter tolerance. While RLL
+(2,7) achieves a higher theoretical data density by enforcing larger
+gaps between magnetic flux transitions, RLL (1,7) offers a wider
+detection window that provides superior tolerance to timing jitter,
+making it widely adopted in later high-density drive technologies.</p>
+<h2 id="understanding-rll-dk-notation">Understanding RLL (d,k)
+Notation</h2>
+<p>In RLL <span class="math inline">\((d,k)\)</span> schemes, user data
+bits are translated into channel bits (code bits) that dictate where
+magnetic flux transitions occur:</p>
+<ul>
+<li><strong><span class="math inline">\(d\)</span> (Minimum
+constraint):</strong> The minimum number of consecutive <code>0</code>s
+allowed between consecutive <code>1</code>s. A higher <span
+class="math inline">\(d\)</span> value spaces magnetic transitions
+further apart, reducing inter-symbol interference (pulse crowding).</li>
+<li><strong><span class="math inline">\(k\)</span> (Maximum
+constraint):</strong> The maximum number of consecutive <code>0</code>s
+allowed between consecutive <code>1</code>s. This ensures frequent
+enough transitions for the drive's phase-locked loop (PLL) clock to stay
+synchronized with the data stream.</li>
+</ul>
+<h2 id="rll-17-encoding">RLL (1,7) Encoding</h2>
+<p>RLL (1,7) uses a code rate of <strong>2/3</strong>, meaning 2 input
+data bits are mapped to 3 channel bits.</p>
+<ul>
+<li><strong>Run-length constraints:</strong> <span
+class="math inline">\(d = 1\)</span>, <span class="math inline">\(k =
+7\)</span> (at least one <code>0</code> and at most seven
+<code>0</code>s between <code>1</code>s).</li>
+<li><strong>Detection Window (<span
+class="math inline">\(T_w\)</span>):</strong> <span
+class="math inline">\(T_w = \frac{2}{3} T \approx 0.67T\)</span>, where
+<span class="math inline">\(T\)</span> is the user bit period.</li>
+<li><strong>Minimum Transition Spacing (<span
+class="math inline">\(T_{\text{min}}\)</span>):</strong> <span
+class="math inline">\((1 + d) \times T_w = (1 + 1) \times \frac{2}{3}T =
+1.33T\)</span>.</li>
+<li><strong>Maximum Transition Spacing (<span
+class="math inline">\(T_{\text{max}}\)</span>):</strong> <span
+class="math inline">\((1 + k) \times T_w = (1 + 7) \times \frac{2}{3}T =
+5.33T\)</span>.</li>
+<li><strong>Density Ratio (<span
+class="math inline">\(DR\)</span>):</strong> <span
+class="math inline">\((1 + d) \times \text{Rate} = 2 \times \frac{2}{3}
+\approx 1.33\)</span>.</li>
+</ul>
+<h2 id="rll-27-encoding">RLL (2,7) Encoding</h2>
+<p>RLL (2,7) uses a code rate of <strong>1/2</strong>, meaning 1 input
+data bit is mapped to 2 channel bits.</p>
+<ul>
+<li><strong>Run-length constraints:</strong> <span
+class="math inline">\(d = 2\)</span>, <span class="math inline">\(k =
+7\)</span> (at least two <code>0</code>s and at most seven
+<code>0</code>s between <code>1</code>s).</li>
+<li><strong>Detection Window (<span
+class="math inline">\(T_w\)</span>):</strong> <span
+class="math inline">\(T_w = \frac{1}{2} T = 0.50T\)</span>.</li>
+<li><strong>Minimum Transition Spacing (<span
+class="math inline">\(T_{\text{min}}\)</span>):</strong> <span
+class="math inline">\((1 + d) \times T_w = (2 + 1) \times \frac{1}{2}T =
+1.50T\)</span>.</li>
+<li><strong>Maximum Transition Spacing (<span
+class="math inline">\(T_{\text{max}}\)</span>):</strong> <span
+class="math inline">\((1 + k) \times T_w = (1 + 7) \times \frac{1}{2}T =
+4.00T\)</span>.</li>
+<li><strong>Density Ratio (<span
+class="math inline">\(DR\)</span>):</strong> <span
+class="math inline">\((1 + d) \times \text{Rate} = 3 \times \frac{1}{2}
+= 1.50\)</span>.</li>
+</ul>
+<h2 id="key-technical-comparisons">Key Technical Comparisons</h2>
+<h3 id="1-recording-density">1. Recording Density</h3>
+<p>RLL (2,7) provides a density ratio of 1.50, representing a 50%
+capacity improvement over standard Non-Return-to-Zero (NRZ) recording
+and an advantage over RLL (1,7)'s 1.33 ratio. Because <span
+class="math inline">\(T_{\text{min}}\)</span> is <span
+class="math inline">\(1.50T\)</span> in RLL (2,7) versus <span
+class="math inline">\(1.33T\)</span> in RLL (1,7), magnetic transitions
+can be physically placed closer together on the disk surface for the
+same degree of pulse crowding.</p>
+<h3 id="2-detection-window-and-jitter-margin">2. Detection Window and
+Jitter Margin</h3>
+<p>The detection window (<span class="math inline">\(T_w\)</span>)
+defines the timing margin the read channel has to resolve a
+transition.</p>
+<ul>
+<li>RLL (1,7) has a window of <strong><span
+class="math inline">\(0.67T\)</span></strong> (33% larger than RLL
+2,7).</li>
+<li>RLL (2,7) has a window of <strong><span
+class="math inline">\(0.50T\)</span></strong>.</li>
+</ul>
+<p>Because RLL (1,7) has a broader detection window, it is less
+vulnerable to phase jitter, peak shift, and noise, allowing disk
+controllers to read data accurately at higher channel frequencies.</p>
+<h3 id="3-maximum-to-minimum-transition-ratio-t_textmax--t_textmin">3.
+Maximum-to-Minimum Transition Ratio (<span
+class="math inline">\(T_{\text{max}} / T_{\text{min}}\)</span>)</h3>
+<ul>
+<li><strong>RLL (1,7):</strong> <span
+class="math inline">\(\frac{5.33T}{1.33T} = 4.0\)</span></li>
+<li><strong>RLL (2,7):</strong> <span
+class="math inline">\(\frac{4.00T}{1.50T} \approx 2.67\)</span></li>
+</ul>
+<p>A smaller ratio represents a narrower operational frequency range for
+the analog read/write circuits. RLL (2,7) has a tighter ratio, making
+automatic gain control (AGC) and equalizer design simpler in purely
+analog peak-detection channels.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>RLL (2,7) was heavily used in early high-capacity hard drives because
+its <span class="math inline">\(1.50\)</span> density ratio maximized
+capacity using simpler peak-detection read heads. As drive technology
+evolved toward Partial-Response Maximum-Likelihood (PRML) channels, RLL
+(1,7) became the preferred standard because its larger detection window
+(<span class="math inline">\(0.67T\)</span>) and higher code rate (<span
+class="math inline">\(2/3\)</span>) provided better noise tolerance and
+higher overall throughput at elevated recording frequencies.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

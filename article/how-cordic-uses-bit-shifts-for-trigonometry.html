@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How CORDIC Uses Bit Shifts for Trigonometry - binary</title>
+    <meta name="description" content="The CORDIC (Coordinate Rotation Digital Computer) algorithm is a hardware-efficient method for calculating trigonometric, hyperbolic, and other mathematical functions using only basic additions, subtractions, and binary bit shifts. Instead of relying on">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-cordic-uses-bit-shifts-for-trigonometry">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How CORDIC Uses Bit Shifts for Trigonometry - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-cordic-uses-bit-shifts-for-trigonometry" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The CORDIC (Coordinate Rotation Digital Computer) algorithm is a hardware-efficient method for calculating trigonometric, hyperbolic, and other mathematical functions using only basic additions, subtractions, and binary bit shifts. Instead of relying on" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-cordic-uses-bit-shifts-for-trigonometry">How CORDIC Uses Bit
+Shifts for Trigonometry</h1>
+<p>The CORDIC (Coordinate Rotation Digital Computer) algorithm is a
+hardware-efficient method for calculating trigonometric, hyperbolic, and
+other mathematical functions using only basic additions, subtractions,
+and binary bit shifts. Instead of relying on computationally expensive
+hardware multipliers or massive lookup tables, CORDIC breaks down
+arbitrary angle rotations into a sequence of smaller, predefined
+micro-rotations. This article explains the underlying mathematics of
+CORDIC, how it converts complex matrix multiplication into simple bit
+shifts, and how it accurately derives sine and cosine values in binary
+systems.</p>
+<hr />
+<h3 id="the-fundamental-rotation-problem">The Fundamental Rotation
+Problem</h3>
+<p>Calculating trigonometric functions like <span
+class="math inline">\(\sin(\theta)\)</span> and <span
+class="math inline">\(\cos(\theta)\)</span> can be modeled as rotating a
+two-dimensional unit vector <span class="math inline">\((1, 0)\)</span>
+around the origin by an angle <span
+class="math inline">\(\theta\)</span>. The resulting coordinates <span
+class="math inline">\((x&#39;, y&#39;)\)</span> represent:</p>
+<p><span class="math display">\[x&#39; = \cos(\theta)\]</span> <span
+class="math display">\[y&#39; = \sin(\theta)\]</span></p>
+<p>Standard 2D rotation of a vector <span class="math inline">\((x,
+y)\)</span> by an angle <span class="math inline">\(\alpha\)</span> is
+governed by the rotation matrix:</p>
+<p><span class="math display">\[x&#39; = x \cos(\alpha) - y
+\sin(\alpha)\]</span> <span class="math display">\[y&#39; = y
+\cos(\alpha) + x \sin(\alpha)\]</span></p>
+<p>Factoring out <span class="math inline">\(\cos(\alpha)\)</span>
+transforms these equations into:</p>
+<p><span class="math display">\[x&#39; = \cos(\alpha) [x - y
+\tan(\alpha)]\]</span> <span class="math display">\[y&#39; =
+\cos(\alpha) [y + x \tan(\alpha)]\]</span></p>
+<p>This formulation requires multiplying by both <span
+class="math inline">\(\cos(\alpha)\)</span> and <span
+class="math inline">\(\tan(\alpha)\)</span>, which is resource-intensive
+on simple microcontrollers, FPGAs, and ASICs lacking dedicated
+floating-point units.</p>
+<hr />
+<h3 id="the-cordic-simplification-using-powers-of-two">The CORDIC
+Simplification: Using Powers of Two</h3>
+<p>CORDIC simplifies rotation arithmetic through two core design
+choices:</p>
+<ol type="1">
+<li><p><strong>Decomposing the Target Angle:</strong> Any arbitrary
+target angle <span class="math inline">\(\theta\)</span> is reached by
+performing a series of successive rotations by decreasing, fixed angles
+<span class="math inline">\(\alpha_i\)</span>, such that: <span
+class="math display">\[\theta \approx \sum_{i=0}^{N-1} d_i \alpha_i
+\quad \text{where } d_i \in \{-1, +1\}\]</span> Here, <span
+class="math inline">\(d_i\)</span> determines the direction of the
+rotation (clockwise or counterclockwise).</p></li>
+<li><p><strong>Constraining Tangents to Powers of Two:</strong> The
+angle steps <span class="math inline">\(\alpha_i\)</span> are
+deliberately chosen so that their tangents equal negative powers of two:
+<span class="math display">\[\tan(\alpha_i) = 2^{-i}\]</span> This
+yields predefined angles:</p>
+<ul>
+<li><span class="math inline">\(\alpha_0 = \arctan(2^0) =
+45.0^\circ\)</span></li>
+<li><span class="math inline">\(\alpha_1 = \arctan(2^{-1}) \approx
+26.565^\circ\)</span></li>
+<li><span class="math inline">\(\alpha_2 = \arctan(2^{-2}) \approx
+14.036^\circ\)</span></li>
+<li><span class="math inline">\(\alpha_3 = \arctan(2^{-3}) \approx
+7.125^\circ\)</span></li>
+</ul></li>
+</ol>
+<hr />
+<h3 id="replacing-multiplication-with-binary-bit-shifts">Replacing
+Multiplication with Binary Bit Shifts</h3>
+<p>Because <span class="math inline">\(\tan(\alpha_i) = 2^{-i}\)</span>,
+multiplying a binary number by <span
+class="math inline">\(\tan(\alpha_i)\)</span> is mathematically
+equivalent to performing an arithmetic right shift by <span
+class="math inline">\(i\)</span> bit positions:</p>
+<p><span class="math display">\[x \cdot \tan(\alpha_i) = x \cdot 2^{-i}
+= x \gg i\]</span></p>
+<p>By temporarily ignoring the <span
+class="math inline">\(\cos(\alpha_i)\)</span> factor (pseudo-rotation),
+the iteration equations simplify entirely to additions, subtractions,
+and bit shifts:</p>
+<p><span class="math display">\[x_{i+1} = x_i - d_i (y_i \gg i)\]</span>
+<span class="math display">\[y_{i+1} = y_i + d_i (x_i \gg i)\]</span>
+<span class="math display">\[z_{i+1} = z_i - d_i \alpha_i\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(x_i, y_i\)</span> are the coordinates of
+the current vector.</li>
+<li><span class="math inline">\(z_i\)</span> is the residual angle
+accumulator tracking the remaining angle to rotate.</li>
+<li><span class="math inline">\(d_i = +1\)</span> if <span
+class="math inline">\(z_i \ge 0\)</span> (rotate counterclockwise), and
+<span class="math inline">\(d_i = -1\)</span> if <span
+class="math inline">\(z_i &lt; 0\)</span> (rotate clockwise).</li>
+<li><span class="math inline">\(\alpha_i = \arctan(2^{-i})\)</span> is a
+small precalculated constant retrieved from a minimal lookup table.</li>
+</ul>
+<hr />
+<h3 id="correcting-the-scale-factor-k">Correcting the Scale Factor
+(<span class="math inline">\(K\)</span>)</h3>
+<p>Each pseudo-rotation operation stretches the vector by a factor of
+<span class="math inline">\(\sqrt{1 + \tan^2(\alpha_i)} = \sqrt{1 +
+2^{-2i}}\)</span>. Over <span class="math inline">\(N\)</span>
+iterations, the cumulative gain <span class="math inline">\(K\)</span>
+approaches a constant value:</p>
+<p><span class="math display">\[K = \prod_{i=0}^{N-1} \sqrt{1 + 2^{-2i}}
+\approx 1.646760258\]</span></p>
+<p>Because the sequence of rotation angles is fixed, the total gain
+<span class="math inline">\(K\)</span> is known in advance and does not
+depend on the target angle <span class="math inline">\(\theta\)</span>.
+To obtain unscaled, accurate values of <span
+class="math inline">\(\cos(\theta)\)</span> and <span
+class="math inline">\(\sin(\theta)\)</span>, the initial coordinate
+<span class="math inline">\(x_0\)</span> is simply initialized to the
+reciprocal of <span class="math inline">\(K\)</span>:</p>
+<p><span class="math display">\[x_0 = \frac{1}{K} \approx
+0.607252935\]</span> <span class="math display">\[y_0 = 0\]</span> <span
+class="math display">\[z_0 = \theta\]</span></p>
+<hr />
+<h3 id="execution-walkthrough">Execution Walkthrough</h3>
+<p>To compute <span class="math inline">\(\sin(\theta)\)</span> and
+<span class="math inline">\(\cos(\theta)\)</span>:</p>
+<ol type="1">
+<li><strong>Initialization:</strong> Set <span class="math inline">\(x_0
+\approx 0.60725\)</span>, <span class="math inline">\(y_0 = 0\)</span>,
+and the accumulator <span class="math inline">\(z_0 =
+\theta\)</span>.</li>
+<li><strong>Iteration Loop:</strong> For <span class="math inline">\(i =
+0\)</span> to <span class="math inline">\(N-1\)</span>:
+<ul>
+<li>Evaluate the sign of <span class="math inline">\(z_i\)</span> to
+establish <span class="math inline">\(d_i \in \{-1, +1\}\)</span>.</li>
+<li>Compute <span class="math inline">\(x_{i+1} = x_i - d_i (y_i \gg
+i)\)</span>.</li>
+<li>Compute <span class="math inline">\(y_{i+1} = y_i + d_i (x_i \gg
+i)\)</span>.</li>
+<li>Update the remaining angle: <span class="math inline">\(z_{i+1} =
+z_i - d_i \alpha_i\)</span>.</li>
+</ul></li>
+<li><strong>Output:</strong> After <span
+class="math inline">\(N\)</span> iterations, <span
+class="math inline">\(z_N \approx 0\)</span>, <span
+class="math inline">\(x_N \approx \cos(\theta)\)</span>, and <span
+class="math inline">\(y_N \approx \sin(\theta)\)</span>.</li>
+</ol>
+<p>Each iteration yields roughly one additional bit of precision,
+allowing digital circuits to execute exact trigonometric calculations at
+high speeds with minimal gate counts.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

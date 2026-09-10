@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How SimHash Generates Locality-Sensitive Hashes - binary</title>
+    <meta name="description" content="SimHash is a locality-sensitive hashing (LSH) algorithm designed to detect near-duplicate items by mapping high-dimensional data into compact binary fingerprints. Unlike cryptographic hash functions where a tiny change in input causes an avalanche of bit">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-simhash-generates-locality-sensitive-hashes">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How SimHash Generates Locality-Sensitive Hashes - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-simhash-generates-locality-sensitive-hashes" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="SimHash is a locality-sensitive hashing (LSH) algorithm designed to detect near-duplicate items by mapping high-dimensional data into compact binary fingerprints. Unlike cryptographic hash functions where a tiny change in input causes an avalanche of bit" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-simhash-generates-locality-sensitive-hashes">How SimHash
+Generates Locality-Sensitive Hashes</h1>
+<p>SimHash is a locality-sensitive hashing (LSH) algorithm designed to
+detect near-duplicate items by mapping high-dimensional data into
+compact binary fingerprints. Unlike cryptographic hash functions where a
+tiny change in input causes an avalanche of bit changes, SimHash ensures
+that documents with high semantic similarity produce hashes with very
+low Hamming distances. This article explains the step-by-step
+mathematical process of how SimHash constructs these binary fingerprints
+and preserves semantic closeness in the binary number system.</p>
+<h3 id="1-feature-extraction-and-weighting">1. Feature Extraction and
+Weighting</h3>
+<p>The process begins by tokenizing the input document into distinct
+features, such as words, n-grams, or shingles. Each feature is assigned
+a weight based on its importance, commonly determined by term frequency,
+TF-IDF, or custom domain weights. Highly significant words receive
+larger weights, ensuring they have a stronger influence on the final
+hash.</p>
+<h3 id="2-individual-feature-hashing">2. Individual Feature Hashing</h3>
+<p>Each extracted feature is hashed independently using a standard,
+uniform hashing function (such as MD5 or MurmurHash) to produce a
+fixed-length binary string of <span class="math inline">\(b\)</span>
+bits (typically 64 or 128 bits). At this stage, the individual feature
+hashes are uniformly distributed and non-locality-sensitive.</p>
+<h3 id="3-vector-accumulation">3. Vector Accumulation</h3>
+<p>To combine all feature hashes into a single representation, an
+accumulator vector <span class="math inline">\(V\)</span> of length
+<span class="math inline">\(b\)</span> is initialized with all zeros.
+For each feature:</p>
+<ul>
+<li>The algorithm inspects every bit position <span
+class="math inline">\(i\)</span> (from 1 to <span
+class="math inline">\(b\)</span>) of the feature's standard hash.</li>
+<li>If the <span class="math inline">\(i\)</span>-th bit is
+<strong>1</strong>, the feature's weight <span
+class="math inline">\(w\)</span> is added to <span
+class="math inline">\(V[i]\)</span>.</li>
+<li>If the <span class="math inline">\(i\)</span>-th bit is
+<strong>0</strong>, the feature's weight <span
+class="math inline">\(w\)</span> is subtracted from <span
+class="math inline">\(V[i]\)</span>.</li>
+</ul>
+<p>This weighted summation aggregates the directional contributions of
+every token across all <span class="math inline">\(b\)</span>
+dimensions.</p>
+<h3 id="4-quantization-to-a-binary-fingerprint">4. Quantization to a
+Binary Fingerprint</h3>
+<p>Once all features are processed, the real-valued vector <span
+class="math inline">\(V\)</span> is converted back into a <span
+class="math inline">\(b\)</span>-bit binary fingerprint:</p>
+<ul>
+<li>If <span class="math inline">\(V[i] &gt; 0\)</span>, the <span
+class="math inline">\(i\)</span>-th bit of the final SimHash is set to
+<strong>1</strong>.</li>
+<li>If <span class="math inline">\(V[i] \le 0\)</span>, the <span
+class="math inline">\(i\)</span>-th bit of the final SimHash is set to
+<strong>0</strong>.</li>
+</ul>
+<h3 id="capturing-semantic-differences-via-hamming-distance">Capturing
+Semantic Differences via Hamming Distance</h3>
+<p>The geometry behind SimHash relies on the projection of feature
+vectors across random hyperplanes. When two documents share the majority
+of their text, their accumulator vectors accumulate weights in the same
+direction at most bit positions. Consequently, the signs of <span
+class="math inline">\(V[i]\)</span> across both documents remain
+identical for the vast majority of the <span
+class="math inline">\(b\)</span> dimensions.</p>
+<p>When converted to binary, this sign alignment means the two documents
+share nearly identical bit sequences. The difference between two
+documents is measured by their <strong>Hamming distance</strong>—the
+count of differing bit positions (computed via an XOR operation followed
+by a population count). Minor edits, word substitutions, or small
+deletions only shift the sums slightly, causing few, if any, bit flips.
+As a result, small semantic differences directly correspond to small
+Hamming distances, enabling rapid, large-scale similarity lookups.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

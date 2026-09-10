@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Multiplication vs Decimal: Why Binary Is Simpler - binary</title>
+    <meta name="description" content="Binary multiplication is significantly simpler than decimal multiplication because the binary system relies on only two digits: 0 and 1. This article explores how this base-2 foundation reduces single-digit multiplication to basic logical decisions, comp">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/binary-multiplication-vs-decimal-why-binary-is-simpler">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Binary Multiplication vs Decimal: Why Binary Is Simpler - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/binary-multiplication-vs-decimal-why-binary-is-simpler" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Binary multiplication is significantly simpler than decimal multiplication because the binary system relies on only two digits: 0 and 1. This article explores how this base-2 foundation reduces single-digit multiplication to basic logical decisions, comp" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="binary-multiplication-vs-decimal-why-binary-is-simpler">Binary
+Multiplication vs Decimal: Why Binary Is Simpler</h1>
+<p>Binary multiplication is significantly simpler than decimal
+multiplication because the binary system relies on only two digits: 0
+and 1. This article explores how this base-2 foundation reduces
+single-digit multiplication to basic logical decisions, completely
+eliminates the need for multiplication tables, and transforms the entire
+mathematical process into a series of simple shift and add
+operations.</p>
+<h2 id="the-simplicity-of-single-digit-operations">The Simplicity of
+Single-Digit Operations</h2>
+<p>In the decimal (base-10) system, single-digit multiplication requires
+memorizing a table of 100 possible combinations (from <span
+class="math inline">\(0 \times 0\)</span> up to <span
+class="math inline">\(9 \times 9\)</span>). Multiplying two single
+decimal digits often yields a multi-digit result (such as <span
+class="math inline">\(7 \times 8 = 56\)</span>), which introduces
+carries during intermediate steps.</p>
+<p>In contrast, the binary (base-2) system has only four possible
+single-digit multiplication rules:</p>
+<ul>
+<li><span class="math inline">\(0 \times 0 = 0\)</span></li>
+<li><span class="math inline">\(0 \times 1 = 0\)</span></li>
+<li><span class="math inline">\(1 \times 0 = 0\)</span></li>
+<li><span class="math inline">\(1 \times 1 = 1\)</span></li>
+</ul>
+<p>Because the product of any two binary digits never exceeds 1,
+single-digit binary multiplication never generates an immediate carry.
+The operation is identical to the standard boolean <strong>AND</strong>
+logic gate: the result is 1 if and only if both digits are 1.</p>
+<h2 id="elimination-of-intermediate-scaling">Elimination of Intermediate
+Scaling</h2>
+<p>When multiplying multi-digit numbers in the decimal system, each
+digit of the multiplier scales the entire multiplicand (for example,
+multiplying 435 by 7 requires calculating <span
+class="math inline">\(435 \times 7 = 3045\)</span>). This requires
+multiple intermediate multiplications and carry additions.</p>
+<p>In binary multiplication, no scaling calculation is necessary. When
+evaluating each digit of the multiplier:</p>
+<ul>
+<li>If the multiplier digit is <strong>1</strong>, the partial product
+is simply an exact copy of the multiplicand.</li>
+<li>If the multiplier digit is <strong>0</strong>, the partial product
+is simply <strong>0</strong>.</li>
+</ul>
+<h2 id="the-shift-and-add-method">The "Shift and Add" Method</h2>
+<p>Because binary single-digit operations produce only the number itself
+or zero, long multiplication becomes a purely mechanical process of
+shifting and adding:</p>
+<ol type="1">
+<li><strong>Inspect:</strong> Look at the current bit of the
+multiplier.</li>
+<li><strong>Copy or Clear:</strong> Write down the multiplicand if the
+bit is 1, or write zeros if the bit is 0.</li>
+<li><strong>Shift:</strong> Shift the multiplicand one position to the
+left for each subsequent bit.</li>
+<li><strong>Sum:</strong> Add all the shifted partial products together
+using binary addition.</li>
+</ol>
+<h3 id="example-comparison">Example Comparison</h3>
+<p>To multiply <span class="math inline">\(13 \times 5 =
+65\)</span>:</p>
+<ul>
+<li><strong>Binary Representation:</strong> <span
+class="math inline">\(1101_2 \times 101_2\)</span></li>
+<li><strong>Step 1 (first bit is 1):</strong> <span
+class="math inline">\(1101\)</span> (copy)</li>
+<li><strong>Step 2 (second bit is 0):</strong> <span
+class="math inline">\(00000\)</span> (shift and zero)</li>
+<li><strong>Step 3 (third bit is 1):</strong> <span
+class="math inline">\(110100\)</span> (shift twice and copy)</li>
+<li><strong>Addition:</strong> <span class="math inline">\(1101 + 110100
+= 1000001_2\)</span> (which equals <span
+class="math inline">\(65_{10}\)</span>)</li>
+</ul>
+<h2 id="computational-efficiency">Computational Efficiency</h2>
+<p>This structural simplicity is why digital computers use binary
+arithmetic. Hardware multipliers do not need complex arithmetic lookup
+tables. Instead, they use simple AND gates to generate partial products
+and binary adders to accumulate the results, making binary
+multiplication exceptionally fast and resource-efficient to implement in
+silicon.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

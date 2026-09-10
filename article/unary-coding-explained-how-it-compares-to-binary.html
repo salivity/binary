@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unary Coding Explained: How It Compares to Binary - binary</title>
+    <meta name="description" content="This article provides a concise guide to unary coding, explaining its fundamental mechanics and mathematical structure. It breaks down how numbers are encoded using this tally-based method and provides a direct storage efficiency comparison against the s">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/unary-coding-explained-how-it-compares-to-binary">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Unary Coding Explained: How It Compares to Binary - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/unary-coding-explained-how-it-compares-to-binary" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article provides a concise guide to unary coding, explaining its fundamental mechanics and mathematical structure. It breaks down how numbers are encoded using this tally-based method and provides a direct storage efficiency comparison against the s" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="unary-coding-explained-how-it-compares-to-binary">Unary Coding
+Explained: How It Compares to Binary</h1>
+<p>This article provides a concise guide to unary coding, explaining its
+fundamental mechanics and mathematical structure. It breaks down how
+numbers are encoded using this tally-based method and provides a direct
+storage efficiency comparison against the standard positional binary
+number system, highlighting where unary fails for large data and where
+it excels in specialized compression algorithms.</p>
+<h2 id="how-unary-coding-works">How Unary Coding Works</h2>
+<p>Unary coding is a base-1 numeral system and a prefix code that
+represents a non-negative integer <span class="math inline">\(n\)</span>
+by a sequence of <span class="math inline">\(n\)</span> identical bits
+terminated by a single opposite bit. It functions like a digital tally
+mark system.</p>
+<p>In standard implementation:</p>
+<ul>
+<li>An integer <span class="math inline">\(n\)</span> is written as
+<span class="math inline">\(n\)</span> ones followed by a single zero
+(or alternatively, <span class="math inline">\(n\)</span> zeros followed
+by a single one).</li>
+<li>The terminating bit acts as a delimiter, making unary code
+self-delimiting. A decoder knows a number has ended the moment it reads
+the terminating bit, eliminating the need for fixed bit-widths or
+explicit separators.</li>
+</ul>
+<h3 id="examples-of-unary-encoding">Examples of Unary Encoding</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Integer (<span
+class="math inline">\(n\)</span>)</th>
+<th style="text-align: left;">Unary Code (Ones terminated by 0)</th>
+<th style="text-align: left;">Total Bits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;"><code>0</code></td>
+<td style="text-align: left;">1 bit</td>
+</tr>
+<tr>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;"><code>10</code></td>
+<td style="text-align: left;">2 bits</td>
+</tr>
+<tr>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;"><code>110</code></td>
+<td style="text-align: left;">3 bits</td>
+</tr>
+<tr>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;"><code>1110</code></td>
+<td style="text-align: left;">4 bits</td>
+</tr>
+<tr>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;"><code>11110</code></td>
+<td style="text-align: left;">5 bits</td>
+</tr>
+<tr>
+<td style="text-align: left;">10</td>
+<td style="text-align: left;"><code>11111111110</code></td>
+<td style="text-align: left;">11 bits</td>
+</tr>
+</tbody>
+</table>
+<p>Mathematically, encoding any integer <span class="math inline">\(n
+\ge 0\)</span> in unary requires exactly <strong><span
+class="math inline">\(n + 1\)</span> bits</strong>.</p>
+<hr />
+<h2 id="storage-efficiency-unary-vs-standard-binary">Storage Efficiency:
+Unary vs. Standard Binary</h2>
+<p>The standard binary number system is a base-2 positional notation
+system. The efficiency disparity between unary and binary comes down to
+<strong>linear vs. logarithmic growth</strong>.</p>
+<h3 id="bit-length-comparison">Bit-Length Comparison</h3>
+<ul>
+<li><strong>Standard Binary:</strong> The number of bits required to
+store an integer <span class="math inline">\(n &gt; 0\)</span> is <span
+class="math inline">\(\lfloor \log_2(n) \rfloor + 1\)</span>. Its space
+complexity scales <strong>logarithmically</strong>: <span
+class="math inline">\(O(\log n)\)</span>.</li>
+<li><strong>Unary Coding:</strong> The number of bits required to store
+an integer <span class="math inline">\(n\)</span> is <span
+class="math inline">\(n + 1\)</span>. Its space complexity scales
+<strong>linearly</strong>: <span
+class="math inline">\(O(n)\)</span>.</li>
+</ul>
+<h3 id="scalability-comparison">Scalability Comparison</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Integer (<span
+class="math inline">\(n\)</span>)</th>
+<th style="text-align: left;">Standard Binary</th>
+<th style="text-align: left;">Binary Bit Count</th>
+<th style="text-align: left;">Unary Code Bit Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>0</strong></td>
+<td style="text-align: left;"><code>0</code></td>
+<td style="text-align: left;">1 bit</td>
+<td style="text-align: left;">1 bit</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>1</strong></td>
+<td style="text-align: left;"><code>1</code></td>
+<td style="text-align: left;">1 bit</td>
+<td style="text-align: left;">2 bits</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>7</strong></td>
+<td style="text-align: left;"><code>111</code></td>
+<td style="text-align: left;">3 bits</td>
+<td style="text-align: left;">8 bits</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>64</strong></td>
+<td style="text-align: left;"><code>1000000</code></td>
+<td style="text-align: left;">7 bits</td>
+<td style="text-align: left;">65 bits</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>1,000</strong></td>
+<td style="text-align: left;"><code>1111101000</code></td>
+<td style="text-align: left;">10 bits</td>
+<td style="text-align: left;">1,001 bits</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>1,000,000</strong></td>
+<td style="text-align: left;"><code>11110100001001000000</code></td>
+<td style="text-align: left;">20 bits</td>
+<td style="text-align: left;">1,000,001 bits</td>
+</tr>
+</tbody>
+</table>
+<p>For small values (<span class="math inline">\(0\)</span> and <span
+class="math inline">\(1\)</span>), unary coding is competitive or
+equivalent in size to binary. However, as values grow, unary coding
+quickly becomes exponentially worse in terms of storage efficiency.
+Storing a value of one million in binary takes less than 3 bytes of
+data, whereas in unary it takes approximately 122 kilobytes.</p>
+<hr />
+<h2 id="where-unary-coding-is-used">Where Unary Coding Is Used</h2>
+<p>Despite its extreme inefficiency for general data storage, unary
+coding is widely used in data compression when combined with
+entropy-based models.</p>
+<ol type="1">
+<li><strong>Geometric Distributions:</strong> Unary coding is
+mathematically optimal (equivalent to Huffman coding) when the
+probability of encountering an integer <span
+class="math inline">\(n\)</span> follows a geometric distribution of
+<span class="math inline">\(P(n) = 2^{-(n+1)}\)</span>. If smaller
+numbers occur overwhelmingly more often than large numbers, unary coding
+produces minimal overhead.</li>
+<li><strong>Hybrid Entropy Coders:</strong> Unary coding is a core
+building block in variable-length codes such as:
+<ul>
+<li><strong>Golomb Coding:</strong> Divides numbers into a quotient
+(encoded in unary) and a remainder (encoded in truncated binary).</li>
+<li><strong>Rice Coding:</strong> A power-of-two subset of Golomb coding
+used in lossless audio formats like FLAC.</li>
+<li><strong>Exponential-Golomb Coding:</strong> Used extensively in
+modern video codecs, including H.264/MPEG-4 AVC and H.265/HEVC, to
+encode syntax elements and motion vectors.</li>
+</ul></li>
+</ol></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

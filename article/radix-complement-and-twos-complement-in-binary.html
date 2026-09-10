@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radix Complement and Twos Complement in Binary - binary</title>
+    <meta name="description" content="This article explains how the mathematical framework of the radix complement generalizes to establish the two's complement system in digital computing. By defining complement arithmetic in an arbitrary base $b$, we demonstrate how setting the base to 2 n">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/radix-complement-and-twos-complement-in-binary">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Radix Complement and Twos Complement in Binary - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/radix-complement-and-twos-complement-in-binary" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explains how the mathematical framework of the radix complement generalizes to establish the two's complement system in digital computing. By defining complement arithmetic in an arbitrary base $b$, we demonstrate how setting the base to 2 n" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="radix-complement-and-twos-complement-in-binary">Radix Complement
+and Twos Complement in Binary</h1>
+<p>This article explains how the mathematical framework of the radix
+complement generalizes to establish the two's complement system in
+digital computing. By defining complement arithmetic in an arbitrary
+base <span class="math inline">\(b\)</span>, we demonstrate how setting
+the base to 2 naturally yields the standard two's complement
+representation, enabling seamless arithmetic operations and negative
+number representation in binary hardware.</p>
+<h2 id="the-mathematical-definition-of-radix-complement">The
+Mathematical Definition of Radix Complement</h2>
+<p>In positional numeral systems, the radix complement provides a method
+to represent negative numbers and perform subtraction using only
+addition circuitry. For an <span class="math inline">\(n\)</span>-digit
+number <span class="math inline">\(N\)</span> in base (radix) <span
+class="math inline">\(b\)</span>, the radix complement is mathematically
+defined as:</p>
+<p><span class="math display">\[\text{Radix Complement}(N) = b^n -
+N\]</span></p>
+<p>This operation relies on modular arithmetic. In an <span
+class="math inline">\(n\)</span>-digit fixed-width register, values wrap
+around at modulo <span class="math inline">\(b^n\)</span>. Subtracting a
+number <span class="math inline">\(N\)</span> from another number <span
+class="math inline">\(M\)</span> can be rewritten as adding the
+complement of <span class="math inline">\(N\)</span>:</p>
+<p><span class="math display">\[M - N \equiv M + (b^n - N)
+\pmod{b^n}\]</span></p>
+<p>When the sum exceeds <span class="math inline">\(b^n - 1\)</span>,
+the carry-out value of <span class="math inline">\(b^n\)</span> is
+naturally discarded by the fixed-width register, leaving the exact
+result of <span class="math inline">\(M - N\)</span>.</p>
+<h2 id="specializing-to-binary-deriving-twos-complement">Specializing to
+Binary: Deriving Two's Complement</h2>
+<p>Two's complement is the specific instance of the radix complement
+where the base is binary (<span class="math inline">\(b = 2\)</span>).
+For an <span class="math inline">\(n\)</span>-bit binary integer <span
+class="math inline">\(N\)</span>, the radix complement formula
+becomes:</p>
+<p><span class="math display">\[\text{Two&#39;s Complement}(N) = 2^n -
+N\]</span></p>
+<p>In an 8-bit system (<span class="math inline">\(n = 8\)</span>), the
+base power is <span class="math inline">\(2^8 = 256\)</span>. The two's
+complement of a number <span class="math inline">\(N\)</span> is
+therefore <span class="math inline">\(256 - N\)</span>. If <span
+class="math inline">\(N = 6\)</span> (<code>00000110</code> in binary),
+its two's complement is <span class="math inline">\(256 - 6 =
+250\)</span> (<code>11111010</code> in binary), which represents <span
+class="math inline">\(-6\)</span> in signed 8-bit arithmetic.</p>
+<h2 id="relationship-with-diminished-radix-complement">Relationship with
+Diminished Radix Complement</h2>
+<p>Calculating <span class="math inline">\(b^n - N\)</span> directly
+requires borrowing across multiple digits. To simplify this, the radix
+complement can be rewritten using the diminished radix complement:</p>
+<p><span class="math display">\[b^n - N = ((b^n - 1) - N) +
+1\]</span></p>
+<p>In any base, <span class="math inline">\((b^n - 1)\)</span> consists
+of <span class="math inline">\(n\)</span> repetitions of the largest
+digit in that base (<span class="math inline">\(b - 1\)</span>). In base
+2:</p>
+<ol type="1">
+<li><span class="math inline">\((2^n - 1)\)</span> produces a sequence
+of <span class="math inline">\(n\)</span> ones (e.g.,
+<code>11111111</code> for <span
+class="math inline">\(n=8\)</span>).</li>
+<li>Subtracting any binary number <span class="math inline">\(N\)</span>
+from all ones reverses every bit (<span class="math inline">\(1 - 0 =
+1\)</span> and <span class="math inline">\(1 - 1 = 0\)</span>). This
+step is the diminished radix complement, commonly known as the
+<strong>one's complement</strong> or bitwise NOT (<span
+class="math inline">\(\sim N\)</span>).</li>
+<li>Adding <span class="math inline">\(1\)</span> to the result
+completes the radix complement calculation:</li>
+</ol>
+<p><span class="math display">\[\text{Two&#39;s Complement}(N) = (\sim
+N) + 1\]</span></p>
+<p>This formulation eliminates the need for multi-digit subtraction,
+allowing hardware to compute the radix complement by applying a simple
+bitwise NOT gate followed by an increment by one.</p>
+<h2 id="architectural-advantages-in-binary-systems">Architectural
+Advantages in Binary Systems</h2>
+<p>Generalizing the radix complement to base 2 provides distinct
+operational advantages for digital systems:</p>
+<ul>
+<li><strong>Unified Arithmetic:</strong> Addition and subtraction use
+the same physical adder circuits, as negation is handled by
+complementation.</li>
+<li><strong>Single Zero Representation:</strong> Unlike one's complement
+(which has both <span class="math inline">\(+0\)</span> and <span
+class="math inline">\(-0\)</span>), two's complement produces a single
+unique representation for zero (<span class="math inline">\(2^n
+\pmod{2^n} = 0\)</span>).</li>
+<li><strong>Sign Identification:</strong> The most significant bit (MSB)
+automatically acts as the sign bit, where <code>0</code> denotes
+positive values and <code>1</code> denotes negative values.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

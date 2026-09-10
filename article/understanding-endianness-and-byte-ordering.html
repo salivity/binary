@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Endianness and Byte Ordering - binary</title>
+    <meta name="description" content="Endianness refers to the sequence in which bytes of a multi-byte digital word are stored in computer memory or transmitted over a network. This article covers the fundamental concept of endianness, explains the difference between Big-Endian and Little-En">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/understanding-endianness-and-byte-ordering">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Understanding Endianness and Byte Ordering - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/understanding-endianness-and-byte-ordering" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Endianness refers to the sequence in which bytes of a multi-byte digital word are stored in computer memory or transmitted over a network. This article covers the fundamental concept of endianness, explains the difference between Big-Endian and Little-En" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="understanding-endianness-and-byte-ordering">Understanding
+Endianness and Byte Ordering</h1>
+<p>Endianness refers to the sequence in which bytes of a multi-byte
+digital word are stored in computer memory or transmitted over a
+network. This article covers the fundamental concept of endianness,
+explains the difference between Big-Endian and Little-Endian formats,
+provides concrete examples of how binary data is organized at specific
+memory addresses, and highlights why byte ordering matters for software
+development, data interchange, and hardware architecture.</p>
+<h2 id="what-is-endianness">What Is Endianness?</h2>
+<p>In computing, data is fundamentally organized into bytes (typically 8
+bits each). While a single byte can represent values from 0 to 255 (or
+-128 to 127), modern architectures regularly work with larger data types
+such as 16-bit, 32-bit, or 64-bit integers and floating-point numbers.
+These multi-byte values must be stored across multiple contiguous memory
+addresses.</p>
+<p>Endianness defines the rule used by a system architecture to arrange
+the individual bytes of a multi-byte word in memory—specifically,
+whether the most significant byte or the least significant byte is
+stored at the lowest memory address.</p>
+<h2 id="the-most-and-least-significant-bytes">The Most and Least
+Significant Bytes</h2>
+<p>To understand endianness, a multi-byte value must be broken into its
+component bytes:</p>
+<ul>
+<li><strong>Most Significant Byte (MSB):</strong> The byte containing
+the highest-order bits, carrying the greatest numerical weight.</li>
+<li><strong>Least Significant Byte (LSB):</strong> The byte containing
+the lowest-order bits, carrying the smallest numerical weight.</li>
+</ul>
+<p>For example, consider the 32-bit hexadecimal value
+<code>0x12345678</code>:</p>
+<ul>
+<li><code>0x12</code> is the Most Significant Byte (MSB).</li>
+<li><code>0x78</code> is the Least Significant Byte (LSB).</li>
+<li><code>0x34</code> and <code>0x56</code> are the intermediate
+bytes.</li>
+</ul>
+<h2 id="big-endian-vs-little-endian">Big-Endian vs. Little-Endian</h2>
+<p>Hardware architectures handle the storage of these bytes using one of
+two primary approaches:</p>
+<h3 id="1-big-endian">1. Big-Endian</h3>
+<p>In a Big-Endian system, the Most Significant Byte (MSB) is stored at
+the lowest memory address (first in memory), followed by the remaining
+bytes in decreasing order of significance. This reflects the standard
+left-to-right reading order used in Western arithmetic.</p>
+<p>Using <code>0x12345678</code> across memory addresses
+<code>0x00</code> through <code>0x03</code>:</p>
+<ul>
+<li><code>0x00</code>: <code>0x12</code> (MSB)</li>
+<li><code>0x01</code>: <code>0x34</code></li>
+<li><code>0x02</code>: <code>0x56</code></li>
+<li><code>0x03</code>: <code>0x78</code> (LSB)</li>
+</ul>
+<p>Historically, Big-Endian format was widely used by Motorola 68000
+series, SPARC processors, and mainframe architectures.</p>
+<h3 id="2-little-endian">2. Little-Endian</h3>
+<p>In a Little-Endian system, the Least Significant Byte (LSB) is stored
+at the lowest memory address. The bytes appear in reverse order compared
+to how numbers are traditionally written.</p>
+<p>Using the same value <code>0x12345678</code> across memory addresses
+<code>0x00</code> through <code>0x03</code>:</p>
+<ul>
+<li><code>0x00</code>: <code>0x78</code> (LSB)</li>
+<li><code>0x01</code>: <code>0x56</code></li>
+<li><code>0x02</code>: <code>0x34</code></li>
+<li><code>0x03</code>: <code>0x12</code> (MSB)</li>
+</ul>
+<p>Little-Endian is the dominant format today, utilized by x86, x86-64,
+and the majority of modern ARM processor configurations.</p>
+<h2 id="how-endianness-affects-binary-systems">How Endianness Affects
+Binary Systems</h2>
+<p>Endianness only impacts multi-byte units. It does not alter the order
+of bits inside an individual byte, nor does it affect single-byte data
+types like ASCII characters. However, it significantly impacts
+multi-byte data processing:</p>
+<h3 id="1-binary-data-exchange">1. Binary Data Exchange</h3>
+<p>If a Little-Endian machine writes a 32-bit integer to a file and a
+Big-Endian machine reads it without conversion, the receiving machine
+interprets the bytes backward. A value of <code>1</code>
+(<code>0x00000001</code>) written on a Little-Endian system
+(<code>01 00 00 00</code>) will be read on a Big-Endian system as
+<code>16,777,216</code> (<code>0x01000000</code>).</p>
+<h3 id="2-network-communications">2. Network Communications</h3>
+<p>Network protocols standardise on Big-Endian representation, commonly
+referred to as <strong>Network Byte Order</strong>. When a Little-Endian
+system transmits data over the Internet (such as IP addresses or TCP
+port numbers), it must convert values from <strong>Host Byte
+Order</strong> to Network Byte Order before transmission, and reverse
+the process upon reception.</p>
+<h3 id="3-type-casting-and-pointer-arithmetic">3. Type Casting and
+Pointer Arithmetic</h3>
+<p>In low-level programming languages like C and C++, casting pointers
+between types of different sizes (e.g., casting a 32-bit integer pointer
+to an 8-bit character pointer) yields different results depending on the
+target architecture's endianness. On Little-Endian machines,
+dereferencing the pointer reads the least significant byte first,
+whereas on Big-Endian systems, it reads the most significant byte.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

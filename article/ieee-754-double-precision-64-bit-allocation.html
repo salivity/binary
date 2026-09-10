@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IEEE 754 Double-Precision 64-Bit Allocation - binary</title>
+    <meta name="description" content="The IEEE 754 standard for double-precision floating-point arithmetic uses a fixed 64-bit binary format to represent real numbers across a vast dynamic range. These 64 bits are segmented into three distinct components: 1 bit for the sign, 11 bits for the">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/ieee-754-double-precision-64-bit-allocation">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="IEEE 754 Double-Precision 64-Bit Allocation - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/ieee-754-double-precision-64-bit-allocation" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The IEEE 754 standard for double-precision floating-point arithmetic uses a fixed 64-bit binary format to represent real numbers across a vast dynamic range. These 64 bits are segmented into three distinct components: 1 bit for the sign, 11 bits for the" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="ieee-754-double-precision-64-bit-allocation">IEEE 754
+Double-Precision 64-Bit Allocation</h1>
+<p>The IEEE 754 standard for double-precision floating-point arithmetic
+uses a fixed 64-bit binary format to represent real numbers across a
+vast dynamic range. These 64 bits are segmented into three distinct
+components: 1 bit for the sign, 11 bits for the exponent, and 52 bits
+for the fraction (commonly referred to as the mantissa or significand).
+Together, these fields determine the sign, magnitude, and precision of
+the numerical value.</p>
+<h3 id="1-the-sign-bit-bit-63">1. The Sign Bit (Bit 63)</h3>
+<ul>
+<li><strong>Size:</strong> 1 bit</li>
+<li><strong>Function:</strong> Determines whether the number is positive
+or negative.</li>
+<li><strong>Encoding:</strong>
+<ul>
+<li><code>0</code> represents a positive value.</li>
+<li><code>1</code> represents a negative value.</li>
+</ul></li>
+</ul>
+<h3 id="2-the-biased-exponent-bits-62-to-52">2. The Biased Exponent
+(Bits 62 to 52)</h3>
+<ul>
+<li><strong>Size:</strong> 11 bits</li>
+<li><strong>Function:</strong> Determines the magnitude or scale of the
+number.</li>
+<li><strong>Bias:</strong> An offset of <code>1023</code> is used to
+represent both positive and negative powers of two without needing a
+separate sign bit for the exponent.</li>
+<li><strong>Range:</strong>
+<ul>
+<li>Unsigned binary values range from <code>0</code> to
+<code>2047</code>.</li>
+<li>The actual exponent is calculated as <span
+class="math inline">\(\text{Exponent} - 1023\)</span>, yielding an
+effective power range of <span class="math inline">\(2^{-1022}\)</span>
+to <span class="math inline">\(2^{+1023}\)</span> for normalized
+numbers.</li>
+</ul></li>
+<li><strong>Special Cases:</strong>
+<ul>
+<li><code>00000000000</code> (<span class="math inline">\(0\)</span>):
+Represents zero (if the mantissa is zero) or subnormal numbers (if the
+mantissa is non-zero).</li>
+<li><code>11111111111</code> (<span
+class="math inline">\(2047\)</span>): Represents infinity (if the
+mantissa is zero) or Not-a-Number (NaN, if the mantissa is
+non-zero).</li>
+</ul></li>
+</ul>
+<h3 id="3-the-mantissa--fraction-bits-51-to-0">3. The Mantissa /
+Fraction (Bits 51 to 0)</h3>
+<ul>
+<li><strong>Size:</strong> 52 bits</li>
+<li><strong>Function:</strong> Encodes the significant digits
+(precision) of the number.</li>
+<li><strong>Implicit Leading Bit:</strong> For normalized numbers, IEEE
+754 assumes an implicit leading <code>1</code> before the binary point
+(i.e., <code>1.mantissa_bits</code>). Because this bit is always
+<code>1</code>, it is omitted from storage, effectively providing 53
+bits of precision.</li>
+<li><strong>Precision:</strong> 53 bits of binary precision equates to
+approximately 15 to 17 significant decimal digits.</li>
+</ul>
+<hr />
+<h3 id="mathematical-value-calculation">Mathematical Value
+Calculation</h3>
+<p>For normalized double-precision numbers, the stored binary sequence
+evaluates to:</p>
+<p><span class="math display">\[\text{Value} = (-1)^{\text{Sign}} \times
+\left(1 + \sum_{i=1}^{52} b_{52-i} 2^{-i}\right) \times
+2^{(\text{Exponent} - 1023)}\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(\text{Sign}\)</span> is the value of bit
+63.</li>
+<li><span class="math inline">\(b_{52-i}\)</span> represents each bit
+along the 52-bit fraction field.</li>
+<li><span class="math inline">\(\text{Exponent}\)</span> is the decimal
+value of the 11-bit field.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

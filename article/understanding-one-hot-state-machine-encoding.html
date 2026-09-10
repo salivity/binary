@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding One-Hot State Machine Encoding - binary</title>
+    <meta name="description" content="One-hot state machine encoding is a digital design technique where every individual state in a finite state machine (FSM) is represented by its own dedicated flip-flop. While standard binary encoding compresses $N$ states into $\lceil\log2(N)\rceil$ flip">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/understanding-one-hot-state-machine-encoding">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Understanding One-Hot State Machine Encoding - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/understanding-one-hot-state-machine-encoding" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="One-hot state machine encoding is a digital design technique where every individual state in a finite state machine (FSM) is represented by its own dedicated flip-flop. While standard binary encoding compresses $N$ states into $\lceil\log2(N)\rceil$ flip" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="understanding-one-hot-state-machine-encoding">Understanding
+One-Hot State Machine Encoding</h1>
+<p>One-hot state machine encoding is a digital design technique where
+every individual state in a finite state machine (FSM) is represented by
+its own dedicated flip-flop. While standard binary encoding compresses
+<span class="math inline">\(N\)</span> states into <span
+class="math inline">\(\lceil\log_2(N)\rceil\)</span> flip-flops, one-hot
+encoding uses exactly <span class="math inline">\(N\)</span> flip-flops,
+increasing register count. However, this trade-off dramatically reduces
+the combinational logic required to decode states and calculate
+next-state transitions, leading to faster operational speeds and simpler
+routing in digital circuits such as FPGAs.</p>
+<h3 id="flip-flop-requirements-one-hot-vs-binary">Flip-Flop
+Requirements: One-Hot vs. Binary</h3>
+<p>In a standard binary-encoded FSM, states are represented as unique
+binary numbers. For example, a system with 8 states requires 3
+flip-flops because <span class="math inline">\(2^3 = 8\)</span>. Each
+state corresponds to a binary pattern (e.g., State 0 is
+<code>000</code>, State 7 is <code>111</code>).</p>
+<p>In a one-hot encoded FSM, each state is assigned a dedicated
+flip-flop. For an 8-state machine, 8 flip-flops are required. In this
+configuration, only one flip-flop holds a logic value of <code>1</code>
+(hot) at any given time, while all other flip-flops hold a logic value
+of <code>0</code> (e.g., State 0 is <code>00000001</code>, State 7 is
+<code>10000000</code>). Consequently, the flip-flop count scales
+linearly (<span class="math inline">\(O(N)\)</span>) with the number of
+states rather than logarithmically (<span class="math inline">\(O(\log_2
+N)\)</span>).</p>
+<h3 id="reduction-in-combinational-decoding-logic">Reduction in
+Combinational Decoding Logic</h3>
+<p>The primary advantage of one-hot encoding is the simplification of
+the combinational logic required to evaluate the current state,
+determine output values, and compute next-state conditions.</p>
+<h4 id="1-direct-state-evaluation">1. Direct State Evaluation</h4>
+<p>In binary encoding, identifying the active state requires decoding
+all state bits simultaneously using multi-input logic gates. For
+instance, to verify if a 4-bit binary machine is in state 5
+(<code>0101</code>), the logic must compute:</p>
+<p><span class="math display">\[\text{State}_5 = \overline{Q_3} \cdot
+Q_2 \cdot \overline{Q_1} \cdot Q_0\]</span></p>
+<p>This introduces gate delays and requires complex multi-variable
+Boolean logic.</p>
+<p>In a one-hot machine, checking if the system is in State 5 requires
+reading only the output of flip-flop 5 (<span
+class="math inline">\(Q_5\)</span>). No combinational decoding gates are
+needed to determine if the state is active.</p>
+<h4 id="2-simplified-next-state-logic">2. Simplified Next-State
+Logic</h4>
+<p>Next-state logic dictates when a flip-flop transitions to
+<code>1</code>. In one-hot encoding, a state flip-flop transitions to
+<code>1</code> if any preceding state with a valid transition condition
+activates it.</p>
+<p>The equation for entering State <span
+class="math inline">\(K\)</span> typically reduces to a simple
+sum-of-products based on single flip-flop outputs and inputs:</p>
+<p><span class="math display">\[D_K = (Q_A \cdot \text{Condition}_1) +
+(Q_B \cdot \text{Condition}_2)\]</span></p>
+<p>Because there is no need to decode multiple binary state bits to
+determine the source state, the logic depth is shallow, reducing gate
+count and propagation delay.</p>
+<h4 id="3-simplified-output-generation">3. Simplified Output
+Generation</h4>
+<p>Moore and Mealy machine outputs depend on the current state (and
+inputs in Mealy machines). In one-hot encoding, an output active in
+several states can be generated simply by OR-ing the outputs of the
+corresponding state flip-flops:</p>
+<p><span class="math display">\[\text{Output} = Q_2 + Q_5 +
+Q_7\]</span></p>
+<p>Binary encoding would require full decoding networks for each state
+before OR-ing them together, significantly increasing the total gate
+count.</p>
+<h3 id="architectural-implications">Architectural Implications</h3>
+<p>The trade-off between higher flip-flop usage and reduced
+combinational logic makes one-hot encoding particularly well-suited for
+Field Programmable Gate Arrays (FPGAs). FPGA architectures feature an
+abundance of flip-flops relative to Look-Up Tables (LUTs). By using
+one-hot encoding, designers minimize LUT utilization and logic depth,
+resulting in higher clock frequencies and easier place-and-route timing
+closure. Conversely, in Application-Specific Integrated Circuits (ASICs)
+where flip-flops consume significantly more silicon area than standard
+logic gates, binary or Gray encoding is often preferred for large state
+machines.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

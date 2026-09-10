@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminating Logic Hazards with Consensus Terms - binary</title>
+    <meta name="description" content="In digital circuit design, physical propagation delays within logic gates can cause transient false outputs known as logic hazards or glitches. When an input variable transitions between binary states, complementary paths in a combinational circuit may n">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/eliminating-logic-hazards-with-consensus-terms">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Eliminating Logic Hazards with Consensus Terms - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/eliminating-logic-hazards-with-consensus-terms" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In digital circuit design, physical propagation delays within logic gates can cause transient false outputs known as logic hazards or glitches. When an input variable transitions between binary states, complementary paths in a combinational circuit may n" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="eliminating-logic-hazards-with-consensus-terms">Eliminating
+Logic Hazards with Consensus Terms</h1>
+<p>In digital circuit design, physical propagation delays within logic
+gates can cause transient false outputs known as logic hazards or
+glitches. When an input variable transitions between binary states,
+complementary paths in a combinational circuit may not switch
+instantaneously at the exact same moment. Designers eliminate these
+static hazards by identifying adjacent product terms in a Boolean
+function and adding redundant consensus terms. This article explains how
+static-1 hazards form during binary input transitions and details the
+exact process engineers use to stabilize Boolean expressions using
+consensus theory and Karnaugh maps.</p>
+<h2 id="understanding-logic-hazards-in-binary-logic">Understanding Logic
+Hazards in Binary Logic</h2>
+<p>A logic hazard is a temporary unwanted glitch on an output line
+caused by unequal signal propagation delays through different circuit
+paths. In binary systems, circuits operate under the assumption that
+changes between binary 0 and binary 1 are instantaneous. In physical
+silicon, however, inverters and logic gates have finite propagation
+delays (<span class="math inline">\(\Delta t\)</span>).</p>
+<p>Hazards are categorized primarily into:</p>
+<ul>
+<li><strong>Static-1 Hazard:</strong> An output is expected to remain
+stable at binary 1 during an input transition, but briefly drops to
+binary 0 before returning to 1 (<span class="math inline">\(1 \to 0 \to
+1\)</span>).</li>
+<li><strong>Static-0 Hazard:</strong> An output is expected to remain
+stable at binary 0 during an input transition, but briefly spikes to
+binary 1 before returning to 0 (<span class="math inline">\(0 \to 1 \to
+0\)</span>).</li>
+<li><strong>Dynamic Hazard:</strong> An output changes multiple times
+when it is supposed to undergo a single monotonic transition (e.g.,
+<span class="math inline">\(0 \to 1 \to 0 \to 1\)</span>).</li>
+</ul>
+<p>Static-1 hazards occur in Sum-of-Products (SOP) circuits constructed
+using AND-OR logic, making them the most common hazard designers address
+via Boolean manipulation.</p>
+<h2 id="the-cause-of-static-1-hazards">The Cause of Static-1
+Hazards</h2>
+<p>Consider a minimal SOP expression implementing an output <span
+class="math inline">\(F\)</span>:</p>
+<p><span class="math display">\[F = A B + A&#39; C\]</span></p>
+<p>Assume the initial binary state is <span
+class="math inline">\(A=1\)</span>, <span
+class="math inline">\(B=1\)</span>, and <span
+class="math inline">\(C=1\)</span>, yielding <span
+class="math inline">\(F = (1 \cdot 1) + (0 \cdot 1) = 1\)</span>.</p>
+<p>If input <span class="math inline">\(A\)</span> transitions from
+<span class="math inline">\(1\)</span> to <span
+class="math inline">\(0\)</span> while <span
+class="math inline">\(B\)</span> and <span
+class="math inline">\(C\)</span> remain <span
+class="math inline">\(1\)</span>:</p>
+<ol type="1">
+<li>The term <span class="math inline">\(AB\)</span> transitions from
+<span class="math inline">\(1\)</span> to <span
+class="math inline">\(0\)</span>.</li>
+<li>The term <span class="math inline">\(A&#39;C\)</span> transitions
+from <span class="math inline">\(0\)</span> to <span
+class="math inline">\(1\)</span>.</li>
+<li>Because the inverted signal <span
+class="math inline">\(A&#39;\)</span> must pass through a NOT gate, it
+incurs a propagation delay. Consequently, <span
+class="math inline">\(AB\)</span> becomes <span
+class="math inline">\(0\)</span> slightly before <span
+class="math inline">\(A&#39;C\)</span> becomes <span
+class="math inline">\(1\)</span>.</li>
+<li>For a brief duration (<span class="math inline">\(\Delta
+t\)</span>), both <span class="math inline">\(AB = 0\)</span> and <span
+class="math inline">\(A&#39;C = 0\)</span>, causing the OR gate to
+output <span class="math inline">\(F = 0\)</span>.</li>
+</ol>
+<p>This brief dip to 0 is a static-1 glitch.</p>
+<h2 id="eliminating-hazards-using-the-consensus-theorem">Eliminating
+Hazards Using the Consensus Theorem</h2>
+<p>To prevent this glitch, designers apply the <strong>Consensus
+Theorem</strong> of Boolean algebra. The theorem states:</p>
+<p><span class="math display">\[X Y + X&#39; Z + Y Z = X Y + X&#39;
+Z\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(XY\)</span> and <span
+class="math inline">\(X&#39;Z\)</span> are terms containing a
+complementary variable pair (<span class="math inline">\(X\)</span> and
+<span class="math inline">\(X&#39;\)</span>).</li>
+<li><span class="math inline">\(YZ\)</span> is the <strong>consensus
+term</strong>, formed by taking the conjunction of the remaining
+literals from each term after eliminating the switching variable.</li>
+</ul>
+<p>Although the consensus term <span class="math inline">\(YZ\)</span>
+is logically redundant in minimal Boolean algebra, adding it to the
+physical hardware configuration guarantees hazard-free operation:</p>
+<p><span class="math display">\[F_{\text{hazard-free}} = A B + A&#39; C
++ B C\]</span></p>
+<p>When <span class="math inline">\(B=1\)</span> and <span
+class="math inline">\(C=1\)</span>, the consensus term <span
+class="math inline">\(BC\)</span> evaluates to <span
+class="math inline">\(1\)</span> independently of variable <span
+class="math inline">\(A\)</span>. As <span
+class="math inline">\(A\)</span> switches from <span
+class="math inline">\(1\)</span> to <span
+class="math inline">\(0\)</span> (or <span
+class="math inline">\(0\)</span> to <span
+class="math inline">\(1\)</span>), the term <span
+class="math inline">\(BC\)</span> continuously feeds a logic 1 into the
+final OR gate, masking any propagation delay across the switching
+branches and maintaining a stable output.</p>
+<h2 id="identifying-hazards-on-karnaugh-maps">Identifying Hazards on
+Karnaugh Maps</h2>
+<p>Designers routinely detect and fix static hazards using Karnaugh Maps
+(K-maps):</p>
+<ol type="1">
+<li><strong>Map the Minimal Expression:</strong> Plot the minimal prime
+implicants covering all binary 1s on the K-map.</li>
+<li><strong>Find Uncovered Adjacencies:</strong> Inspect adjacent cells
+(cells that differ by only one input variable) that belong to two
+different grouping loops. If two adjacent 1-cells are not enclosed
+within a single shared implicant loop, a transition between those two
+states can produce a static-1 hazard.</li>
+<li><strong>Bridge the Boundaries:</strong> Draw an extra, overlapping
+grouping loop that encompasses the adjacent cells spanning across the
+boundary.</li>
+<li><strong>Derive and Include the Consensus Term:</strong> Write the
+Boolean product corresponding to this new redundant grouping and add it
+into the SOP expression.</li>
+</ol>
+<p>By including redundant consensus gates, designers trade a minor
+increase in gate count and silicon area for guaranteed timing integrity,
+eliminating glitches in high-speed, asynchronous, and clockless binary
+control systems.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

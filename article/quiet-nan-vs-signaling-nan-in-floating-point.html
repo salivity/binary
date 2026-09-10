@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiet NaN vs Signaling NaN in Floating-Point - binary</title>
+    <meta name="description" content="In binary floating-point arithmetic compliant with the IEEE 754 standard, NaN (Not a Number) represents values that are undefined or unrepresentable, such as the result of $0/0$ or the square root of a negative number. The standard divides NaNs into two">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/quiet-nan-vs-signaling-nan-in-floating-point">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Quiet NaN vs Signaling NaN in Floating-Point - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/quiet-nan-vs-signaling-nan-in-floating-point" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In binary floating-point arithmetic compliant with the IEEE 754 standard, NaN (Not a Number) represents values that are undefined or unrepresentable, such as the result of $0/0$ or the square root of a negative number. The standard divides NaNs into two" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="quiet-nan-vs-signaling-nan-in-floating-point">Quiet NaN vs
+Signaling NaN in Floating-Point</h1>
+<p>In binary floating-point arithmetic compliant with the IEEE 754
+standard, <strong>NaN</strong> (Not a Number) represents values that are
+undefined or unrepresentable, such as the result of <span
+class="math inline">\(0/0\)</span> or the square root of a negative
+number. The standard divides NaNs into two distinct categories:
+<strong>Quiet NaNs (qNaN)</strong> and <strong>Signaling NaNs
+(sNaN)</strong>. While quiet NaNs allow computations to continue by
+propagating invalid states silently through downstream operations,
+signaling NaNs immediately halt execution or trigger hardware exceptions
+to alert the system of an error.</p>
+<h3 id="binary-representation-of-nans">Binary Representation of
+NaNs</h3>
+<p>In IEEE 754 binary formats (such as 32-bit single precision or 64-bit
+double precision), a floating-point number consists of three components:
+a sign bit, an exponent, and a fraction (mantissa).</p>
+<p>A value is classified as a NaN when:</p>
+<ul>
+<li>All exponent bits are set to <code>1</code>.</li>
+<li>The fraction (mantissa) is non-zero. (If the fraction is zero, the
+value represents infinity).</li>
+</ul>
+<p>The most significant bit (MSB) of the fraction determines whether the
+NaN is quiet or signaling:</p>
+<ul>
+<li><strong>Quiet NaN (qNaN):</strong> The MSB of the fraction is
+typically set to <code>1</code>.</li>
+<li><strong>Signaling NaN (sNaN):</strong> The MSB of the fraction is
+set to <code>0</code>, with at least one remaining fraction bit set to
+<code>1</code> to avoid representing infinity.</li>
+</ul>
+<p><em>(Note: While some legacy architectures like early MIPS or PA-RISC
+inverted this convention, the standard modern implementation uses
+<code>1</code> for quiet and <code>0</code> for signaling).</em></p>
+<h3 id="quiet-nan-qnan">Quiet NaN (qNaN)</h3>
+<p>A Quiet NaN represents indeterminate operations that do not require
+program termination.</p>
+<ul>
+<li><strong>Behavior:</strong> When a qNaN is used as an operand in an
+arithmetic operation, it silently propagates through the calculation
+without throwing a hardware trap or an invalid operation exception. The
+result of any basic arithmetic involving a qNaN is simply another
+qNaN.</li>
+<li><strong>Common Causes:</strong> Generated by operations with
+undefined mathematical results, such as <span
+class="math inline">\(\infty - \infty\)</span>, <span
+class="math inline">\(0 \times \infty\)</span>, or <span
+class="math inline">\(0 / 0\)</span>.</li>
+<li><strong>Use Cases:</strong> Ideal for batch processing, graphics
+pipelines, and scientific simulations where an isolated error should not
+crash an entire system, allowing missing or invalid data to be handled
+gracefully at the end of the pipeline.</li>
+</ul>
+<h3 id="signaling-nan-snan">Signaling NaN (sNaN)</h3>
+<p>A Signaling NaN is designed to catch invalid computations
+immediately.</p>
+<ul>
+<li><strong>Behavior:</strong> When an sNaN is passed to an arithmetic
+operation, the processor immediately raises an "invalid operation"
+floating-point exception (or trap). If the exception is handled in
+software, the operation typically produces a quiet NaN as a fallback
+result; otherwise, it halts the program.</li>
+<li><strong>Common Causes:</strong> sNaNs are rarely generated
+automatically by arithmetic operations; instead, they are usually
+injected intentionally by software, compilers, or debuggers.</li>
+<li><strong>Use Cases:</strong> Commonly used to initialize unallocated
+memory or uninitialized variables to catch bugs where data is read
+before being written. They are also used in custom math libraries to
+implement extended arithmetic behaviors or trap un-implemented
+features.</li>
+</ul>
+<h3 id="summary-of-key-differences">Summary of Key Differences</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">Quiet NaN (qNaN)</th>
+<th style="text-align: left;">Signaling NaN (sNaN)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Exception Handling</strong></td>
+<td style="text-align: left;">No exception raised; propagates
+silently</td>
+<td style="text-align: left;">Raises an invalid operation
+exception/trap</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Fraction MSB</strong></td>
+<td style="text-align: left;">Set to <code>1</code> (on modern
+systems)</td>
+<td style="text-align: left;">Set to <code>0</code> (with non-zero
+payload)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Propagation</strong></td>
+<td style="text-align: left;">Flows through arithmetic operations</td>
+<td style="text-align: left;">Converted to qNaN if caught, or aborts
+execution</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Primary Purpose</strong></td>
+<td style="text-align: left;">Fault tolerance and graceful failure</td>
+<td style="text-align: left;">Debugging, initialization tracking, and
+error trapping</td>
+</tr>
+</tbody>
+</table></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

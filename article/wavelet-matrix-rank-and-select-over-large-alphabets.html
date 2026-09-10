@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wavelet Matrix: Rank and Select Over Large Alphabets - binary</title>
+    <meta name="description" content="A Wavelet Matrix is a compact, succinct data structure designed to efficiently store sequences over large alphabets while supporting core query operations: access, rank, and select. By breaking symbols down into their binary representations and storing t">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/wavelet-matrix-rank-and-select-over-large-alphabets">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Wavelet Matrix: Rank and Select Over Large Alphabets - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/wavelet-matrix-rank-and-select-over-large-alphabets" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A Wavelet Matrix is a compact, succinct data structure designed to efficiently store sequences over large alphabets while supporting core query operations: access, rank, and select. By breaking symbols down into their binary representations and storing t" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="wavelet-matrix-rank-and-select-over-large-alphabets">Wavelet
+Matrix: Rank and Select Over Large Alphabets</h1>
+<p>A Wavelet Matrix is a compact, succinct data structure designed to
+efficiently store sequences over large alphabets while supporting core
+query operations: <code>access</code>, <code>rank</code>, and
+<code>select</code>. By breaking symbols down into their binary
+representations and storing them across a sequence of bitvectors, the
+Wavelet Matrix generalizes binary operations to arbitrary alphabet
+sizes. Unlike traditional Wavelet Trees, the Wavelet Matrix simplifies
+pointer-less navigation and enhances cache efficiency by reordering
+symbols using stable partitioning at each bit level.</p>
+<h2 id="what-is-a-wavelet-matrix">What is a Wavelet Matrix?</h2>
+<p>A Wavelet Matrix represents a sequence <span
+class="math inline">\(S\)</span> of length <span
+class="math inline">\(n\)</span> composed of symbols from an alphabet
+<span class="math inline">\(\Sigma = [0, \sigma - 1]\)</span>. If each
+symbol is encoded using <span class="math inline">\(\ell = \lceil \log_2
+\sigma \rceil\)</span> bits, the Wavelet Matrix consists of <span
+class="math inline">\(\ell\)</span> bitvectors <span
+class="math inline">\(B_0, B_1, \dots, B_{\ell - 1}\)</span>, each of
+length <span class="math inline">\(n\)</span>.</p>
+<p>While a standard Wavelet Tree recursively divides the alphabet in a
+balanced tree structure, a Wavelet Matrix processes all elements
+globally level-by-level based on their binary representation from the
+Most Significant Bit (MSB) to the Least Significant Bit (LSB).</p>
+<h2 id="construction-using-binary-representation">Construction Using
+Binary Representation</h2>
+<ol type="1">
+<li><strong>Level 0 (MSB):</strong> The bitvector <span
+class="math inline">\(B_0\)</span> contains the most significant bit of
+each character in the original sequence <span
+class="math inline">\(S\)</span>.</li>
+<li><strong>Reordering:</strong> To construct the sequence for the next
+level, elements with a <code>0</code> at the current bit position are
+placed first (preserving their relative order), followed by all elements
+with a <code>1</code> (also preserving relative order).</li>
+<li><strong>Subsequent Levels:</strong> The process repeats for levels
+<span class="math inline">\(1\)</span> through <span
+class="math inline">\(\ell - 1\)</span>. At level <span
+class="math inline">\(k\)</span>, <span
+class="math inline">\(B_k\)</span> stores the <span
+class="math inline">\(k\)</span>-th most significant bit of the
+reordered sequence from level <span
+class="math inline">\(k-1\)</span>.</li>
+<li><strong>Zero-Count Tracking:</strong> For each level <span
+class="math inline">\(k\)</span>, a single integer <span
+class="math inline">\(z_k\)</span> is stored, representing the total
+number of <code>0</code> bits in <span
+class="math inline">\(B_k\)</span>. This acts as the boundary offset
+where <code>1</code> bits begin in the subsequent level.</li>
+</ol>
+<h2 id="generalizing-rank-and-select-operations">Generalizing Rank and
+Select Operations</h2>
+<p>The primary power of the Wavelet Matrix is extending binary
+<code>rank</code> and <code>select</code> primitives—which count and
+locate bits in <span class="math inline">\(O(1)\)</span> time using
+succinct bitvectors (such as Elias-Fano or Clark's select structures)—to
+work over large alphabets in <span class="math inline">\(O(\log
+\sigma)\)</span> time.</p>
+<h3 id="1-the-access-operation">1. The Access Operation</h3>
+<p><code>access(S, i)</code> retrieves the symbol <span
+class="math inline">\(S[i]\)</span>:</p>
+<ul>
+<li>Start at index <span class="math inline">\(p_0 = i\)</span>.</li>
+<li>At each level <span class="math inline">\(k\)</span> from <span
+class="math inline">\(0\)</span> to <span class="math inline">\(\ell -
+1\)</span>:
+<ul>
+<li>Read bit <span class="math inline">\(b = B_k[p_k]\)</span>.</li>
+<li>Append <span class="math inline">\(b\)</span> to the reconstructed
+binary value of the character.</li>
+<li>If <span class="math inline">\(b = 0\)</span>, the next index is
+<span class="math inline">\(p_{k+1} = \text{rank}_0(B_k, p_k) -
+1\)</span>.</li>
+<li>If <span class="math inline">\(b = 1\)</span>, the next index is
+<span class="math inline">\(p_{k+1} = z_k + \text{rank}_1(B_k, p_k) -
+1\)</span>.</li>
+</ul></li>
+<li>After <span class="math inline">\(\ell\)</span> steps, the assembled
+bits form the original symbol.</li>
+</ul>
+<h3 id="2-the-rank-operation">2. The Rank Operation</h3>
+<p><code>rank_c(S, i)</code> counts how many times symbol <span
+class="math inline">\(c\)</span> appears in the prefix <span
+class="math inline">\(S[0 \dots i-1]\)</span>:</p>
+<ul>
+<li>Let <span class="math inline">\(c_{\ell-1} \dots c_0\)</span> be the
+binary representation of <span class="math inline">\(c\)</span>.</li>
+<li>Start with range boundary <span class="math inline">\(p =
+i\)</span>.</li>
+<li>For each level <span class="math inline">\(k\)</span> from <span
+class="math inline">\(0\)</span> to <span class="math inline">\(\ell -
+1\)</span>:
+<ul>
+<li>If the <span class="math inline">\(k\)</span>-th bit of <span
+class="math inline">\(c\)</span> is <code>0</code>, update <span
+class="math inline">\(p \leftarrow \text{rank}_0(B_k, p)\)</span>.</li>
+<li>If the <span class="math inline">\(k\)</span>-th bit of <span
+class="math inline">\(c\)</span> is <code>1</code>, update <span
+class="math inline">\(p \leftarrow z_k + \text{rank}_1(B_k,
+p)\)</span>.</li>
+</ul></li>
+<li>After traversing all <span class="math inline">\(\ell\)</span>
+levels, the final value of <span class="math inline">\(p\)</span> minus
+the starting offset of symbol <span class="math inline">\(c\)</span> at
+the bottom level yields the exact rank.</li>
+</ul>
+<h3 id="3-the-select-operation">3. The Select Operation</h3>
+<p><code>select_c(S, j)</code> returns the position of the <span
+class="math inline">\(j\)</span>-th occurrence of symbol <span
+class="math inline">\(c\)</span>:</p>
+<ul>
+<li>Find the starting position of character <span
+class="math inline">\(c\)</span> in the implicitly sorted bottom level.
+The index at level <span class="math inline">\(\ell\)</span> is <span
+class="math inline">\(p_\ell = \text{start\_pos}(c) + j\)</span>.</li>
+<li>Trace the position upward from level <span
+class="math inline">\(\ell - 1\)</span> down to level <span
+class="math inline">\(0\)</span>:
+<ul>
+<li>If the <span class="math inline">\(k\)</span>-th bit of <span
+class="math inline">\(c\)</span> is <code>0</code>, calculate <span
+class="math inline">\(p_k = \text{select}_0(B_k, p_{k+1})\)</span>.</li>
+<li>If the <span class="math inline">\(k\)</span>-th bit of <span
+class="math inline">\(c\)</span> is <code>1</code>, calculate <span
+class="math inline">\(p_k = \text{select}_1(B_k, p_{k+1} -
+z_k)\)</span>.</li>
+</ul></li>
+<li>The resulting index <span class="math inline">\(p_0\)</span>
+corresponds to the index of the <span
+class="math inline">\(j\)</span>-th occurrence of <span
+class="math inline">\(c\)</span> in <span
+class="math inline">\(S\)</span>.</li>
+</ul>
+<h2 id="advantages-over-standard-wavelet-trees">Advantages Over Standard
+Wavelet Trees</h2>
+<ul>
+<li><strong>No Pointer Overhead:</strong> Eliminates tree pointers,
+reducing memory consumption strictly to the bitvectors and a small array
+of <span class="math inline">\(z_k\)</span> values.</li>
+<li><strong>Cache-Friendly Traversal:</strong> Operations require
+scanning uniform arrays of length <span
+class="math inline">\(n\)</span>, making memory access patterns more
+predictable.</li>
+<li><strong>Large Alphabet Efficiency:</strong> Handles alphabets of
+arbitrary size without extra structural overhead, requiring only <span
+class="math inline">\(n \log_2 \sigma + o(n \log_2 \sigma)\)</span> bits
+of space while executing queries in <span class="math inline">\(O(\log
+\sigma)\)</span> time.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

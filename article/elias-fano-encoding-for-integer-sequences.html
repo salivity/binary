@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elias-Fano Encoding for Integer Sequences - binary</title>
+    <meta name="description" content="Elias-Fano encoding is a quasi-succinct data structure that compresses monotonically non-decreasing sequences of non-negative integers into a space close to the information-theoretic lower bound. By splitting each integer into its most significant (high)">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/elias-fano-encoding-for-integer-sequences">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Elias-Fano Encoding for Integer Sequences - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/elias-fano-encoding-for-integer-sequences" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Elias-Fano encoding is a quasi-succinct data structure that compresses monotonically non-decreasing sequences of non-negative integers into a space close to the information-theoretic lower bound. By splitting each integer into its most significant (high)" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="elias-fano-encoding-for-integer-sequences">Elias-Fano Encoding
+for Integer Sequences</h1>
+<p>Elias-Fano encoding is a quasi-succinct data structure that
+compresses monotonically non-decreasing sequences of non-negative
+integers into a space close to the information-theoretic lower bound. By
+splitting each integer into its most significant (high) and least
+significant (low) binary bits, the technique achieves near-optimal
+compression while supporting constant-time random access and fast
+predecessor searches without full decompression.</p>
+<h3 id="the-mathematical-foundation">The Mathematical Foundation</h3>
+<p>Consider a strictly increasing or non-decreasing sequence of <span
+class="math inline">\(n\)</span> integers:</p>
+<p><span class="math display">\[S = (x_0, x_1, x_2, \dots,
+x_{n-1})\]</span></p>
+<p>where the maximum value is bounded by <span
+class="math inline">\(x_{n-1} \le U\)</span>.</p>
+<p>The information-theoretic lower bound required to represent any
+subset of <span class="math inline">\(n\)</span> elements from a
+universe of size <span class="math inline">\(U\)</span> is:</p>
+<p><span class="math display">\[\left\lceil \log_2 \binom{U}{n}
+\right\rceil \approx n \log_2\left(\frac{U}{n}\right) + n \log_2(e)
+\text{ bits}\]</span></p>
+<p>Elias-Fano achieves a total size bounded by <span
+class="math inline">\(n \lceil \log_2(U / n) \rceil + 2n\)</span> bits,
+which is less than half a byte per element away from the theoretical
+minimum.</p>
+<h3 id="bit-splitting-low-bits-and-high-bits">Bit Splitting: Low Bits
+and High Bits</h3>
+<p>The encoding determines a split point <span
+class="math inline">\(l\)</span> for the binary representation of each
+integer:</p>
+<p><span class="math display">\[l = \max\left(0, \left\lfloor
+\log_2\left(\frac{U}{n}\right) \right\rfloor\right)\]</span></p>
+<p>Every integer <span class="math inline">\(x_i\)</span> in the
+sequence is partitioned into two components:</p>
+<ol type="1">
+<li><strong>Low Bits (<span
+class="math inline">\(L_i\)</span>):</strong> The lowest <span
+class="math inline">\(l\)</span> bits, computed as <span
+class="math inline">\(x_i \bmod 2^l\)</span>.</li>
+<li><strong>High Bits (<span
+class="math inline">\(H_i\)</span>):</strong> The remaining upper bits,
+computed as <span class="math inline">\(\lfloor x_i / 2^l
+\rfloor\)</span>.</li>
+</ol>
+<h3 id="storing-the-low-bits">Storing the Low Bits</h3>
+<p>The low bits of all <span class="math inline">\(n\)</span> integers
+are concatenated directly into a uniform bit array. Because every
+low-bit representation has a fixed width of <span
+class="math inline">\(l\)</span> bits, the sequence <span
+class="math inline">\(L = (L_0, L_1, \dots, L_{n-1})\)</span> occupies
+exactly <span class="math inline">\(n \times l\)</span> bits. Retrieving
+the low bits for the <span class="math inline">\(i\)</span>-th element
+simply requires reading <span class="math inline">\(l\)</span>
+consecutive bits starting at bit offset <span class="math inline">\(i
+\times l\)</span>.</p>
+<h3 id="storing-the-high-bits">Storing the High Bits</h3>
+<p>Since <span class="math inline">\(S\)</span> is non-decreasing, the
+sequence of high bits <span class="math inline">\(H = (H_0, H_1, \dots,
+H_{n-1})\)</span> is also non-decreasing and bounded by <span
+class="math inline">\(U / 2^l \approx n\)</span>. The high bits are
+encoded using a unary-like bitvector:</p>
+<ol type="1">
+<li>Initialize an empty bitvector.</li>
+<li>For each unique bucket value <span class="math inline">\(k \in [0,
+\lfloor U / 2^l \rfloor]\)</span>, append a number of <code>1</code>s
+equal to the frequency of <span class="math inline">\(k\)</span> in
+<span class="math inline">\(H\)</span>.</li>
+<li>Append a <code>0</code> to signal the transition to <span
+class="math inline">\(k+1\)</span>.</li>
+</ol>
+<p>This bitvector contains exactly <span
+class="math inline">\(n\)</span> ones (one for each integer) and at most
+<span class="math inline">\(n\)</span> zeros (one for each possible
+high-bit value), resulting in a length of at most <span
+class="math inline">\(2n\)</span> bits.</p>
+<h3 id="decoding-and-fast-operations">Decoding and Fast Operations</h3>
+<p>To reconstruct any integer <span
+class="math inline">\(x_i\)</span>:</p>
+<ol type="1">
+<li>Find the position of the <span
+class="math inline">\((i+1)\)</span>-th <code>1</code> in the high-bit
+bitvector using a fast hardware-accelerated <code>select_1(i)</code>
+operation.</li>
+<li>The high-bit value <span class="math inline">\(H_i\)</span> equals
+the number of <code>0</code>s preceding this <code>1</code>, calculated
+as <span class="math inline">\(\text{select}_1(i) - i\)</span>.</li>
+<li>Extract the <span class="math inline">\(l\)</span> low bits starting
+at index <span class="math inline">\(i \times l\)</span> from the
+low-bit array.</li>
+<li>Recombine the parts using binary arithmetic: <span
+class="math inline">\(x_i = (H_i \ll l) \ | \ L_i\)</span>.</li>
+</ol>
+<p>Using auxiliary rank/select index structures that require negligible
+additional space (typically <span class="math inline">\(o(n)\)</span>
+bits), both element lookups and predecessor queries operate in <span
+class="math inline">\(O(1)\)</span> time.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

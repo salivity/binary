@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casting 64-Bit to 32-Bit Integer in Binary - binary</title>
+    <meta name="description" content="When casting a 64-bit integer to a 32-bit integer, the system performs integer truncation at the binary level by discarding the 32 most significant (upper) bits and preserving only the 32 least significant (lower) bits. This process directly alters the b">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/casting-64-bit-to-32-bit-integer-in-binary">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Casting 64-Bit to 32-Bit Integer in Binary - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/casting-64-bit-to-32-bit-integer-in-binary" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="When casting a 64-bit integer to a 32-bit integer, the system performs integer truncation at the binary level by discarding the 32 most significant (upper) bits and preserving only the 32 least significant (lower) bits. This process directly alters the b" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="casting-64-bit-to-32-bit-integer-in-binary">Casting 64-Bit to
+32-Bit Integer in Binary</h1>
+<p>When casting a 64-bit integer to a 32-bit integer, the system
+performs integer truncation at the binary level by discarding the 32
+most significant (upper) bits and preserving only the 32 least
+significant (lower) bits. This process directly alters the bit pattern,
+which can result in significant data loss, value changes, or unexpected
+sign inversions depending on whether the original number exceeds the
+storage capacity of a 32-bit representation.</p>
+<h2 id="the-binary-mechanism">The Binary Mechanism</h2>
+<p>In computer architecture, a 64-bit integer consists of 64 contiguous
+bits in memory, indexed from bit 0 (least significant bit, or LSB) to
+bit 63 (most significant bit, or MSB).</p>
+<p>When truncated to 32 bits:</p>
+<ul>
+<li><strong>Discarded Bits:</strong> Bits 32 through 63 are dropped
+entirely.</li>
+<li><strong>Retained Bits:</strong> Bits 0 through 31 remain
+unaltered.</li>
+</ul>
+<p>At the machine level, this operation is computationally equivalent to
+applying a bitwise AND mask:</p>
+<p><span class="math display">\[\text{Result} = \text{Value}_{64} \
+\&amp; \ \text{0x00000000FFFFFFFF}\]</span></p>
+<p>Mathematically, for unsigned integers, this corresponds to a modulo
+reduction of <span class="math inline">\(2^{32}\)</span> (<span
+class="math inline">\(\text{Value} \pmod{4294967296}\)</span>).</p>
+<h2 id="effects-on-unsigned-and-signed-numbers">Effects on Unsigned and
+Signed Numbers</h2>
+<p>The binary outcome depends on the interpretation of the remaining 32
+bits under standard binary and two's complement systems:</p>
+<h3 id="1-values-within-the-32-bit-range">1. Values Within the 32-Bit
+Range</h3>
+<p>If the 64-bit integer holds a value that naturally fits within the
+target 32-bit range, the upper 32 bits consist only of sign-extension
+bits (all <code>0</code>s for positive values, or all <code>1</code>s
+for negative two's complement values). Dropping these redundant bits
+does not change the numerical value.</p>
+<h3 id="2-magnitude-overflow-and-data-loss">2. Magnitude Overflow and
+Data Loss</h3>
+<p>If the original value requires more than 32 bits to be represented,
+the discarded upper bits contain active data. Once dropped, that
+information cannot be recovered, and the remaining 32 bits form a
+completely different numerical magnitude.</p>
+<h3 id="3-sign-inversion-in-twos-complement">3. Sign Inversion in Two's
+Complement</h3>
+<p>In signed 32-bit integers, bit 31 functions as the sign bit
+(<code>0</code> for positive, <code>1</code> for negative). Truncation
+places whatever was originally at bit index 31 into the sign position of
+the new 32-bit integer:</p>
+<ul>
+<li>A large positive 64-bit number with a <code>1</code> at bit 31
+becomes <strong>negative</strong> after truncation.</li>
+<li>A negative 64-bit number with a <code>0</code> at bit 31 becomes
+<strong>positive</strong> after truncation.</li>
+</ul>
+<h2 id="step-by-step-binary-example">Step-by-Step Binary Example</h2>
+<p>Consider the 64-bit integer <code>4,294,967,297</code> (which is
+<span class="math inline">\(2^{32} + 1\)</span>):</p>
+<ol type="1">
+<li><strong>64-bit Binary Representation:</strong>
+<code>00000000 00000000 00000000 00000001 00000000 00000000 00000000 00000001</code></li>
+<li><strong>Discard Upper 32 Bits:</strong>
+<del><code>00000000 00000000 00000000 00000001</code></del></li>
+<li><strong>Retained Lower 32 Bits:</strong>
+<code>00000000 00000000 00000000 00000001</code></li>
+<li><strong>Final 32-bit Value:</strong> <code>1</code></li>
+</ol>
+<p>Because the upper bits containing the value <span
+class="math inline">\(2^{32}\)</span> were dropped, the final value
+wraps around to <code>1</code>.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

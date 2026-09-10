@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitwise Interleaving and Morton Code Explained - binary</title>
+    <meta name="description" content="Bitwise interleaving, commonly known as generating a Morton code or Z-order curve, is a computational technique used to map multidimensional coordinates into a single one-dimensional index. By alternating the binary bits of coordinate values, this operat">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/bitwise-interleaving-and-morton-code-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Bitwise Interleaving and Morton Code Explained - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/bitwise-interleaving-and-morton-code-explained" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Bitwise interleaving, commonly known as generating a Morton code or Z-order curve, is a computational technique used to map multidimensional coordinates into a single one-dimensional index. By alternating the binary bits of coordinate values, this operat" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="bitwise-interleaving-and-morton-code-explained">Bitwise
+Interleaving and Morton Code Explained</h1>
+<p>Bitwise interleaving, commonly known as generating a Morton code or
+Z-order curve, is a computational technique used to map multidimensional
+coordinates into a single one-dimensional index. By alternating the
+binary bits of coordinate values, this operation projects multi-axis
+data into a linear sequence while preserving spatial locality. This
+article explains how bitwise interleaving functions at the binary level,
+why it forms a Z-shaped spatial curve, and how it is used to efficiently
+organize and index multidimensional data.</p>
+<h3 id="what-is-bitwise-interleaving">What is Bitwise Interleaving?</h3>
+<p>Bitwise interleaving takes two or more binary numbers and merges them
+into a single binary number by alternating their bits. Invented by Guy
+Macdonald Morton in 1966, this process generates a "Morton code."</p>
+<p>When plotted in a multi-dimensional Cartesian grid, connecting
+sequential Morton codes forms a continuous fractal space-filling curve
+resembling repeating 'Z' patterns, which is why it is also known as the
+Z-order curve.</p>
+<h3 id="how-it-works-in-the-binary-system">How It Works in the Binary
+System</h3>
+<p>To understand the operation, consider a two-dimensional coordinate
+system with two integer inputs, <span class="math inline">\(X\)</span>
+and <span class="math inline">\(Y\)</span>:</p>
+<ol type="1">
+<li>Convert both coordinate values into their fixed-width binary
+representations.</li>
+<li>Select bits sequentially, alternating between the coordinates from
+the most significant bit (MSB) to the least significant bit (LSB).</li>
+</ol>
+<h4 id="concrete-example">Concrete Example:</h4>
+<p>Suppose we want to encode the 2D point <span class="math inline">\((X
+= 5, Y = 3)\)</span>:</p>
+<ul>
+<li><strong>Binary of X (5):</strong> <code>1 0 1</code> (Bits: <span
+class="math inline">\(x_2=1, x_1=0, x_0=1\)</span>)</li>
+<li><strong>Binary of Y (3):</strong> <code>0 1 1</code> (Bits: <span
+class="math inline">\(y_2=0, y_1=1, y_0=1\)</span>)</li>
+</ul>
+<p>To interleave them, pair each bit in the order <span
+class="math inline">\((y_n, x_n)\)</span>:</p>
+<ul>
+<li>Bit 2 (MSB): <span class="math inline">\(y_2 = 0\)</span>, <span
+class="math inline">\(x_2 = 1 \rightarrow \mathbf{01}\)</span></li>
+<li>Bit 1: <span class="math inline">\(y_1 = 1\)</span>, <span
+class="math inline">\(x_1 = 0 \rightarrow \mathbf{10}\)</span></li>
+<li>Bit 0 (LSB): <span class="math inline">\(y_0 = 1\)</span>, <span
+class="math inline">\(x_0 = 1 \rightarrow \mathbf{11}\)</span></li>
+</ul>
+<p>Combining these pairs produces the interleaved Morton code: <span
+class="math display">\[\text{Binary: } \mathbf{011011}_2\]</span> <span
+class="math display">\[\text{Decimal: } 27\]</span></p>
+<p>For three dimensions <span class="math inline">\((X, Y, Z)\)</span>,
+the interleaving pattern simply alternates across three bits at a time
+<span class="math inline">\((z_n, y_n, x_n)\)</span>, and extends
+similarly to higher dimensions.</p>
+<h3 id="how-it-organizes-multidimensional-data">How It Organizes
+Multidimensional Data</h3>
+<p>In computer architecture, memory and storage systems are strictly
+linear (1D). Organizing multi-axis data (like 2D images, 3D voxel
+models, or geographical coordinates) presents a challenge: traditional
+row-major or column-major layouts keep points that are close along one
+axis near each other in memory, but points close along another axis end
+up far apart.</p>
+<p>Bitwise interleaving solves this by providing key structural
+advantages:</p>
+<ul>
+<li><strong>Preserving Spatial Locality:</strong> Points that are close
+to each other in 2D or 3D space generally have similar high-order bits.
+Consequently, their Morton codes remain close in the linear sequence,
+maximizing CPU cache efficiency.</li>
+<li><strong>Hierarchical Decomposition:</strong> Each pair (or triplet)
+of bits in a Morton code corresponds to a specific quadrant in a 2D
+quadtree or octant in a 3D octree. This makes Morton codes equivalent to
+implicit tree paths.</li>
+<li><strong>Efficient Range Queries:</strong> Bounding-box and
+nearest-neighbor searches can be executed quickly using simple bitwise
+masking and binary searches (such as with B-trees) rather than scanning
+multi-dimensional arrays.</li>
+</ul>
+<h3 id="practical-applications">Practical Applications</h3>
+<p>Because bitwise interleaving converts complex multidimensional
+relationships into standard integers, it is widely implemented in:</p>
+<ul>
+<li><strong>Geographic Information Systems (GIS):</strong> Indexing
+latitude and longitude coordinates in spatial databases.</li>
+<li><strong>Computer Graphics and GPUs:</strong> Texture mapping and
+bounding volume hierarchies (BVH) for ray tracing.</li>
+<li><strong>Scientific Computing:</strong> N-body simulations and
+Barnes-Hut algorithms to cluster nearby particles efficiently.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

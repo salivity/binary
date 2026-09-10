@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Zero Extension Works for Unsigned Integers - binary</title>
+    <meta name="description" content="Zero extension is a fundamental binary operation used by computer hardware and compilers to increase the bit-width of an unsigned integer while preserving its original numerical value. When a smaller data type—such as an 8-bit byte—is promoted to a l">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-zero-extension-works-for-unsigned-integers">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Zero Extension Works for Unsigned Integers - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-zero-extension-works-for-unsigned-integers" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Zero extension is a fundamental binary operation used by computer hardware and compilers to increase the bit-width of an unsigned integer while preserving its original numerical value. When a smaller data type—such as an 8-bit byte—is promoted to a l" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-zero-extension-works-for-unsigned-integers">How Zero
+Extension Works for Unsigned Integers</h1>
+<p>Zero extension is a fundamental binary operation used by computer
+hardware and compilers to increase the bit-width of an unsigned integer
+while preserving its original numerical value. When a smaller data
+type—such as an 8-bit byte—is promoted to a larger data type—such as a
+16-bit or 32-bit register—the system copies the original bits into the
+lower-order positions and fills all remaining higher-order positions
+with zeros. This mechanism guarantees that the magnitude of an unsigned
+number remains identical regardless of the target register size.</p>
+<h2 id="the-mechanism-of-zero-extension">The Mechanism of Zero
+Extension</h2>
+<p>In binary representation, an integer's value is determined by the
+positional weight of its bits. When an unsigned integer moves to a
+larger storage format, changing the value of the higher-order bits would
+alter the represented number. Zero extension addresses this by placing
+the original binary pattern in the least significant bit (LSB) positions
+and setting every newly introduced most significant bit (MSB) to
+<code>0</code>.</p>
+<p>Because adding leading zeros to a standard base-2 number contributes
+zero to the total positional sum (<span class="math inline">\(0 \times
+2^n = 0\)</span>), the original value is mathematically preserved:</p>
+<ol type="1">
+<li><strong>Source Placement:</strong> The <span
+class="math inline">\(n\)</span>-bit source value is copied directly
+into bits <span class="math inline">\(0\)</span> through <span
+class="math inline">\(n-1\)</span> of the destination.</li>
+<li><strong>Padding:</strong> For an <span
+class="math inline">\(m\)</span>-bit destination (where <span
+class="math inline">\(m &gt; n\)</span>), bits <span
+class="math inline">\(n\)</span> through <span
+class="math inline">\(m-1\)</span> are set to <code>0</code>.</li>
+</ol>
+<h2 id="step-by-step-binary-example">Step-by-Step Binary Example</h2>
+<p>Consider an 8-bit unsigned integer promoted to a 16-bit integer:</p>
+<ul>
+<li><strong>8-bit Value:</strong> <code>11001010</code> (Decimal:
+<code>202</code>)</li>
+<li><strong>Target Size:</strong> 16 bits</li>
+</ul>
+<p>During zero extension:</p>
+<ol type="1">
+<li>The 8 bits of the source are placed into the lower 8 bits (bits 0–7)
+of the 16-bit register: <code>???? ???? 1100 1010</code>.</li>
+<li>The remaining high-order bits (bits 8–15) are padded with
+<code>0</code>s: <code>0000 0000 1100 1010</code>.</li>
+<li><strong>Resulting 16-bit Value:</strong>
+<code>0000000011001010</code> (Decimal: <code>202</code>).</li>
+</ol>
+<p>Even though the most significant bit of the original 8-bit byte was
+<code>1</code>, zero extension ignores this sign bit because the data is
+unsigned.</p>
+<h2 id="zero-extension-vs-sign-extension">Zero Extension vs. Sign
+Extension</h2>
+<p>Zero extension differs fundamentally from sign extension:</p>
+<ul>
+<li><strong>Zero Extension (Unsigned):</strong> Always pads the
+high-order bits with <code>0</code>, regardless of whether the original
+leading bit is <code>0</code> or <code>1</code>. This treats all data as
+non-negative values.</li>
+<li><strong>Sign Extension (Signed):</strong> Copies the most
+significant bit (the sign bit in two's complement) across all high-order
+bits. If the leading bit is <code>1</code> (representing a negative
+number), it fills the upper bits with <code>1</code>s to maintain the
+negative value.</li>
+</ul>
+<p>If a system mistakenly applies sign extension to an unsigned integer
+with a leading <code>1</code>, the value changes dramatically. For
+example, applying sign extension to the 8-bit value
+<code>11001010</code> would yield <code>1111111111001010</code>
+(Decimal: <code>65,226</code>), corrupting the original value of
+<code>202</code>.</p>
+<h2 id="hardware-and-processor-implementation">Hardware and Processor
+Implementation</h2>
+<p>Modern processor architectures include dedicated instructions to
+perform zero extension efficiently in a single clock cycle:</p>
+<ul>
+<li><strong>x86/x86-64:</strong> The <code>MOVZX</code> (Move with
+Zero-Extend) instruction copies a smaller source operand (such as an
+8-bit or 16-bit register/memory location) into a larger 32-bit or 64-bit
+destination register while automatically zeroing the upper bits.</li>
+<li><strong>ARM:</strong> Instructions such as <code>UXTB</code>
+(Unsigned Extend Byte) and <code>UXTH</code> (Unsigned Extend Halfword)
+extract and pad smaller unsigned values into 32-bit or 64-bit
+registers.</li>
+</ul>
+<p>By standardizing this operation in hardware, computing architectures
+ensure that type casting, function call argument passing, and arithmetic
+promotions involving unsigned data remain safe, fast, and numerically
+accurate.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

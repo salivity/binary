@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Genome Searching with BWT and FM-Index - binary</title>
+    <meta name="description" content="Fast genome searching relies on the synergistic integration of the Burrows-Wheeler Transform (BWT), the Ferragina-Manzini (FM) index, and binary bitvectors. By converting massive nucleotide sequences into a reversible, highly compressible format, the BWT">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/fast-genome-searching-with-bwt-and-fm-index">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Fast Genome Searching with BWT and FM-Index - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/fast-genome-searching-with-bwt-and-fm-index" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Fast genome searching relies on the synergistic integration of the Burrows-Wheeler Transform (BWT), the Ferragina-Manzini (FM) index, and binary bitvectors. By converting massive nucleotide sequences into a reversible, highly compressible format, the BWT" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="fast-genome-searching-with-bwt-and-fm-index">Fast Genome
+Searching with BWT and FM-Index</h1>
+<p>Fast genome searching relies on the synergistic integration of the
+Burrows-Wheeler Transform (BWT), the Ferragina-Manzini (FM) index, and
+binary bitvectors. By converting massive nucleotide sequences into a
+reversible, highly compressible format, the BWT groups identical
+characters together. The FM-index leverages this structure through the
+Last-to-First (LF) mapping property to enable backward pattern matching
+in time proportional strictly to the length of the query, rather than
+the genome size. When mapped to compact binary bitvectors, these
+operations are accelerated using constant-time bitwise operations,
+allowing whole genomes to be indexed, compressed, and searched directly
+in standard computer memory.</p>
+<h3 id="the-burrows-wheeler-transform-bwt">The Burrows-Wheeler Transform
+(BWT)</h3>
+<p>The BWT is a reversible permutation of a string. To index a reference
+genome (composed of characters A, C, G, and T, plus a unique end-marker
+<code>$</code>), all cyclic rotations of the sequence are generated and
+lexicographically sorted. The last column of this sorted matrix forms
+the BWT string (<span class="math inline">\(L\)</span>).</p>
+<p>Because genomes contain repetitive sequences, the sorting step
+clusters identical adjacent nucleotides together in <span
+class="math inline">\(L\)</span>, creating long runs of repeated
+characters that are ideal for compression. More importantly, the BWT
+preserves a mathematical property known as the Last-to-First (LF)
+mapping: the <span class="math inline">\(i\)</span>-th occurrence of a
+character in the last column <span class="math inline">\(L\)</span>
+corresponds to the exact same physical character as the <span
+class="math inline">\(i\)</span>-th occurrence of that character in the
+first column <span class="math inline">\(F\)</span>.</p>
+<h3 id="the-fm-index-and-backward-search">The FM-Index and Backward
+Search</h3>
+<p>The FM-index augments the BWT with two compact auxiliary structures
+to perform "backward search," matching a query string from right to
+left:</p>
+<ol type="1">
+<li><strong>The <span class="math inline">\(C\)</span>-table:</strong>
+An array storing the total number of characters in the text that are
+lexicographically smaller than a given character.</li>
+<li><strong>The <span class="math inline">\(Occ\)</span> (or Rank)
+function:</strong> A function where <span class="math inline">\(Occ(c,
+k)\)</span> returns the number of occurrences of character <span
+class="math inline">\(c\)</span> in the prefix <span
+class="math inline">\(L[0 \dots k]\)</span>.</li>
+</ol>
+<p>Using these structures, a query string <span
+class="math inline">\(P\)</span> of length <span
+class="math inline">\(m\)</span> is matched character-by-character from
+<span class="math inline">\(P[m-1]\)</span> down to <span
+class="math inline">\(P[0]\)</span>. At each step, the search updates a
+continuous range of rows <span class="math inline">\([sp, ep]\)</span>
+in the virtual BWT matrix:</p>
+<p><span class="math display">\[sp_{new} = C[c] + Occ(c, sp -
+1)\]</span> <span class="math display">\[ep_{new} = C[c] + Occ(c, ep) -
+1\]</span></p>
+<p>If <span class="math inline">\(sp \le ep\)</span> at the end of the
+query, the pattern exists in the genome <span class="math inline">\((ep
+- sp + 1)\)</span> times. The search time depends only on the length of
+the query <span class="math inline">\(O(m)\)</span>, completely
+independent of the multi-gigabyte size of the reference genome.</p>
+<h3 id="binary-encoding-and-bitvectors">Binary Encoding and
+Bitvectors</h3>
+<p>In raw form, storing the full <span
+class="math inline">\(Occ\)</span> table takes more space than the
+original genome. To make the index succinct, the BWT string is
+decomposed into binary bitvectors:</p>
+<ul>
+<li><strong>2-Bit Encoding:</strong> Nucleotides (A, C, G, T) are mapped
+to 2-bit binary values (<code>00</code>, <code>01</code>,
+<code>10</code>, <code>11</code>).</li>
+<li><strong>Indicator Bitvectors:</strong> Alternatively, four distinct
+bitvectors (<span class="math inline">\(B_A, B_C, B_G, B_T\)</span>)
+represent the BWT, where a bit is set to <code>1</code> if the
+corresponding character matches that nucleotide, and <code>0</code>
+otherwise.</li>
+</ul>
+<p>Binary bitvectors allow the <span class="math inline">\(Occ(c,
+k)\)</span> function to be executed as a binary <strong><span
+class="math inline">\(\text{rank}_1(k)\)</span></strong>
+query—calculating the number of set bits up to position <span
+class="math inline">\(k\)</span>.</p>
+<h3 id="acceleration-with-bitwise-operations">Acceleration with Bitwise
+Operations</h3>
+<p>Modern CPU architectures can compute <span
+class="math inline">\(\text{rank}_1(k)\)</span> queries in <span
+class="math inline">\(O(1)\)</span> constant time using hardware-level
+bitwise operations:</p>
+<ol type="1">
+<li><strong>Checkpointing:</strong> Bitvectors are divided into
+fixed-size blocks (e.g., 64 or 512 bits). Precomputed cumulative rank
+counts are stored only at the boundaries of these blocks (superblocks),
+drastically reducing memory overhead.</li>
+<li><strong>Bitmasking and Population Count:</strong> To resolve a rank
+query inside a block, a bitmask isolates the bits up to the target index
+<span class="math inline">\(k\)</span>. The CPU instruction
+<code>POPCNT</code> (population count) then tallies the set bits within
+that 64-bit word in a single clock cycle.</li>
+</ol>
+<p><span class="math display">\[\text{rank}_1(k) =
+\text{CheckpointedRank}(\lfloor k / 64 \rfloor) +
+\text{POPCNT}(\text{Block} \ \&amp; \ \text{Mask}(k \bmod
+64))\]</span></p>
+<h3 id="conclusion">Conclusion</h3>
+<p>By translating genomic text into BWT-ordered character streams,
+structuring them with the FM-index, and executing searches across
+hardware-accelerated binary bitvectors, bioinformatic tools can align
+millions of DNA reads against reference genomes containing billions of
+base pairs in seconds, using only a few gigabytes of RAM.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

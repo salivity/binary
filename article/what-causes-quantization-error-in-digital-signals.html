@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Causes Quantization Error in Digital Signals - binary</title>
+    <meta name="description" content="Quantization error is the inherent discrepancy that occurs during analog-to-digital conversion when an infinitely variable, continuous physical signal is rounded to the nearest discrete value supported by a digital system. Because binary systems rely on">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-causes-quantization-error-in-digital-signals">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Causes Quantization Error in Digital Signals - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-causes-quantization-error-in-digital-signals" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Quantization error is the inherent discrepancy that occurs during analog-to-digital conversion when an infinitely variable, continuous physical signal is rounded to the nearest discrete value supported by a digital system. Because binary systems rely on" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-causes-quantization-error-in-digital-signals">What Causes
+Quantization Error in Digital Signals</h1>
+<p>Quantization error is the inherent discrepancy that occurs during
+analog-to-digital conversion when an infinitely variable, continuous
+physical signal is rounded to the nearest discrete value supported by a
+digital system. Because binary systems rely on a finite number of bits
+to represent data, they cannot capture the infinite precision of
+real-world phenomena like sound, temperature, or voltage. This article
+explains the mechanics of the quantization process, the mathematical
+origin of this error, and how digital resolution limits signal
+fidelity.</p>
+<h2 id="the-continuous-vs-discrete-dilemma">The Continuous vs. Discrete
+Dilemma</h2>
+<p>Physical signals exist in a continuous state, meaning they can assume
+an infinite number of values within any given range. For example, a
+voltage signal moving between 0V and 5V does not simply jump between
+whole numbers; it passes through infinite fractional values such as
+2.3479...V.</p>
+<p>Digital processors, however, operate in a binary format using bits
+(<span class="math inline">\(0\)</span> and <span
+class="math inline">\(1\)</span>). A binary system with <span
+class="math inline">\(N\)</span> bits can only represent a finite number
+of unique states, calculated as <span
+class="math inline">\(2^N\)</span>. For instance, an 8-bit system can
+represent <span class="math inline">\(2^8 = 256\)</span> distinct
+levels, while a 16-bit system can represent <span
+class="math inline">\(2^{16} = 65,536\)</span> levels. Because infinity
+cannot be mapped into a finite set without data loss, the continuous
+signal must be approximated.</p>
+<h2 id="the-quantization-process-and-step-size">The Quantization Process
+and Step Size</h2>
+<p>When an Analog-to-Digital Converter (ADC) samples a signal, it
+divides the total input range into a series of uniform discrete bins or
+step sizes, often denoted as <span class="math inline">\(\Delta\)</span>
+or <span class="math inline">\(Q\)</span>. The step size is determined
+by the formula:</p>
+<p><span class="math display">\[Q = \frac{V_{\text{max}} -
+V_{\text{min}}}{2^N}\]</span></p>
+<p>Where <span class="math inline">\(V_{\text{max}} -
+V_{\text{min}}\)</span> represents the full-scale amplitude range, and
+<span class="math inline">\(N\)</span> is the bit resolution.</p>
+<p>During the conversion, the ADC measures the instantaneous continuous
+voltage and assigns it to the closest discrete quantization level. Any
+value falling within a given step interval is forced to round up or down
+to that interval's assigned binary code.</p>
+<h2 id="how-the-error-arises">How the Error Arises</h2>
+<p>Quantization error (<span class="math inline">\(e_q\)</span>) is the
+direct difference between the actual continuous input voltage (<span
+class="math inline">\(x\)</span>) and the resulting quantized output
+value (<span class="math inline">\(x_q\)</span>):</p>
+<p><span class="math display">\[e_q = x - x_q\]</span></p>
+<p>Because the digital system rounds the input to the nearest available
+step, the maximum error in a standard rounding system is half of the
+step size:</p>
+<p><span class="math display">\[-\frac{Q}{2} \le e_q \le
+\frac{Q}{2}\]</span></p>
+<p>This rounding process discards the fractional details of the original
+signal. The lost information manifests as an unwanted noise-like signal,
+commonly referred to as quantization noise or quantization
+distortion.</p>
+<h2 id="reducing-quantization-error">Reducing Quantization Error</h2>
+<p>While quantization error cannot be completely eliminated in digital
+systems, it can be minimized using specific engineering techniques:</p>
+<ul>
+<li><strong>Increasing Bit Depth:</strong> Adding more bits
+exponentially increases the number of available discrete levels, making
+the step size <span class="math inline">\(Q\)</span> much smaller. For
+every 1-bit increase in resolution, the signal-to-quantization-noise
+ratio (SQNR) improves by approximately 6 dB.</li>
+<li><strong>Oversampling:</strong> Sampling the signal at frequencies
+far higher than the Nyquist rate spreads the quantization noise over a
+wider bandwidth, allowing digital filters to remove the noise outside
+the target frequency band.</li>
+<li><strong>Dithering:</strong> Adding a microscopic amount of
+randomized noise to the analog signal before conversion breaks up
+harmonic distortions caused by repetitive rounding errors, converting
+harsh quantization artifacts into benign, uniform background hiss.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

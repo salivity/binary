@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berlekamp-Massey Algorithm for Binary LFSRs - binary</title>
+    <meta name="description" content="The Berlekamp-Massey algorithm is a computationally efficient method used to determine the minimal Linear Feedback Shift Register (LFSR) capable of generating a given binary sequence. In the binary field, also known as Galois Field 2 or $\text{GF}(2)$, t">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/berlekamp-massey-algorithm-for-binary-lfsrs">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Berlekamp-Massey Algorithm for Binary LFSRs - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/berlekamp-massey-algorithm-for-binary-lfsrs" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Berlekamp-Massey algorithm is a computationally efficient method used to determine the minimal Linear Feedback Shift Register (LFSR) capable of generating a given binary sequence. In the binary field, also known as Galois Field 2 or $\text{GF}(2)$, t" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="berlekamp-massey-algorithm-for-binary-lfsrs">Berlekamp-Massey
+Algorithm for Binary LFSRs</h1>
+<p>The Berlekamp-Massey algorithm is a computationally efficient method
+used to determine the minimal Linear Feedback Shift Register (LFSR)
+capable of generating a given binary sequence. In the binary field, also
+known as Galois Field 2 or <span
+class="math inline">\(\text{GF}(2)\)</span>, the algorithm iteratively
+constructs the shortest linear recurrence relation that satisfies the
+observed bit stream. This article explains the step-by-step mechanics of
+the binary Berlekamp-Massey algorithm, detailing how it computes
+discrepancies, updates the connection polynomial using modulo-2
+arithmetic, and guarantees the minimal linear complexity for the
+sequence.</p>
+<h3 id="mathematical-foundations-in-textgf2">Mathematical Foundations in
+<span class="math inline">\(\text{GF}(2)\)</span></h3>
+<p>An LFSR generates a sequence of binary digits <span
+class="math inline">\(s_0, s_1, s_2, \dots\)</span> based on a feedback
+polynomial (or connection polynomial) denoted as:</p>
+<p><span class="math display">\[C(x) = 1 + c_1 x + c_2 x^2 + \dots + c_L
+x^L\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(L\)</span> represents the length (linear
+complexity) of the register.</li>
+<li><span class="math inline">\(c_i \in \{0, 1\}\)</span> are the binary
+feedback coefficients.</li>
+<li>Arithmetic operations are performed modulo 2: addition corresponds
+to bitwise XOR (<span class="math inline">\(\oplus\)</span>), and
+multiplication corresponds to bitwise AND (<span
+class="math inline">\(\cdot\)</span>).</li>
+</ul>
+<p>For an LFSR of length <span class="math inline">\(L\)</span>, any bit
+<span class="math inline">\(s_k\)</span> (for <span
+class="math inline">\(k \ge L\)</span>) is generated by the linear
+recurrence:</p>
+<p><span class="math display">\[s_k = \sum_{i=1}^{L} c_i s_{k-i} \pmod
+2\]</span></p>
+<h3 id="initialization">Initialization</h3>
+<p>The algorithm processes the binary sequence <span
+class="math inline">\(s_0, s_1, \dots, s_{N-1}\)</span> bit by bit. It
+initializes five key variables:</p>
+<ul>
+<li><strong>Current Connection Polynomial:</strong> <span
+class="math inline">\(C(x) = 1\)</span></li>
+<li><strong>Previous Best Polynomial:</strong> <span
+class="math inline">\(B(x) = 1\)</span></li>
+<li><strong>Current Minimal Length:</strong> <span
+class="math inline">\(L = 0\)</span></li>
+<li><strong>Step Shift Counter:</strong> <span class="math inline">\(m =
+1\)</span></li>
+<li><strong>Bit Index:</strong> <span class="math inline">\(k =
+0\)</span> (iterating up to <span
+class="math inline">\(N-1\)</span>)</li>
+</ul>
+<h3 id="step-by-step-execution">Step-by-Step Execution</h3>
+<p>For each bit index <span class="math inline">\(k\)</span> from <span
+class="math inline">\(0\)</span> to <span
+class="math inline">\(N-1\)</span>, the algorithm executes the following
+steps:</p>
+<h4 id="1-calculate-the-discrepancy-d">1. Calculate the Discrepancy
+(<span class="math inline">\(d\)</span>)</h4>
+<p>The discrepancy <span class="math inline">\(d \in \{0, 1\}\)</span>
+measures whether the current polynomial <span
+class="math inline">\(C(x)\)</span> correctly predicts the next bit
+<span class="math inline">\(s_k\)</span>:</p>
+<p><span class="math display">\[d = s_k \oplus \bigoplus_{i=1}^{L} c_i
+s_{k-i}\]</span></p>
+<ul>
+<li>If <span class="math inline">\(d = 0\)</span>, the current LFSR
+correctly produces <span class="math inline">\(s_k\)</span>. The
+algorithm increments the step counter <span class="math inline">\(m
+\leftarrow m + 1\)</span> and proceeds to the next bit.</li>
+<li>If <span class="math inline">\(d = 1\)</span>, the current LFSR
+fails to produce <span class="math inline">\(s_k\)</span>, requiring a
+polynomial update.</li>
+</ul>
+<h4 id="2-update-the-polynomial">2. Update the Polynomial</h4>
+<p>When <span class="math inline">\(d = 1\)</span>, a correction term
+based on the previous best polynomial <span
+class="math inline">\(B(x)\)</span> is applied to eliminate the
+discrepancy:</p>
+<p><span class="math display">\[C_{\text{new}}(x) = C(x) \oplus \left(
+x^m \cdot B(x) \right)\]</span></p>
+<p>Because operations are in <span
+class="math inline">\(\text{GF}(2)\)</span>, the addition is performed
+via bitwise XOR of the coefficient vectors.</p>
+<h4 id="3-update-register-length-and-auxiliary-variables">3. Update
+Register Length and Auxiliary Variables</h4>
+<p>The algorithm checks if the register length must increase:</p>
+<ul>
+<li><p><strong>Case A: <span class="math inline">\(2L \le
+k\)</span></strong> The current LFSR is too short to generate the
+sequence up to bit <span class="math inline">\(k\)</span>. The new
+length becomes: <span class="math display">\[L_{\text{new}} = k + 1 -
+L\]</span> The auxiliary state is updated to store the failing
+configuration: <span class="math display">\[B(x) \leftarrow
+C(x)\]</span> <span class="math display">\[L \leftarrow
+L_{\text{new}}\]</span> <span class="math display">\[m \leftarrow
+1\]</span></p></li>
+<li><p><strong>Case B: <span class="math inline">\(2L &gt;
+k\)</span></strong> The current length <span
+class="math inline">\(L\)</span> is sufficient to accommodate the change
+without increasing register size. The length <span
+class="math inline">\(L\)</span> remains unchanged, and the shift
+counter increments: <span class="math display">\[m \leftarrow m +
+1\]</span></p></li>
+</ul>
+<p>Finally, set <span class="math inline">\(C(x) \leftarrow
+C_{\text{new}}(x)\)</span> and advance <span class="math inline">\(k
+\leftarrow k + 1\)</span>.</p>
+<h3 id="termination-and-result">Termination and Result</h3>
+<p>Once all <span class="math inline">\(N\)</span> bits are processed,
+the algorithm terminates with:</p>
+<ul>
+<li>The final polynomial <span class="math inline">\(C(x)\)</span>,
+which defines the feedback taps of the LFSR.</li>
+<li>The integer <span class="math inline">\(L\)</span>, representing the
+minimal length (linear complexity) of the binary sequence.</li>
+</ul>
+<p>If <span class="math inline">\(N \ge 2L\)</span>, the resulting
+polynomial <span class="math inline">\(C(x)\)</span> is mathematically
+guaranteed to be the unique minimal-length LFSR that generates the
+entire prefix of the sequence.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

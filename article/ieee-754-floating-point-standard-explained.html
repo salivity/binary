@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IEEE 754 Floating-Point Standard Explained - binary</title>
+    <meta name="description" content="The IEEE 754 standard is the universal technical benchmark for representing and computing floating-point numbers in modern computer systems. This article explains the architectural structure of the IEEE 754 format, details its core components—the sign">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/ieee-754-floating-point-standard-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="IEEE 754 Floating-Point Standard Explained - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/ieee-754-floating-point-standard-explained" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The IEEE 754 standard is the universal technical benchmark for representing and computing floating-point numbers in modern computer systems. This article explains the architectural structure of the IEEE 754 format, details its core components—the sign" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="ieee-754-floating-point-standard-explained">IEEE 754
+Floating-Point Standard Explained</h1>
+<p>The IEEE 754 standard is the universal technical benchmark for
+representing and computing floating-point numbers in modern computer
+systems. This article explains the architectural structure of the IEEE
+754 format, details its core components—the sign bit, exponent, and
+significand—and demonstrates how real numbers are converted into binary
+floating-point representation. It also covers common formats like single
+and double precision, alongside the encoding of special values such as
+infinity and NaN.</p>
+<h2 id="what-is-ieee-754">What is IEEE 754?</h2>
+<p>Established by the Institute of Electrical and Electronics Engineers
+in 1985, the IEEE 754 standard defines arithmetic formats, rounding
+rules, operations, and exception handling for floating-point
+calculations. Before its adoption, computer manufacturers used
+proprietary methods for floating-point arithmetic, which led to
+inconsistent calculation results across different hardware platforms.
+IEEE 754 ensures portability and numerical consistency across modern
+CPUs, GPUs, and software environments.</p>
+<h2 id="the-structure-of-a-floating-point-number">The Structure of a
+Floating-Point Number</h2>
+<p>Floating-point numbers represent real values in scientific notation
+using base 2:</p>
+<p><span class="math display">\[\text{Value} = (-1)^{\text{Sign}} \times
+\text{Significand} \times 2^{\text{Exponent}}\]</span></p>
+<p>To store this in memory, IEEE 754 divides a binary sequence into
+three distinct fields:</p>
+<ol type="1">
+<li><strong>Sign Bit:</strong> A single bit indicating the sign of the
+number (<span class="math inline">\(0\)</span> for positive, <span
+class="math inline">\(1\)</span> for negative).</li>
+<li><strong>Exponent:</strong> A field of bits representing the power of
+two to which the significand is raised. To handle both positive and
+negative exponents without requiring a separate sign bit, an exponent
+bias is added to the actual exponent.</li>
+<li><strong>Significand (Mantissa):</strong> The fractional part of the
+number. In normalized form, binary numbers always begin with a leading
+non-zero digit (<span class="math inline">\(1\)</span>). Because this
+leading <span class="math inline">\(1\)</span> is always present, it is
+omitted from storage to save space (known as the "hidden bit" or
+"implicit leading bit"), leaving only the fractional bits.</li>
+</ol>
+<h2 id="common-formats-single-and-double-precision">Common Formats:
+Single and Double Precision</h2>
+<p>The standard specifies several precision levels, with 32-bit and
+64-bit being the most widely used:</p>
+<ul>
+<li><strong>Single Precision (Binary32):</strong>
+<ul>
+<li>Total size: 32 bits</li>
+<li>Sign: 1 bit</li>
+<li>Exponent: 8 bits (Bias = 127)</li>
+<li>Significand: 23 bits (24 bits of precision with implicit leading
+1)</li>
+</ul></li>
+<li><strong>Double Precision (Binary64):</strong>
+<ul>
+<li>Total size: 64 bits</li>
+<li>Sign: 1 bit</li>
+<li>Exponent: 11 bits (Bias = 1023)</li>
+<li>Significand: 52 bits (53 bits of precision with implicit leading
+1)</li>
+</ul></li>
+</ul>
+<h2 id="step-by-step-encoding-process">Step-by-Step Encoding
+Process</h2>
+<p>To illustrate how IEEE 754 encodes a real number into binary,
+consider converting the decimal value <strong>-9.625</strong> into
+32-bit single precision:</p>
+<ol type="1">
+<li><p><strong>Determine the Sign Bit:</strong> The number is negative,
+so the sign bit is <code>1</code>.</p></li>
+<li><p><strong>Convert the Absolute Value to Binary:</strong></p>
+<ul>
+<li>Whole number part: <span class="math inline">\(9_{10} =
+1001_2\)</span></li>
+<li>Fractional part: <span class="math inline">\(0.625_{10} = 0.5 +
+0.125 = 2^{-1} + 2^{-3} = 0.101_2\)</span></li>
+<li>Combined binary representation: <span
+class="math inline">\(1001.101_2\)</span></li>
+</ul></li>
+<li><p><strong>Normalize the Binary Value:</strong> Shift the binary
+point until there is exactly one non-zero digit to its left: <span
+class="math display">\[1001.101_2 = 1.001101_2 \times 2^3\]</span> The
+actual exponent is <span class="math inline">\(3\)</span>.</p></li>
+<li><p><strong>Calculate the Biased Exponent:</strong> Add the
+single-precision bias (<span class="math inline">\(127\)</span>) to the
+actual exponent (<span class="math inline">\(3\)</span>): <span
+class="math display">\[E = 3 + 127 = 130\]</span> Convert <span
+class="math inline">\(130\)</span> to an 8-bit binary number: <span
+class="math display">\[130_{10} = 10000010_2\]</span></p></li>
+<li><p><strong>Extract the Significand (Mantissa):</strong> Drop the
+implicit leading <code>1.</code> from <span
+class="math inline">\(1.001101_2\)</span>, leaving <code>001101</code>.
+Pad the remaining positions with zeros to fill all 23 bits:
+<code>00110100000000000000000</code></p></li>
+<li><p><strong>Assemble the Final 32-Bit Sequence:</strong></p>
+<ul>
+<li>Sign (1 bit): <code>1</code></li>
+<li>Exponent (8 bits): <code>10000010</code></li>
+<li>Mantissa (23 bits): <code>00110100000000000000000</code></li>
+</ul>
+<p><strong>Final Encoded Binary:</strong>
+<code>1 10000010 00110100000000000000000</code> (Hexadecimal:
+<code>0xC11A0000</code>)</p></li>
+</ol>
+<h2 id="special-values-and-edge-cases">Special Values and Edge
+Cases</h2>
+<p>IEEE 754 reserves specific bit patterns in the exponent field to
+handle edge cases and non-standard values:</p>
+<ul>
+<li><strong>Zero:</strong> Represented by an exponent of all <span
+class="math inline">\(0\)</span>s and a mantissa of all <span
+class="math inline">\(0\)</span>s. Because of the sign bit, the standard
+supports both <span class="math inline">\(+0\)</span> and <span
+class="math inline">\(-0\)</span>.</li>
+<li><strong>Subnormal Numbers:</strong> When the exponent is all <span
+class="math inline">\(0\)</span>s but the mantissa is non-zero, the
+implicit leading bit becomes <span class="math inline">\(0\)</span>
+rather than <span class="math inline">\(1\)</span>. This allows for
+gradual underflow near zero.</li>
+<li><strong>Infinity (<span
+class="math inline">\(\pm\infty\)</span>):</strong> Represented by an
+exponent of all <span class="math inline">\(1\)</span>s and a mantissa
+of all <span class="math inline">\(0\)</span>s. Used for results that
+overflow or operations like dividing a non-zero number by zero.</li>
+<li><strong>NaN (Not a Number):</strong> Represented by an exponent of
+all <span class="math inline">\(1\)</span>s and a non-zero mantissa.
+Used to signify undefined mathematical operations, such as <span
+class="math inline">\(0/0\)</span> or the square root of a negative
+number.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

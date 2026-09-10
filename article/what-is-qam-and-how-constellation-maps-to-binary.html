@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is QAM and How Constellation Maps to Binary - binary</title>
+    <meta name="description" content="Quadrature Amplitude Modulation (QAM) is an efficient modulation technique that transmits digital data by altering both the amplitude and phase of carrier signals. This article explains the fundamentals of QAM, the structure of its constellation diagram,">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-qam-and-how-constellation-maps-to-binary">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is QAM and How Constellation Maps to Binary - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-qam-and-how-constellation-maps-to-binary" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Quadrature Amplitude Modulation (QAM) is an efficient modulation technique that transmits digital data by altering both the amplitude and phase of carrier signals. This article explains the fundamentals of QAM, the structure of its constellation diagram," />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-qam-and-how-constellation-maps-to-binary">What Is QAM
+and How Constellation Maps to Binary</h1>
+<p>Quadrature Amplitude Modulation (QAM) is an efficient modulation
+technique that transmits digital data by altering both the amplitude and
+phase of carrier signals. This article explains the fundamentals of QAM,
+the structure of its constellation diagram, and the exact demodulation
+process used to interpret incoming analog symbols and map them back into
+binary bitstreams.</p>
+<h3 id="what-is-quadrature-amplitude-modulation-qam">What Is Quadrature
+Amplitude Modulation (QAM)?</h3>
+<p>QAM is a hybrid modulation scheme that transmits two independent
+carrier waves—an In-phase (<span class="math inline">\(I\)</span>)
+component and a Quadrature (<span class="math inline">\(Q\)</span>)
+component—on the same frequency. The <span
+class="math inline">\(Q\)</span> carrier is phase-shifted by 90 degrees
+relative to the <span class="math inline">\(I\)</span> carrier.</p>
+<p>By independently modulating the amplitude of both the <span
+class="math inline">\(I\)</span> and <span
+class="math inline">\(Q\)</span> carriers and summing them together, QAM
+creates unique combinations of amplitude and phase. Each unique state
+represents a "symbol," allowing multiple binary bits to be transmitted
+within a single signal change. The total number of states determines the
+QAM order. For example, 16-QAM represents 4 bits per symbol (<span
+class="math inline">\(2^4 = 16\)</span>), while 64-QAM represents 6 bits
+per symbol (<span class="math inline">\(2^6 = 64\)</span>).</p>
+<h3 id="the-constellation-diagram">The Constellation Diagram</h3>
+<p>A constellation diagram is a two-dimensional geometric representation
+of all possible symbols a QAM system can transmit.</p>
+<ul>
+<li><strong>Horizontal Axis (<span
+class="math inline">\(I\)</span>):</strong> Represents the amplitude of
+the in-phase carrier.</li>
+<li><strong>Vertical Axis (<span
+class="math inline">\(Q\)</span>):</strong> Represents the amplitude of
+the quadrature carrier.</li>
+</ul>
+<p>Each point on the grid represents an ideal symbol state characterized
+by a specific coordinate <span class="math inline">\((I, Q)\)</span>,
+which corresponds to a distinct binary word.</p>
+<h3
+id="how-constellation-points-map-back-to-the-binary-number-system">How
+Constellation Points Map Back to the Binary Number System</h3>
+<p>When a signal arrives at a receiver, noise, interference, and channel
+distortion cause the received coordinates to deviate from their ideal
+constellation locations. The receiver converts these physical signals
+back into digital binary numbers through the following structured
+process:</p>
+<h4 id="1-coherent-demodulation-extracting-i-and-q">1. Coherent
+Demodulation (Extracting <span class="math inline">\(I\)</span> and
+<span class="math inline">\(Q\)</span>)</h4>
+<p>The receiver multiplies the incoming analog signal by local reference
+oscillators—one synchronized with the original carrier and one shifted
+by 90 degrees. Low-pass filters then remove high-frequency components,
+yielding the raw coordinate values <span class="math inline">\((I_{rx},
+Q_{rx})\)</span> of the received symbol.</p>
+<h4 id="2-decision-slicing-and-distance-calculation">2. Decision Slicing
+and Distance Calculation</h4>
+<p>Because of noise, the measured point <span
+class="math inline">\((I_{rx}, Q_{rx})\)</span> rarely lands exactly on
+an ideal coordinate. The receiver determines the most likely transmitted
+point using Maximum Likelihood Detection. It calculates the Euclidean
+distance between the received point and all possible valid constellation
+points:</p>
+<p><span class="math display">\[d = \sqrt{(I_{rx} - I_{ideal})^2 +
+(Q_{rx} - Q_{ideal})^2}\]</span></p>
+<p>The ideal point with the shortest geometric distance to the received
+coordinate is selected as the intended symbol. In hardware, this is
+often implemented efficiently using decision boundaries (slicers) that
+divide the constellation grid into regions.</p>
+<h4 id="3-binary-de-mapping-using-gray-coding">3. Binary De-Mapping
+Using Gray Coding</h4>
+<p>Once the nearest ideal point is identified, the receiver translates
+the coordinate back into its binary representation using a predefined
+lookup table or mapping logic.</p>
+<p>Standard QAM systems employ <strong>Gray coding</strong> for this
+mapping. Under Gray coding, adjacent constellation points differ by only
+a single binary digit (e.g., <code>00</code> is next to <code>01</code>,
+not <code>11</code>). This ensures that if noise causes a symbol to
+cross a decision boundary into an adjacent region, it results in only a
+single bit error rather than multiple corrupted bits.</p>
+<h4 id="4-serialization">4. Serialization</h4>
+<p>Finally, the recovered parallel bits from each symbol (e.g., 4 bits
+from a 16-QAM point) are loaded into a shift register or digital buffer
+and converted into a continuous serial binary stream (<code>0</code>s
+and <code>1</code>s) ready for downstream digital processing.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

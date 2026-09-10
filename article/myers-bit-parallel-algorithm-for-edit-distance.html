@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Myers Bit-Parallel Algorithm for Edit Distance - binary</title>
+    <meta name="description" content="The Myers bit-parallel algorithm accelerates edit distance and approximate sequence alignment calculations by exploiting word-level parallelism inherent in modern computer processors. By translating the incremental differences of dynamic programming matr">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/myers-bit-parallel-algorithm-for-edit-distance">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Myers Bit-Parallel Algorithm for Edit Distance - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/myers-bit-parallel-algorithm-for-edit-distance" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Myers bit-parallel algorithm accelerates edit distance and approximate sequence alignment calculations by exploiting word-level parallelism inherent in modern computer processors. By translating the incremental differences of dynamic programming matr" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="myers-bit-parallel-algorithm-for-edit-distance">Myers
+Bit-Parallel Algorithm for Edit Distance</h1>
+<p>The Myers bit-parallel algorithm accelerates edit distance and
+approximate sequence alignment calculations by exploiting word-level
+parallelism inherent in modern computer processors. By translating the
+incremental differences of dynamic programming matrices into compact bit
+vectors, the algorithm computes entire columns of the alignment grid
+using single-cycle bitwise and arithmetic operations. This technique
+reduces the classic Levenshtein distance time complexity from <span
+class="math inline">\(O(nm)\)</span> to <span
+class="math inline">\(O(nm/w)\)</span>, where <span
+class="math inline">\(n\)</span> and <span
+class="math inline">\(m\)</span> are sequence lengths and <span
+class="math inline">\(w\)</span> is the computer word size (typically 64
+bits), yielding substantial speedups for high-throughput bioinformatics
+and text searching applications.</p>
+<h3 id="the-dynamic-programming-bottleneck">The Dynamic Programming
+Bottleneck</h3>
+<p>Standard sequence alignment relies on dynamic programming (DP),
+building an <span class="math inline">\((n+1) \times (m+1)\)</span>
+matrix <span class="math inline">\(D\)</span> where each cell <span
+class="math inline">\(D[i,j]\)</span> represents the edit distance
+between sequence prefixes. Calculating each cell sequentially requires
+computing minimums across insertions, deletions, and substitutions:</p>
+<p><span class="math display">\[D[i,j] = \min(D[i-1,j] + 1, D[i,j-1] +
+1, D[i-1,j-1] + \text{cost})\]</span></p>
+<p>Because each cell directly depends on its left, top, and top-left
+neighbors, traditional processors must evaluate these calculations one
+element at a time, resulting in <span
+class="math inline">\(O(nm)\)</span> computational steps and significant
+CPU cache usage.</p>
+<h3 id="the-adjacent-delta-property">The Adjacent Delta Property</h3>
+<p>Gene Myers recognized that full integer matrices contain redundant
+data. In an edit distance matrix, adjacent cells differ by at most one
+unit:</p>
+<ul>
+<li><span class="math inline">\(D[i,j] - D[i-1,j] \in \{-1, 0,
++1\}\)</span> (Vertical differences)</li>
+<li><span class="math inline">\(D[i,j] - D[i,j-1] \in \{-1, 0,
++1\}\)</span> (Horizontal differences)</li>
+</ul>
+<p>Because the change between adjacent cells is constrained to three
+states, these differences can be encoded into binary states rather than
+multi-byte integers.</p>
+<h3 id="encoding-matrix-deltas-into-bit-vectors">Encoding Matrix Deltas
+into Bit Vectors</h3>
+<p>Myers represents an entire column of the DP table using bit vectors,
+where individual bit positions correspond to row indices:</p>
+<ul>
+<li><strong>Vertical Positive (<span
+class="math inline">\(VP\)</span>):</strong> Bit <span
+class="math inline">\(i\)</span> is 1 if <span
+class="math inline">\(D[i,j] - D[i-1,j] = +1\)</span>.</li>
+<li><strong>Vertical Negative (<span
+class="math inline">\(VN\)</span>):</strong> Bit <span
+class="math inline">\(i\)</span> is 1 if <span
+class="math inline">\(D[i,j] - D[i-1,j] = -1\)</span>.</li>
+<li><strong>Horizontal Positive (<span
+class="math inline">\(HP\)</span>):</strong> Bit <span
+class="math inline">\(i\)</span> is 1 if <span
+class="math inline">\(D[i,j] - D[i,j-1] = +1\)</span>.</li>
+<li><strong>Horizontal Negative (<span
+class="math inline">\(HN\)</span>):</strong> Bit <span
+class="math inline">\(i\)</span> is 1 if <span
+class="math inline">\(D[i,j] - D[i,j-1] = -1\)</span>.</li>
+<li><strong>Pattern Match Vector (<span
+class="math inline">\(PM\)</span>):</strong> Precomputed bitmasks
+indicating matching character positions in the query sequence.</li>
+</ul>
+<p>If neither the positive nor negative bit is set at index <span
+class="math inline">\(i\)</span>, the delta is zero. Storing deltas this
+way fits 64 consecutive rows of the alignment matrix directly into a
+single 64-bit CPU register.</p>
+<h3 id="binary-arithmetic-and-carry-propagation">Binary Arithmetic and
+Carry Propagation</h3>
+<p>The core breakthrough of the Myers algorithm is using standard binary
+addition to simulate score propagation across cells:</p>
+<ol type="1">
+<li><strong>Character Matching:</strong> A bitwise <code>AND</code>
+between the pattern mask for the incoming target character and the
+current vector identifies match opportunities.</li>
+<li><strong>Carry-Based Propagation:</strong> The addition of binary
+vectors causes carry bits to ripple from lower-order bits to
+higher-order bits. This natural hardware mechanism matches how diagonal
+substitutions and vertical deletions propagate scores down a DP
+column.</li>
+<li><strong>State Transition Logic:</strong> A series of logical
+operators (<code>AND</code>, <code>OR</code>, <code>XOR</code>,
+<code>NOT</code>) and bitwise shifts update <span
+class="math inline">\(VP\)</span>, <span
+class="math inline">\(VN\)</span>, <span
+class="math inline">\(HP\)</span>, and <span
+class="math inline">\(HN\)</span> in parallel.</li>
+</ol>
+<p>Because binary addition ripples through a 64-bit integer within a
+single CPU cycle, the processor resolves 64 dynamic programming
+subproblems simultaneously.</p>
+<h3 id="primary-drivers-of-performance-acceleration">Primary Drivers of
+Performance Acceleration</h3>
+<ul>
+<li><strong>Word-Level Parallelism:</strong> The algorithm evaluates
+<span class="math inline">\(w\)</span> matrix cells in parallel per
+instruction, providing an immediate <span class="math inline">\(\approx
+64\times\)</span> speedup on standard 64-bit registers, and up to <span
+class="math inline">\(256\times\)</span> or <span
+class="math inline">\(512\times\)</span> when implemented with SIMD
+vector extensions (such as AVX-2 or AVX-512).</li>
+<li><strong>Elimination of Conditional Branching:</strong> The dynamic
+programming <span class="math inline">\(\min()\)</span> operations and
+character checks are replaced by purely deterministic bitwise formulas,
+eliminating CPU branch mispredictions.</li>
+<li><strong>Cache and Memory Efficiency:</strong> Only bit-vector
+representations of the active column must reside in CPU registers,
+removing the large memory footprint and cache thrashing associated with
+storing large 2D score matrices.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How DES Permutes and Substitutes 64-Bit Blocks - binary</title>
+    <meta name="description" content="The Data Encryption Standard (DES) encrypts data in 64-bit blocks using a symmetric 16-round Feistel network based on alternating stages of permutation and substitution. Permutations rearrange the positions of binary bits to provide diffusion, while subs">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-des-permutes-and-substitutes-64-bit-blocks">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How DES Permutes and Substitutes 64-Bit Blocks - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-des-permutes-and-substitutes-64-bit-blocks" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Data Encryption Standard (DES) encrypts data in 64-bit blocks using a symmetric 16-round Feistel network based on alternating stages of permutation and substitution. Permutations rearrange the positions of binary bits to provide diffusion, while subs" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-des-permutes-and-substitutes-64-bit-blocks">How DES Permutes
+and Substitutes 64-Bit Blocks</h1>
+<p>The Data Encryption Standard (DES) encrypts data in 64-bit blocks
+using a symmetric 16-round Feistel network based on alternating stages
+of permutation and substitution. Permutations rearrange the positions of
+binary bits to provide diffusion, while substitutions replace bit
+patterns with new values via non-linear tables to provide confusion.
+This process ensures that a change in a single bit of plaintext or key
+propagates unpredictably across the entire 64-bit ciphertext block.</p>
+<h3 id="1-initial-permutation-ip">1. Initial Permutation (IP)</h3>
+<p>The 64-bit input block, represented as a binary sequence from bit 1
+to bit 64, first enters the Initial Permutation (IP). The IP is a fixed
+transposition that rearranges the bits according to a predefined
+matrix:</p>
+<ul>
+<li>All even-indexed bits are shifted to the left half of the
+block.</li>
+<li>All odd-indexed bits are shifted to the right half of the
+block.</li>
+</ul>
+<p>The resulting 64-bit block is split into two 32-bit halves: the Left
+block (<span class="math inline">\(L_0\)</span>) and the Right block
+(<span class="math inline">\(R_0\)</span>).</p>
+<h3 id="2-the-round-structure-and-expansion-permutation-e-box">2. The
+Round Structure and Expansion Permutation (E-Box)</h3>
+<p>DES executes 16 identical rounds. In each round <span
+class="math inline">\(i\)</span> (from 1 to 16), the 32-bit right half
+(<span class="math inline">\(R_{i-1}\)</span>) undergoes the Feistel
+function (<span class="math inline">\(f\)</span>), while the left half
+(<span class="math inline">\(L_{i-1}\)</span>) is XORed with the output
+of <span class="math inline">\(f\)</span>: <span
+class="math display">\[L_i = R_{i-1}\]</span> <span
+class="math display">\[R_i = L_{i-1} \oplus f(R_{i-1}, K_i)\]</span></p>
+<p>Inside the Feistel function, the 32-bit half is first expanded to 48
+bits using the Expansion Permutation (E-box). The E-box rearranges the
+32 bits and duplicates 16 specific bits, creating 8 groups of 6 bits.
+This ensures each bit influences two separate substitutions in the next
+stage.</p>
+<h3 id="3-key-mixing-and-s-box-substitution">3. Key Mixing and S-Box
+Substitution</h3>
+<p>The expanded 48-bit block is combined with a 48-bit round subkey
+(<span class="math inline">\(K_i\)</span>) using bitwise XOR (<span
+class="math inline">\(\oplus\)</span>). The 48-bit result is then
+reduced back to 32 bits through the substitution process using eight
+distinct Substitution Boxes (<span class="math inline">\(S_1\)</span> to
+<span class="math inline">\(S_8\)</span>):</p>
+<ul>
+<li>The 48-bit stream is split into eight 6-bit chunks (<span
+class="math inline">\(B_1, B_2, \dots, B_8\)</span>).</li>
+<li>Each chunk <span class="math inline">\(B_j\)</span> is processed by
+its corresponding box <span class="math inline">\(S_j\)</span>.</li>
+<li>In each 6-bit chunk (<span class="math inline">\(b_1 b_2 b_3 b_4 b_5
+b_6\)</span>), the first and last bits (<span class="math inline">\(b_1
+b_6\)</span>) form a 2-bit binary number (0–3) to select the matrix
+row.</li>
+<li>The middle four bits (<span class="math inline">\(b_2 b_3 b_4
+b_5\)</span>) form a 4-bit binary number (0–15) to select the matrix
+column.</li>
+<li>The intersection of the row and column in the S-box yields a unique
+4-bit output.</li>
+</ul>
+<p>Combining the 4-bit outputs from all eight S-boxes produces a 32-bit
+block. This substitution stage is the only non-linear component of DES,
+making the cipher resistant to linear cryptanalysis.</p>
+<h3 id="4-permutation-function-p-box">4. Permutation Function
+(P-Box)</h3>
+<p>The 32-bit output from the S-boxes is passed through a straight
+32-bit permutation known as the P-box. The P-box does not add, remove,
+or substitute bits; it rearranges the 32 bits according to a fixed
+mapping. This step ensures that the 4-bit output of each S-box is
+distributed across multiple S-boxes in the subsequent round,
+accelerating the avalanche effect.</p>
+<h3 id="5-inverse-initial-permutation-ip-1">5. Inverse Initial
+Permutation (<span class="math inline">\(IP^{-1}\)</span>)</h3>
+<p>After completing 16 rounds, the final left and right 32-bit halves
+are swapped and concatenated into a single 64-bit block (<span
+class="math inline">\(R_{16}L_{16}\)</span>). This 64-bit block passes
+through the Inverse Initial Permutation (<span
+class="math inline">\(IP^{-1}\)</span>), also known as the Final
+Permutation.</p>
+<p>The <span class="math inline">\(IP^{-1}\)</span> matrix is the exact
+mathematical inverse of the Initial Permutation matrix. It restores the
+transposed bits into the standard format, producing the final 64-bit
+encrypted ciphertext block.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

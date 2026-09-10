@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Bit-Slicing Works in Cryptography - binary</title>
+    <meta name="description" content="Bit-slicing is an implementation technique that transforms standard cryptographic algorithms into software-emulated hardware circuits by restructuring data layout. By transposing independent data blocks across processor registers, bit-slicing enables sta">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-bit-slicing-works-in-cryptography">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Bit-Slicing Works in Cryptography - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-bit-slicing-works-in-cryptography" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Bit-slicing is an implementation technique that transforms standard cryptographic algorithms into software-emulated hardware circuits by restructuring data layout. By transposing independent data blocks across processor registers, bit-slicing enables sta" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-bit-slicing-works-in-cryptography">How Bit-Slicing Works in
+Cryptography</h1>
+<p>Bit-slicing is an implementation technique that transforms standard
+cryptographic algorithms into software-emulated hardware circuits by
+restructuring data layout. By transposing independent data blocks across
+processor registers, bit-slicing enables standard bitwise CPU
+instructions to operate as parallel logic gates within the binary number
+system. This approach eliminates timing-based side-channel
+vulnerabilities and maximizes throughput by running multiple
+cryptographic operations simultaneously.</p>
+<h3 id="the-bit-slicing-paradigm">The Bit-Slicing Paradigm</h3>
+<p>In conventional cryptographic implementations, a CPU register holds a
+complete unit of data, such as an 8-bit byte or a 32-bit word,
+representing a single state within a cryptographic algorithm. Operations
+are executed sequentially or in small parallel units using standard
+arithmetic instructions and memory-based lookup tables (S-boxes).</p>
+<p>Bit-slicing inverts this arrangement through orthogonal data
+transposition. If an algorithm processes <span
+class="math inline">\(n\)</span>-bit blocks and runs on a CPU with <span
+class="math inline">\(w\)</span>-bit registers, bit-slicing distributes
+<span class="math inline">\(w\)</span> distinct blocks across <span
+class="math inline">\(n\)</span> registers. Instead of Register 0
+containing all <span class="math inline">\(n\)</span> bits of Block 0,
+Register 0 holds bit 0 from all <span class="math inline">\(w\)</span>
+blocks, Register 1 holds bit 1 from all <span
+class="math inline">\(w\)</span> blocks, and so on.</p>
+<h3 id="emulating-digital-logic-in-software">Emulating Digital Logic in
+Software</h3>
+<p>Once data is transposed into a bit-sliced format, the processor
+treats each register as a bundle of wires carrying binary values (0 or
+1) from <span class="math inline">\(w\)</span> parallel executions.
+Cryptographic functions are translated directly into sequences of
+primitive binary logic instructions:</p>
+<ul>
+<li><strong>Logic Gates:</strong> Processor instructions such as
+<code>AND</code>, <code>OR</code>, <code>XOR</code>, and
+<code>NOT</code> directly emulate their hardware logic-gate equivalents.
+A single 64-bit <code>XOR</code> instruction evaluates 64 independent
+XOR gates concurrently.</li>
+<li><strong>S-Box Conversion:</strong> Memory lookup tables cannot be
+indexed directly in a bit-sliced state. Instead, non-linear substitution
+boxes (S-boxes) are converted into optimized Boolean equations
+(Combinational Logic Circuits). Using techniques like Karnaugh mapping
+or algebraic normal form optimization, the substitution behavior is
+synthesized into a minimal sequence of logical operations.</li>
+<li><strong>Permutations and Shifts:</strong> Linear mixing steps, bit
+rotations, and fixed permutations require zero CPU execution cycles.
+Because each bit position is mapped to a designated register, a
+permutation is achieved simply by renaming registers in code at compile
+time.</li>
+</ul>
+<h3 id="advantages-of-the-bit-sliced-approach">Advantages of the
+Bit-Sliced Approach</h3>
+<ul>
+<li><strong>Constant-Time Execution:</strong> By replacing
+data-dependent memory lookups with a fixed sequence of bitwise
+instructions, bit-slicing ensures identical execution times regardless
+of the input data or key. This inherently mitigates cache-timing and
+branch-prediction side-channel attacks.</li>
+<li><strong>Parallel Throughput:</strong> Bit-slicing leverages native
+SIMD (Single Instruction, Multiple Data) execution without requiring
+dedicated vector hardware. On modern architectures with 256-bit or
+512-bit vector registers (such as AVX-2 or AVX-512), hundreds of blocks
+can be processed concurrently.</li>
+</ul>
+<h3 id="trade-offs-and-constraints">Trade-offs and Constraints</h3>
+<p>The primary cost of bit-slicing is the computational overhead of the
+initial data transposition (slicing) and the final output reconstruction
+(un-slicing). Consequently, bit-slicing is most effective when
+processing large volumes of data in parallel modes of operation (such as
+CTR or GCM) or when handling simultaneous parallel streams, rather than
+encrypting isolated, single-block payloads.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

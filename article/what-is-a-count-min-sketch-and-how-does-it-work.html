@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is a Count-Min Sketch and How Does It Work? - binary</title>
+    <meta name="description" content="A Count-Min Sketch is a probabilistic sublinear-space data structure used in computer science to estimate the frequencies of events in high-volume, continuous data streams. By using a two-dimensional grid of fixed-width binary counters alongside a set of">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-a-count-min-sketch-and-how-does-it-work">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is a Count-Min Sketch and How Does It Work? - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-a-count-min-sketch-and-how-does-it-work" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A Count-Min Sketch is a probabilistic sublinear-space data structure used in computer science to estimate the frequencies of events in high-volume, continuous data streams. By using a two-dimensional grid of fixed-width binary counters alongside a set of" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-a-count-min-sketch-and-how-does-it-work">What Is a
+Count-Min Sketch and How Does It Work?</h1>
+<p>A Count-Min Sketch is a probabilistic sublinear-space data structure
+used in computer science to estimate the frequencies of events in
+high-volume, continuous data streams. By using a two-dimensional grid of
+fixed-width binary counters alongside a set of independent hash
+functions, the algorithm provides a mathematically bounded frequency
+estimate for any given item without storing the raw data itself. This
+makes it an essential tool for network traffic monitoring, real-time
+analytics, and caching systems where memory constraints prevent the use
+of traditional hash tables.</p>
+<h3 id="the-problem-of-high-volume-data-streams">The Problem of
+High-Volume Data Streams</h3>
+<p>Tracking the exact frequency of every unique item in massive
+datasets—such as millions of search queries, financial transactions, or
+network packets—requires an unbounded amount of memory. A standard hash
+map stores every unique key along with its associated counter, leading
+to a space complexity of <span class="math inline">\(O(N)\)</span>,
+where <span class="math inline">\(N\)</span> is the number of distinct
+elements.</p>
+<p>When memory is constrained, exact tracking becomes impossible. The
+Count-Min Sketch solves this by sacrificing a small, controlled amount
+of accuracy for a drastic reduction in memory usage, operating in fixed
+<span class="math inline">\(O(w \times d)\)</span> space, where <span
+class="math inline">\(w\)</span> (width) and <span
+class="math inline">\(d\)</span> (depth) are predetermined
+parameters.</p>
+<h3 id="architecture-of-the-count-min-sketch">Architecture of the
+Count-Min Sketch</h3>
+<p>The Count-Min Sketch consists of a two-dimensional array of
+counters:</p>
+<ul>
+<li><strong>Depth (<span class="math inline">\(d\)</span>):</strong> The
+number of rows in the array. Each row is paired with its own unique,
+pairwise-independent hash function (<span class="math inline">\(h_1,
+h_2, \dots, h_d\)</span>).</li>
+<li><strong>Width (<span class="math inline">\(w\)</span>):</strong> The
+number of columns in the array. This defines the range of the hash
+functions (<span class="math inline">\(0\)</span> to <span
+class="math inline">\(w - 1\)</span>).</li>
+</ul>
+<p>Each cell in this <span class="math inline">\(d \times w\)</span>
+matrix is a numerical counter stored as a fixed-size binary integer
+(typically an 8-bit, 16-bit, 32-bit, or 64-bit unsigned binary integer,
+depending on the maximum expected stream volume).</p>
+<h3 id="how-hash-functions-map-data-to-binary-counters">How Hash
+Functions Map Data to Binary Counters</h3>
+<p>When a stream element arrives, the algorithm does not store the
+item's identity. Instead, it maps the item into the array through the
+following steps:</p>
+<ol type="1">
+<li><p><strong>Hashing:</strong> The item <span
+class="math inline">\(x\)</span> is passed to all <span
+class="math inline">\(d\)</span> hash functions simultaneously. Each
+hash function produces a uniformly distributed integer that is mapped to
+a column index using a modulo operation: <span
+class="math display">\[\text{index}_i = h_i(x) \pmod w \quad \text{for
+each row } i \in \{1, \dots, d\}\]</span></p></li>
+<li><p><strong>Bit-Level Counter Updates:</strong> At the hardware
+level, the counter at coordinates <span class="math inline">\((i,
+\text{index}_i)\)</span> is updated using binary addition. The system
+loads the binary value from the cell, executes an increment operation
+(adding binary <code>00000001</code>), and writes the updated binary
+word back to memory.</p></li>
+</ol>
+<pre><code>Incoming Item: &quot;user_123&quot;
+  ├── h₁(user_123) % w = 4  ──&gt; Row 1, Col 4 [Binary Increment +1]
+  ├── h₂(user_123) % w = 12 ──&gt; Row 2, Col 12 [Binary Increment +1]
+  └── h₃(user_123) % w = 2  ──&gt; Row 3, Col 2 [Binary Increment +1]</code></pre>
+<p>Because the algorithm only updates numerical counters, the actual
+identity (string, raw bytes, or object) of the incoming item is
+discarded immediately after hashing.</p>
+<h3 id="querying-frequencies-and-resolving-collisions">Querying
+Frequencies and Resolving Collisions</h3>
+<p>Because the array has a fixed width, multiple distinct items will
+inevitably hash to the same column (a hash collision). This means
+individual counters may overestimate the count of an item, but they can
+never underestimate it.</p>
+<p>To estimate the frequency of an item <span
+class="math inline">\(x\)</span>:</p>
+<ol type="1">
+<li>The item is hashed across all <span class="math inline">\(d\)</span>
+functions to locate its corresponding counter in each row.</li>
+<li>The algorithm reads the binary counter values at <span
+class="math inline">\((1, h_1(x)), (2, h_2(x)), \dots, (d,
+h_d(x))\)</span>.</li>
+<li>The final frequency estimate is the <strong>minimum</strong> value
+found across all <span class="math inline">\(d\)</span> rows: <span
+class="math display">\[\hat{c}(x) = \min_{1 \le i \le d} M[i,
+h_i(x)]\]</span></li>
+</ol>
+<p>Taking the minimum value reduces the impact of hash collisions. Even
+if a collision artificially inflates the counter in one row, it is
+statistically unlikely that the same items collided across all <span
+class="math inline">\(d\)</span> independent hash functions.</p>
+<h3 id="mathematical-guarantees-and-efficiency">Mathematical Guarantees
+and Efficiency</h3>
+<p>The dimensions of the sketch are derived directly from the desired
+accuracy (<span class="math inline">\(\epsilon\)</span>) and error
+probability (<span class="math inline">\(\delta\)</span>):</p>
+<ul>
+<li><strong>Width:</strong> <span class="math inline">\(w = \lceil
+\frac{e}{\epsilon} \rceil\)</span> (controls the margin of error)</li>
+<li><strong>Depth:</strong> <span class="math inline">\(d = \lceil
+\ln(\frac{1}{\delta}) \rceil\)</span> (controls the probability of
+exceeding that error)</li>
+</ul>
+<p>With these parameters, the estimated frequency <span
+class="math inline">\(\hat{c}(x)\)</span> satisfies: <span
+class="math display">\[\hat{c}(x) \le c(x) + \epsilon N\]</span> with a
+probability of at least <span class="math inline">\(1 - \delta\)</span>,
+where <span class="math inline">\(c(x)\)</span> is the true count and
+<span class="math inline">\(N\)</span> is the total number of items
+processed.</p>
+<p>By using fixed-width binary counters and independent hash functions,
+the Count-Min Sketch provides real-time, deterministic memory guarantees
+for processing massive data streams at hardware-level efficiency.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

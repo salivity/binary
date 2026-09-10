@@ -1,0 +1,2486 @@
+[
+  [
+    414,
+    "How Binary Code Connects Software to Hardware",
+    "The binary number system serves as the critical bridge in computing, translating high-level, abstract software into the physical reality of computer hardware. By representing all data and instructions as sequences of base-2 digits (0 and 1), computing sy",
+    false
+  ],
+  [
+    413,
+    "How DNA Data Storage Converts Binary Code to DNA",
+    "DNA data storage is an emerging technology that replaces traditional silicon-based storage media with synthetic strands of deoxyribonucleic acid (DNA) to store digital information. By translating the binary language of computers (0s and 1s) into the four",
+    false
+  ],
+  [
+    412,
+    "AND Gate Multiplication in Stochastic Computing",
+    "Stochastic computing represents continuous numerical values as probabilities within random binary bitstreams, enabling complex arithmetic operations to be performed with minimal digital hardware. In this paradigm, a standard Boolean AND gate acts as an a",
+    false
+  ],
+  [
+    411,
+    "What Is Stochastic Computing and How It Works",
+    "Stochastic computing is an unconventional processing paradigm that represents continuous numerical values as probabilities within randomized binary bitstreams. This article explains the core principles of stochastic computing, details how continuous prob",
+    false
+  ],
+  [
+    410,
+    "Spatial Light Modulation in Optical Computing",
+    "Optical computing architectures harness the unique properties of light—such as speed, phase, polarization, and non-interference—to perform high-throughput computational tasks. At the core of optical binary computing is the Spatial Light Modulator (SL",
+    false
+  ],
+  [
+    409,
+    "How Spintronics Powers Magnetic Racetrack Memory",
+    "Racetrack memory is a non-volatile, solid-state data storage technology that leverages spintronics and magnetic domain walls to achieve unprecedented storage density and processing speed. By using the intrinsic spin of electrons rather than their electri",
+    false
+  ],
+  [
+    408,
+    "Physical Limits of Silicon Transistor Scaling",
+    "As semiconductor manufacturing pushes transistor dimensions toward the atomic scale, fundamental physical laws threaten the traditional scaling of binary silicon logic gates. This article examines the primary physical boundaries—such as quantum tunneli",
+    false
+  ],
+  [
+    407,
+    "How XNOR and Popcount Boost Matrix Energy Efficiency",
+    "Replacing traditional 32-bit floating-point (FP32) matrix multiplications with 1-bit bitwise XNOR and popcount operations yields extreme energy efficiency in computing systems, particularly in Binarized Neural Networks (BNNs). By constraining weights and",
+    false
+  ],
+  [
+    406,
+    "Binary Neural Networks: Replacing MAC with XNOR",
+    "Binary Neural Networks (BNNs) dramatically improve computational efficiency and reduce memory footprints by quantizing both continuous weights and activations to single-bit values. By constraining these values to either $+1$ or $-1$ (mapped to logical $1",
+    false
+  ],
+  [
+    405,
+    "What is Error-Correcting Output Code (ECOC)?",
+    "Error-Correcting Output Code (ECOC) is an ensemble machine learning technique designed to solve multiclass classification problems by breaking them down into multiple, simpler binary classification tasks. By assigning each class a unique multi-bit binary",
+    false
+  ],
+  [
+    404,
+    "How SimHash Generates Locality-Sensitive Hashes",
+    "SimHash is a locality-sensitive hashing (LSH) algorithm designed to detect near-duplicate items by mapping high-dimensional data into compact binary fingerprints. Unlike cryptographic hash functions where a tiny change in input causes an avalanche of bit",
+    false
+  ],
+  [
+    403,
+    "Understanding MinHash and Jaccard Similarity in Bitsets",
+    "This article explores Min-wise hashing (MinHash), an algorithmic technique designed to rapidly estimate the Jaccard similarity between high-dimensional binary datasets. You will learn how documents represented as binary characteristic vectors (bitsets) a",
+    false
+  ],
+  [
+    402,
+    "Why Leading Zeros in Hashes Reveal Accurate Cardinality",
+    "This article explains how probabilistic data structures, such as HyperLogLog, leverage the distribution of leading zeros in binary hash values to approximate the number of unique elements (cardinality) in massive datasets. By converting arbitrary input i",
+    false
+  ],
+  [
+    401,
+    "How HyperLogLog Estimates Cardinality with Hashes",
+    "HyperLogLog (HLL) is an algorithm designed to estimate the cardinality—the number of unique elements—of massive datasets using a fraction of the memory required by traditional counting methods. This article explains the mechanics of HyperLogLog, focu",
+    false
+  ],
+  [
+    400,
+    "What Is a Count-Min Sketch and How Does It Work?",
+    "A Count-Min Sketch is a probabilistic sublinear-space data structure used in computer science to estimate the frequencies of events in high-volume, continuous data streams. By using a two-dimensional grid of fixed-width binary counters alongside a set of",
+    false
+  ],
+  [
+    399,
+    "Fast Genome Searching with BWT and FM-Index",
+    "Fast genome searching relies on the synergistic integration of the Burrows-Wheeler Transform (BWT), the Ferragina-Manzini (FM) index, and binary bitvectors. By converting massive nucleotide sequences into a reversible, highly compressible format, the BWT",
+    false
+  ],
+  [
+    398,
+    "Wavelet Matrix: Rank and Select Over Large Alphabets",
+    "A Wavelet Matrix is a compact, succinct data structure designed to efficiently store sequences over large alphabets while supporting core query operations: access, rank, and select. By breaking symbols down into their binary representations and storing t",
+    false
+  ],
+  [
+    397,
+    "Finding the K-th Set Bit With Select Queries",
+    "The select query is a fundamental operation in succinct data structures that returns the exact index of the $k$-th occurrence of a set bit (1) within a bitvector. While a straightforward linear scan requires linear time, advanced implementations achieve",
+    false
+  ],
+  [
+    396,
+    "Rank Query: Counting Set Bits in Bitvectors",
+    "The rank query is a fundamental operation in succinct data structures that counts the number of set bits (ones) up to a specified index in a bitvector. While a naive scan through the binary sequence solves this linearly, modern computer science uses a co",
+    false
+  ],
+  [
+    395,
+    "Succinct Data Structures: Rank and Select Explained",
+    "Succinct data structures represent data using space that approaches the information-theoretic lower bound while still supporting fast, efficient algorithmic queries in-place without full decompression. This article explains how succinct design minimizes",
+    false
+  ],
+  [
+    394,
+    "Elias-Fano Encoding for Integer Sequences",
+    "Elias-Fano encoding is a quasi-succinct data structure that compresses monotonically non-decreasing sequences of non-negative integers into a space close to the information-theoretic lower bound. By splitting each integer into its most significant (high)",
+    false
+  ],
+  [
+    393,
+    "Compressed Bitsets in Search Engine Inverted Indexes",
+    "Modern search engines rely on inverted indexes to locate records instantly across massive, multi-terabyte datasets. By encoding document identifiers into binary bitsets and compressing them using modern algorithms, search engines drastically lower memory",
+    false
+  ],
+  [
+    392,
+    "What Is Roaring Bitmap Compression?",
+    "Roaring bitmap compression is an advanced data structure designed to store and query large sets of 32-bit unsigned integers with exceptional speed and minimal memory overhead. Unlike traditional bitmaps or run-length encoding formats, Roaring bitmaps dyn",
+    false
+  ],
+  [
+    391,
+    "Judy Array Architecture and Compressed Bit Structures",
+    "This article provides an overview of how Judy arrays achieve near-optimal memory scaling and high computational performance in binary mapping. By dynamically switching between compressed and uncompressed bit structures across a hierarchical digital tree",
+    false
+  ],
+  [
+    390,
+    "What Is a Crit-Bit Tree and How Does It Work?",
+    "A crit-bit (critical-bit) tree is a specialized, memory-efficient variation of a radix tree or Patricia trie used for storing and retrieving binary keys and strings. This article explains the fundamental concept of a crit-bit tree, its structural advanta",
+    false
+  ],
+  [
+    389,
+    "How Radix Trees Compress Binary Prefixes",
+    "A Radix Tree, specifically in its binary-optimized form known as a Patricia Trie (Practical Algorithm to Retrieve Information Coded in Alphanumeric), achieves high space and search efficiency by collapsing redundant, single-child node paths into single e",
+    false
+  ],
+  [
+    388,
+    "Implicit Data Structures and Positional Indexing",
+    "This article explores implicit data structures, detailing how they organize information in memory without the use of explicit pointers. It examines how these structures significantly reduce memory overhead by storing relationships implicitly within conti",
+    false
+  ],
+  [
+    387,
+    "Binary Heap Indexing with Bit Shifts Explained",
+    "Array-based binary heaps store complete binary trees in contiguous memory, allowing parent and child relationships to be traversed without explicit pointers. By mapping tree levels directly to binary place values, standard arithmetic operations like mult",
+    false
+  ],
+  [
+    386,
+    "Binary Numbers in Binary Heap Priority Queues",
+    "Binary heaps are fundamental data structures for implementing priority queues, providing efficient insertion, deletion, and access to minimum or maximum elements. The binary number system dramatically simplifies the implementation of binary heaps by enab",
+    false
+  ],
+  [
+    385,
+    "Hilbert Curve vs Morton Order in Binary Systems",
+    "Space-filling curves map multidimensional data into a one-dimensional sequence, serving as a cornerstone for spatial indexing, image processing, and database architectures. While both the Hilbert curve and Morton ordering (Z-order curve) project higher-d",
+    false
+  ],
+  [
+    384,
+    "Morton Codes in Spatial Octrees and BVH Construction",
+    "Spatial indexing algorithms translate multi-dimensional coordinate data into one-dimensional keys using Morton codes (also known as the Z-order curve), allowing complex spatial structures like octrees and Bounding Volume Hierarchies (BVHs) to be built wi",
+    false
+  ],
+  [
+    383,
+    "Bitboard Representation in Connect Four and Othello",
+    "A bitboard representation is a high-performance data structure that models a board game state using binary integers, where each individual bit corresponds to a specific cell on the board. In games like Connect Four and Othello (Reversi), bitboards replac",
+    false
+  ],
+  [
+    382,
+    "Myers Bit-Parallel Algorithm for Edit Distance",
+    "The Myers bit-parallel algorithm accelerates edit distance and approximate sequence alignment calculations by exploiting word-level parallelism inherent in modern computer processors. By translating the incremental differences of dynamic programming matr",
+    false
+  ],
+  [
+    381,
+    "Bitap Algorithm: Bit-Parallel NFA Fuzzy Search",
+    "The Bitap algorithm—also known as the Shift-Or, Shift-And, or Baeza-Yates–Gonnet algorithm—is an approximate string matching technique that simulates a Non-deterministic Finite Automaton (NFA) using bitwise operations. By encoding the states of an",
+    false
+  ],
+  [
+    380,
+    "Why CORDIC Algorithm Enabled Early Calculators",
+    "The Coordinate Rotation Digital Computer (CORDIC) algorithm was a foundational breakthrough in computing that enabled early pocket calculators and navigation systems to compute complex trigonometric, logarithmic, and mathematical functions without dedica",
+    false
+  ],
+  [
+    379,
+    "How CORDIC Uses Bit Shifts for Trigonometry",
+    "The CORDIC (Coordinate Rotation Digital Computer) algorithm is a hardware-efficient method for calculating trigonometric, hyperbolic, and other mathematical functions using only basic additions, subtractions, and binary bit shifts. Instead of relying on",
+    false
+  ],
+  [
+    378,
+    "Computing Integer Square Root with Binary Shifts",
+    "An integer square root algorithm calculates the greatest integer less than or equal to the square root of a given non-negative integer. This article explains the mechanics of computing exact integer square roots using a digit-by-digit binary method, deta",
+    false
+  ],
+  [
+    377,
+    "How Stein's Binary GCD Algorithm Works",
+    "Stein's algorithm, also known as the binary GCD algorithm, computes the greatest common divisor (GCD) of two non-negative integers by replacing traditional division and modulo operations with bitwise right shifts, parity checks, and subtractions. While t",
+    false
+  ],
+  [
+    376,
+    "What Is the Binary GCD (Stein's) Algorithm?",
+    "The binary GCD algorithm, also known as Stein's algorithm, is an efficient method for computing the greatest common divisor of two non-negative integers. Unlike the traditional Euclidean algorithm, which relies on division and modulo operations, Stein's",
+    false
+  ],
+  [
+    375,
+    "Lemire's Fast Alternative to Modulo Reduction",
+    "Daniel Lemire's fast alternative to modulo reduction maps an uniformly distributed unsigned integer into a bounded range $[0, s)$ using fixed-point multiplication rather than expensive hardware division. By treating the random integer as a fractional val",
+    false
+  ],
+  [
+    374,
+    "How SWAR Finds Zero Bytes in an Integer",
+    "SWAR (SIMD Within A Register) is a technique that processes multiple data lanes in parallel using standard general-purpose registers and integer operations. One of the most famous SWAR algorithms detects whether any byte in a 32-bit (or 64-bit) integer c",
+    false
+  ],
+  [
+    373,
+    "SWAR: Parallel Byte Operations in 64-Bit Registers",
+    "This article provides an overview of SWAR (SIMD Within A Register), detailing how standard 64-bit integer registers and binary bitwise instructions process eight 8-bit bytes simultaneously. By partitioning integer registers, applying bitmasks, and managi",
+    false
+  ],
+  [
+    372,
+    "Bit-Level Matrix Transposition with SIMD",
+    "This article provides a technical overview of bit-level matrix transposition algorithms and their optimization using Single Instruction, Multiple Data (SIMD) architectures. It covers the mathematical formulation of transposing single-bit elements within",
+    false
+  ],
+  [
+    371,
+    "Harvey and Hoeven O(n log n) Integer Multiplication",
+    "In 2019, mathematicians David Harvey and Joris van der Hoeven published a breakthrough algorithm achieving the long-conjectured $O(n \\log n)$ time complexity for multiplying two $n$-bit integers. This article explains how their method processes arbitrary",
+    false
+  ],
+  [
+    370,
+    "Schönhage-Strassen Algorithm and FFT Multiplication",
+    "The Schönhage-Strassen algorithm is an asymptotically fast multiplication algorithm for large integers that reduces the computational complexity of multiplying $N$-bit numbers to $O(N \\log N \\log \\log N)$. Developed by Arnold Schönhage and Volker Stras",
+    false
+  ],
+  [
+    369,
+    "Toom-Cook Algorithm: Generalizing Karatsuba",
+    "This article provides an overview of how the Toom-Cook multiplication algorithm generalizes Karatsuba multiplication by partitioning large integers into an arbitrary number of limbs. By treating multi-precision binary numbers as polynomials, Toom-Cook re",
+    false
+  ],
+  [
+    368,
+    "How Karatsuba Multiplication Accelerates Binary Math",
+    "This article explores how the Karatsuba algorithm improves large integer arithmetic within binary systems by reducing the number of multi-word multiplications required. By dividing large numbers into smaller segments and applying an algebraic identity, K",
+    false
+  ],
+  [
+    367,
+    "Ancient Egyptian Multiplication and Binary Math",
+    "The Ancient Egyptian multiplication algorithm—also known as Ethiopian peasant multiplication or the method of doubling and halving—is an ancient mathematical technique used to multiply two integers using only addition, doubling, and halving. While de",
+    false
+  ],
+  [
+    366,
+    "Binary Bit Shifts in Russian Peasant Multiplication",
+    "Russian peasant multiplication is an ancient algorithm that computes the product of two integers using only halving, doubling, and addition. Despite predating modern computing by centuries, the mechanism behind this technique is functionally identical to",
+    false
+  ],
+  [
+    365,
+    "Positional Base Conversion and Horner's Method",
+    "This article provides an overview of positional notation base conversion and explains how Horner's method optimizes the evaluation of polynomials representing binary numbers. Positional notation expresses numerical values as sums of weighted powers of a",
+    false
+  ],
+  [
+    364,
+    "Stochastic Rounding to Prevent Gradient Vanishing",
+    "This article explains how stochastic rounding addresses the gradient vanishing problem in low-precision neural network training. In constrained binary formats—such as 8-bit or 16-bit floating-point and fixed-point representations—standard determinist",
+    false
+  ],
+  [
+    363,
+    "What Is Integer Quantization? INT8 and INT4 Guide",
+    "Integer quantization is a model optimization technique that compresses deep learning neural networks by converting high-precision floating-point weights and activations into lower-bit integer representations, such as 8-bit (INT8) or 4-bit (INT4). This ar",
+    false
+  ],
+  [
+    362,
+    "How TensorFloat-32 (TF32) Accelerates AI Math",
+    "TensorFloat-32 (TF32) is a specialized computing format designed by NVIDIA to accelerate deep learning training and inference on modern GPUs without requiring manual code changes. It achieves significant speedups by adopting a hybrid binary representatio",
+    false
+  ],
+  [
+    361,
+    "What is bfloat16 and Why Deep Learning Uses It",
+    "This article explores bfloat16 (Brain Floating Point 16), a 16-bit binary floating-point format designed specifically to accelerate neural network training and inference. You will learn the structural differences between bfloat16, IEEE 754 standard singl",
+    false
+  ],
+  [
+    360,
+    "How 80-Bit x87 Floating-Point Reduces Rounding Errors",
+    "This article explains how the 80-bit double-extended precision format, implemented in the x87 floating-point unit (FPU), prevents the accumulation of rounding errors in numerical computations. You will learn the architectural differences between standard",
+    false
+  ],
+  [
+    359,
+    "What Is ULP and How Does It Measure Floating-Point Error?",
+    "A Unit in the Last Place (ULP) is a fundamental metric used in computer science and numerical analysis to quantify the precision and error margins of floating-point computations. Because computers use finite binary representations to store infinitely con",
+    false
+  ],
+  [
+    358,
+    "How the DAZ Flag Handles Subnormal Numbers",
+    "In binary floating-point computation, subnormal numbers introduce gradual underflow to prevent sudden precision loss, but handling them often incurs significant CPU latency. The Denormals-Are-Zero (DAZ) flag is a hardware-level control feature implemente",
+    false
+  ],
+  [
+    357,
+    "How FTZ Flag Optimizes DSP Performance vs Precision",
+    "The Flush-To-Zero (FTZ) flag is a hardware-level floating-point control mechanism that modifies how processors handle underflow conditions in binary arithmetic. In standard IEEE 754 floating-point computation, values that fall below the minimum represent",
+    false
+  ],
+  [
+    356,
+    "Why Subnormal Floats Cause Denormalization Stalls",
+    "A denormalization stall is a severe performance degradation that occurs when a CPU processes subnormal (denormalized) floating-point numbers. In modern computing, floating-point hardware units are highly optimized for standard, normalized IEEE 754 number",
+    false
+  ],
+  [
+    355,
+    "What Is Floating-Point Normalization in Binary?",
+    "Floating-point normalization is a standard process in computer arithmetic that adjusts a number's significand (or mantissa) and exponent so that the significand starts with a single, non-zero digit. This article explains the mechanics of floating-point n",
+    false
+  ],
+  [
+    354,
+    "Floating-Point Addition: Exponent Alignment Explained",
+    "In binary floating-point arithmetic, adding two numbers requires their radix points to be aligned before their significands (mantissas) can be summed. This article explains the alignment process in floating-point addition, focusing on how hardware compar",
+    false
+  ],
+  [
+    353,
+    "Fast Inverse Square Root and Magic Number 0x5f3759df",
+    "This article explores the magic constant 0x5f3759df, made famous by the source code of the video game Quake III Arena, which enables the rapid computation of the inverse square root ($1/\\sqrt{x}$) of a 32-bit floating-point number. Below, we break down h",
+    false
+  ],
+  [
+    352,
+    "Fast Inverse Square Root Algorithm Explained",
+    "The fast inverse square root algorithm, popularized by the source code of Quake III Arena, computes $y = 1/\\sqrt{x}$ up to four times faster than traditional floating-point division and square root operations of its era. It achieves this by treating the",
+    false
+  ],
+  [
+    351,
+    "Why Powers of Two Multiply Without Rounding Errors",
+    "In computer systems, standard floating-point arithmetic (defined by the IEEE 754 standard) represents real numbers using base-2 scientific notation. An exact power of two is any number equal to $2^n$ for an integer $n$, such as 0.25, 0.5, 1, 2, 4, or 8.",
+    false
+  ],
+  [
+    350,
+    "Gradual Underflow and Denormal Numbers Explained",
+    "This article explores the mechanics of gradual underflow and how denormal (or subnormal) numbers prevent critical computational errors in floating-point arithmetic. In the binary number system governed by the IEEE 754 standard, arithmetic operations that",
+    false
+  ],
+  [
+    349,
+    "How IEEE 754 Rounding Modes Affect Binary Output",
+    "The IEEE 754 floating-point standard governs how computer hardware represents and calculates real numbers in binary formats. Because infinite precision arithmetic must fit into finite bit fields, intermediate calculations produce extra precision bits tha",
+    false
+  ],
+  [
+    348,
+    "Casting 64-Bit to 32-Bit Integer in Binary",
+    "When casting a 64-bit integer to a 32-bit integer, the system performs integer truncation at the binary level by discarding the 32 most significant (upper) bits and preserving only the 32 least significant (lower) bits. This process directly alters the b",
+    false
+  ],
+  [
+    347,
+    "How Zero Extension Works for Unsigned Integers",
+    "Zero extension is a fundamental binary operation used by computer hardware and compilers to increase the bit-width of an unsigned integer while preserving its original numerical value. When a smaller data type—such as an 8-bit byte—is promoted to a l",
+    false
+  ],
+  [
+    346,
+    "What Is Sign Extension in Binary Systems?",
+    "Sign extension is an operation in computer arithmetic used to increase the bit width of a signed binary number while preserving its original sign and numerical value. When moving a value from a narrower format (such as an 8-bit byte) to a wider format (s",
+    false
+  ],
+  [
+    345,
+    "Zero-Extend vs Sign-Extend: Integer Widening",
+    "When working with binary data, widening an integer involves converting a value from a smaller bit-width to a larger bit-width, such as converting an 8-bit byte into a 16-bit word or a 32-bit integer. The fundamental difference between a zero-extend instr",
+    false
+  ],
+  [
+    344,
+    "What Is the TEST Instruction in x86 Assembly?",
+    "The TEST instruction in x86 assembly is a non-destructive operation used to evaluate specific bits within registers or memory locations. It computes an implicit bitwise AND between two operands, modifies the CPU status flags based on the outcome, and dis",
+    false
+  ],
+  [
+    343,
+    "How the CMP Instruction Updates CPU Flags",
+    "The CMP (Compare) instruction evaluates the relationship between two operands by performing an internal, implicit subtraction without saving the mathematical result to any destination register. Instead of overwriting register contents, the processor rout",
+    false
+  ],
+  [
+    342,
+    "Condition Codes and Status Flags in Branch Instructions",
+    "This article explains what condition codes are and how conditional branch instructions evaluate status flag combinations within the binary number system. In modern processor architectures, the arithmetic logic unit (ALU) updates hardware flags after arit",
+    false
+  ],
+  [
+    341,
+    "Unsigned vs Signed Overflow: Carry and Overflow Flags",
+    "Central Processing Units (CPUs) handle binary arithmetic identically for both signed and unsigned numbers, relying on status flags in the flags register to indicate when an operation exceeds hardware limits. The processor evaluates unsigned overflow usin",
+    false
+  ],
+  [
+    340,
+    "Why Adding Two Negative Numbers Causes Binary Overflow",
+    "In computer systems, signed integers are typically represented using the two's complement binary format, where the most significant bit (MSB) indicates the sign of the number. When two negative numbers are added, their sum may exceed the minimum negative",
+    false
+  ],
+  [
+    339,
+    "Why Subtracting Negative Numbers Causes Binary Overflow",
+    "In binary computer arithmetic, subtracting a negative number from a positive number is mathematically equivalent to adding two positive magnitudes together. Because computers store signed numbers in fixed-width registers using formats like two's compleme",
+    false
+  ],
+  [
+    338,
+    "Two's Complement Overflow Detection Using XOR",
+    "This article provides an overview of arithmetic overflow in two's complement binary representation and explains how digital systems synthesize detection logic using XOR gates. You will learn the mathematical conditions that cause signed overflow, how sig",
+    false
+  ],
+  [
+    337,
+    "How ADCs Represent Signed Integers in Offset Binary",
+    "Analog-to-Digital Converters (ADCs) frequently handle bipolar analog signals—voltages that swing between negative and positive limits—by using the offset binary system, also known as excess-$K$ or excess binary. This encoding method shifts the signed",
+    false
+  ],
+  [
+    336,
+    "What Is Soft Bit Read in NAND Flash LDPC Decoding",
+    "In modern NAND flash memory, a soft bit read is an advanced sensing technique that samples cell voltage levels using multiple reference thresholds to generate probabilistic confidence metrics rather than simple binary decisions. While a standard hard bit",
+    false
+  ],
+  [
+    335,
+    "How SSD Controllers Correct Burst Read Errors",
+    "This article provides an overview of how Solid State Drive (SSD) controllers use specialized Error-Correcting Code (ECC) engines to identify and fix burst errors during binary memory reads. As NAND flash memory scales down and wears out, physical degrada",
+    false
+  ],
+  [
+    334,
+    "What Is Read Disturb in Flash Memory?",
+    "Read disturb is a hardware-level phenomenon in NAND flash memory where repeatedly reading data from a specific memory cell inadvertently stresses adjacent, unread cells. Over time, this repeated stress injects small electrical charges into neighboring ce",
+    false
+  ],
+  [
+    333,
+    "How SLC Caching Improves SSD Burst Write Performance",
+    "Single-Level Cell (SLC) caching significantly enhances the burst write performance of modern multi-bit flash storage (such as TLC and QLC) by temporarily writing incoming data using a simple, single-bit binary programming method. Instead of immediately w",
+    false
+  ],
+  [
+    332,
+    "SSD Bad Block Tables and Memory Remapping Explained",
+    "Solid-state drives (SSDs) maintain data integrity and performance through internal management systems designed to handle physical hardware degradation. This article explains what a bad block table (BBT) is, how NAND flash memory cells fail to retain bina",
+    false
+  ],
+  [
+    331,
+    "How Flash Wear Leveling Protects Dielectric Oxides",
+    "Flash memory relies on floating-gate or charge-trap transistors where trapped electrons represent binary states separated by an ultra-thin dielectric oxide layer. Repeated program and erase (P/E) cycles degrade this insulating barrier over time, leading",
+    false
+  ],
+  [
+    330,
+    "What Is Modified Frequency Modulation MFM",
+    "Modified Frequency Modulation (MFM) is a run-length limited encoding method historically used to store digital data on magnetic media, such as floppy disks and early hard drives. By optimizing the spacing between magnetic flux transitions, MFM effectivel",
+    false
+  ],
+  [
+    329,
+    "How GCR Improved Floppy Disk Reliability",
+    "Group Coded Recording (GCR) significantly enhanced data reliability on magnetic floppy disks by transforming raw binary data into specific bit patterns that maintain drive synchronization and prevent magnetic interference. Storing raw binary numbers dire",
+    false
+  ],
+  [
+    328,
+    "RLL 1,7 vs RLL 2,7 Encoding Differences",
+    "Run-Length Limited (RLL) encoding is a modulation technique used by magnetic disk controllers to store binary data efficiently and reliably on physical media. The two prominent variants, RLL (1,7) and RLL (2,7), differ fundamentally in their code rates,",
+    false
+  ],
+  [
+    327,
+    "How RLL Encoding Optimizes Binary Storage Density",
+    "Run-length limited (RLL) encoding is a line-coding technique used in magnetic and optical storage systems to maximize data capacity while maintaining signal reliability. By enforcing strict mathematical boundaries on the number of consecutive zeros betwe",
+    false
+  ],
+  [
+    326,
+    "Understanding BMP Format and Pixel Serialization",
+    "The Bitmap (BMP) file format is a foundational raster graphics format that stores digital images as an uncompressed, raw grid of pixels. This article explores the architecture of a BMP file, explains how a two-dimensional visual image is translated into",
+    false
+  ],
+  [
+    325,
+    "How Warshall's Algorithm Uses Bitwise Operations",
+    "Warshall's algorithm is a fundamental graph theory algorithm used to compute the transitive closure of a directed graph, determining whether a path exists between any two vertices. When implemented using the binary number system and bitwise operations, t",
+    false
+  ],
+  [
+    324,
+    "Representing Graphs Using Binary Adjacency Matrices",
+    "This article explores how the binary number system enables the compact, efficient representation of arbitrary graphs through binary adjacency matrices. By encoding the presence or absence of edges as fundamental boolean states—1 and 0—computational s",
+    false
+  ],
+  [
+    323,
+    "Micropipeline Architecture and Bundled Data",
+    "Micropipeline architecture is a modular, event-driven framework used to design asynchronous digital circuits without relying on a global clock signal. This article examines how micropipelines operate, explores their reliance on bundled-data protocols to",
+    false
+  ],
+  [
+    322,
+    "Understanding the Muller C-Element Synchronizer",
+    "The Muller C-element is a fundamental digital logic gate used in asynchronous circuit design to coordinate concurrent operations without a central clock. Unlike standard synchronous circuits that rely on periodic clock ticks to update binary data, asynch",
+    false
+  ],
+  [
+    321,
+    "How Dual-Rail Encoding Works in Asynchronous Logic",
+    "Dual-rail encoding is a signaling convention in asynchronous digital systems that embeds both binary data and operational timing onto physical wires, eliminating the need for a global clock. This article explains how two-wire bit representations convey l",
+    false
+  ],
+  [
+    320,
+    "What Is an Asynchronous Circuit and How It Works",
+    "An asynchronous circuit is a digital system that performs computations without relying on a centralized global clock signal to synchronize its operations. Instead of waiting for periodic clock pulses to advance state changes, asynchronous circuits coordi",
+    false
+  ],
+  [
+    319,
+    "Clock-to-Q Delay and Maximum Clock Frequency",
+    "Clock-to-Q delay is a fundamental timing parameter in sequential digital logic that measures the time required for a flip-flop to update its output after receiving a clock edge. In synchronous binary systems, this delay directly contributes to the minimu",
+    false
+  ],
+  [
+    318,
+    "How STA Calculates Setup and Hold Slack in Logic Paths",
+    "Static Timing Analysis (STA) verifies the operational frequency and timing integrity of digital integrated circuits by evaluating propagation delays across all logic paths without simulating functional vectors. In synchronous designs processing binary da",
+    false
+  ],
+  [
+    317,
+    "What is Technology Mapping in VLSI Design?",
+    "Technology mapping is a crucial phase in the digital VLSI (Very Large Scale Integration) design flow that converts a technology-independent logic representation into a network of target-specific standard cells. This article explores the fundamentals of t",
+    false
+  ],
+  [
+    316,
+    "Binary Logic Synthesis: From HDL Code to Gates",
+    "Binary logic synthesis is the automated process of converting abstract, high-level descriptions of digital circuits into an optimized network of discrete binary logic gates. This article explains how Electronic Design Automation (EDA) tools ingest Hardwa",
+    false
+  ],
+  [
+    315,
+    "Eliminating Logic Hazards with Consensus Terms",
+    "In digital circuit design, physical propagation delays within logic gates can cause transient false outputs known as logic hazards or glitches. When an input variable transitions between binary states, complementary paths in a combinational circuit may n",
+    false
+  ],
+  [
+    314,
+    "Dynamic Hazard Propagation in Binary Circuits",
+    "This article provides an overview of dynamic hazard propagation in digital logic design, detailing how unintended transient glitches occur during signal state changes. It explores the foundational mechanics of dynamic hazards, explains why multi-level co",
+    false
+  ],
+  [
+    313,
+    "Static Hazards and Asymmetric Propagation Delays",
+    "In digital logic design, static hazards are transient errors or \"glitches\" that occur when an input transition causes an output to momentarily toggle when it should remain constant. These glitches stem directly from asymmetric propagation delays across p",
+    false
+  ],
+  [
+    312,
+    "Understanding Hazards in Combinational Circuits",
+    "In digital logic design, hazards and glitches are temporary timing anomalies that cause a circuit's output to switch to an incorrect logic state before settling into its intended value. This article explores the root causes of hazards in combinational di",
+    false
+  ],
+  [
+    311,
+    "Unate Functions and Monotonicity in Switching Theory",
+    "In switching theory and Boolean algebra, an unate function is a specific class of logic function where each input variable exerts a strictly unidirectional effect on the output across all input combinations. This article explores the mathematical definit",
+    false
+  ],
+  [
+    310,
+    "Quine-McCluskey Algorithm for Boolean Minimization",
+    "The Quine-McCluskey method, also known as the tabular method, is a systematic, algebraic approach used to simplify complex Boolean logic functions into their minimal sum-of-products form. While Karnaugh maps (K-maps) rely on human visual pattern recognit",
+    false
+  ],
+  [
+    309,
+    "Karnaugh Maps and Gray Code Logic Simplification",
+    "A Karnaugh map, commonly known as a K-map, is a graphical method used in digital electronics to simplify Boolean algebra expressions without relying on complex algebraic theorems. By organizing truth table values into a specialized multidimensional grid,",
+    false
+  ],
+  [
+    308,
+    "How FWHT Accelerates Binary Vector Correlation",
+    "This article explores how the Fast Walsh-Hadamard Transform (FWHT) optimizes correlation calculations between binary vectors. Computing cross-correlation or autocorrelation naively requires quadratic time complexity, creating a performance bottleneck in",
+    false
+  ],
+  [
+    307,
+    "Walsh-Hadamard Transform of Boolean Functions",
+    "The Walsh-Hadamard Transform (WHT) is an orthogonal mathematical operation that decomposes Boolean functions into a linear combination of basic affine functions within the binary domain. By converting binary functions from the standard truth-table repres",
+    false
+  ],
+  [
+    306,
+    "How Reed-Muller Codes Correct Multidimensional Errors",
+    "Reed-Muller (RM) codes are a foundational class of linear error-correcting codes that model information as multivariate polynomials evaluated over a binary hypercube. By mapping binary data to geometric coordinates across multiple dimensions, these codes",
+    false
+  ],
+  [
+    305,
+    "Algebraic Normal Form of Boolean Functions Explained",
+    "This article provides a clear overview of the Algebraic Normal Form (ANF) of Boolean functions, detailing how it represents logical operations through polynomial equations in the binary system. You will learn the mathematical foundation of ANF, how truth",
+    false
+  ],
+  [
+    304,
+    "How Linear Cryptanalysis Exploits Linear Approximations",
+    "Linear cryptanalysis is a prominent known-plaintext attack used against symmetric block ciphers to recover secret key bits. It operates by identifying and exploiting statistically biased linear relations between the bits of plaintext, ciphertext, and the",
+    false
+  ],
+  [
+    303,
+    "What Is Bit-Level Differential Cryptanalysis?",
+    "Bit-level differential cryptanalysis is a cryptanalytic technique used to analyze how specific differences between pairs of binary inputs propagate through the rounds of a cryptographic algorithm at the granularity of individual bits. By tracking the pro",
+    false
+  ],
+  [
+    302,
+    "Triple DES Key Length and Legacy Hardware Security",
+    "Triple Data Encryption Standard (Triple DES or 3DES) was developed to overcome the critical key-length vulnerabilities of the original Data Encryption Standard (DES) without requiring an overhaul of existing infrastructure. By applying the standard 56-bi",
+    false
+  ],
+  [
+    301,
+    "Why 56-Bit DES Keys Are Insecure to Brute Force",
+    "The Data Encryption Standard (DES) relies on a 56-bit symmetric key, a parameter chosen in the 1970s that eventually led to the algorithm's obsolescence. This article explains why the mathematical constraints of a 56-bit binary keyspace, combined with th",
+    false
+  ],
+  [
+    300,
+    "How DES Permutes and Substitutes 64-Bit Blocks",
+    "The Data Encryption Standard (DES) encrypts data in 64-bit blocks using a symmetric 16-round Feistel network based on alternating stages of permutation and substitution. Permutations rearrange the positions of binary bits to provide diffusion, while subs",
+    false
+  ],
+  [
+    299,
+    "S-Boxes in Block Ciphers: Non-Linearity Explained",
+    "A Substitution Box, commonly known as an S-box, is a fundamental component of symmetric key block ciphers such as the Advanced Encryption Standard (AES) and the Data Encryption Standard (DES). Its primary role is to obscure the relationship between the p",
+    false
+  ],
+  [
+    298,
+    "Why ARX Cryptography Is Efficient on Modern CPUs",
+    "ARX-based cryptographic algorithms—constructed exclusively using modular Addition, bitwise Rotation, and bitwise XOR—deliver exceptional computational performance on modern microprocessors. By aligning algorithmic design with the fundamental architec",
+    false
+  ],
+  [
+    297,
+    "ChaCha20 ARX Quarter-Round Operations Explained",
+    "This article explores how the ChaCha20 stream cipher uses ARX (Addition, Rotation, and XOR) primitives within its quarter-round function to transform binary data. It details the structure of ChaCha20's 512-bit internal state, breaks down the mathematical",
+    false
+  ],
+  [
+    296,
+    "Dangers of Keystream Reuse in Stream Ciphers",
+    "Reusing a keystream across multiple messages—commonly known as the \"Two-Time Pad\" vulnerability—is one of the most catastrophic implementation failures in symmetric cryptography. When the same pseudorandom binary sequence is used to encrypt more than",
+    false
+  ],
+  [
+    295,
+    "Why the One-Time Pad Is Mathematically Unbreakable",
+    "The One-Time Pad (OTP) is the only cryptosystem proven to offer information-theoretic security, also known as perfect secrecy. When applied using random binary bits, the encryption process utilizes the bitwise Exclusive OR (XOR) operation to produce a ci",
+    false
+  ],
+  [
+    294,
+    "Stream Cipher Encryption and Bitwise XOR Explained",
+    "Stream cipher encryption is a symmetric cryptographic method that secures data by combining individual bits of plaintext with a pseudorandom keystream using the bitwise Exclusive-OR (XOR) operation. This article explains the fundamentals of stream cipher",
+    false
+  ],
+  [
+    293,
+    "Berlekamp-Massey Algorithm for Binary LFSRs",
+    "The Berlekamp-Massey algorithm is a computationally efficient method used to determine the minimal Linear Feedback Shift Register (LFSR) capable of generating a given binary sequence. In the binary field, also known as Galois Field 2 or $\\text{GF}(2)$, t",
+    false
+  ],
+  [
+    292,
+    "LFSR Characteristic and Primitive Polynomials Explained",
+    "A Linear Feedback Shift Register (LFSR) is a sequential shift register whose input bit is a linear function of its previous state, commonly implemented using XOR operations. The mathematical behavior, sequence length, and feedback connections of an LFSR",
+    false
+  ],
+  [
+    291,
+    "Johnson Counter Glitch-Free Decoding Explained",
+    "This article explores how Johnson counters eliminate transient glitches during state decoding compared to traditional binary counters. By utilizing a modified shift-register architecture that changes only a single bit per clock transition, Johnson counte",
+    false
+  ],
+  [
+    290,
+    "Understanding One-Hot State Machine Encoding",
+    "One-hot state machine encoding is a digital design technique where every individual state in a finite state machine (FSM) is represented by its own dedicated flip-flop. While standard binary encoding compresses $N$ states into $\\lceil\\log2(N)\\rceil$ flip",
+    false
+  ],
+  [
+    289,
+    "State Assignment: One-Hot vs Binary Encoding",
+    "In digital logic design, state assignment is the process of mapping unique binary patterns to the symbolic states of a Finite State Machine (FSM). This article explains the fundamentals of state assignment and directly compares two primary implementation",
+    false
+  ],
+  [
+    288,
+    "How to Encode FSMs into Binary Transition Tables",
+    "This article outlines the systematic process of converting any finite state machine (FSM) into binary-encoded state transition tables for digital hardware implementation. The procedure involves calculating the required number of binary bits for states, i",
+    false
+  ],
+  [
+    287,
+    "Binary Relations in Set Theory and Binary Matrices",
+    "This article explores the mathematical definition of binary relations in formal set theory and explains their direct structural correspondence to binary matrices (matrices consisting entirely of 0s and 1s). It details how subsets of Cartesian products ma",
+    false
+  ],
+  [
+    286,
+    "How Wolfram's Rule 30 Generates Chaos from Binary",
+    "Stephen Wolfram's Rule 30 is an elementary cellular automaton that produces remarkably complex and aperiodic behavior from a single active binary cell. By applying a simple, deterministic set of neighborhood rules across a one-dimensional grid over discr",
+    false
+  ],
+  [
+    285,
+    "Rule 110: Turing Completeness in Cellular Automata",
+    "Rule 110 is an elementary one-dimensional cellular automaton that exhibits a balance between order and chaos, capable of universal computation despite its minimal ruleset. This article explores the mathematical definition of Rule 110 in the binary number",
+    false
+  ],
+  [
+    284,
+    "Binary Numbers in Cellular Automata and Conway's Game of Life",
+    "The binary number system forms the mathematical and computational bedrock of cellular automata, most famously exemplified by John Conway's Game of Life. By reducing complex dynamic systems to discrete states of zero and one, binary logic provides the exa",
+    false
+  ],
+  [
+    283,
+    "PRBS and Bit Error Rate Testing Explained",
+    "A Pseudorandom Binary Sequence (PRBS) is a deterministic sequence of binary bits that exhibits statistical properties similar to truly random data. In digital communications and electronics, PRBS patterns are the industry standard for evaluating hardware",
+    false
+  ],
+  [
+    282,
+    "Additive vs Self-Synchronizing Scramblers",
+    "Digital communication systems use scramblers to randomize binary data streams, preventing long sequences of continuous ones or zeros to ensure reliable clock recovery and a uniform power spectrum. While both additive and self-synchronizing scramblers ach",
+    false
+  ],
+  [
+    281,
+    "What Is a Scrambler in Telecommunications?",
+    "In telecommunications, a scrambler is a hardware or software mechanism that manipulates a binary data stream before transmission to eliminate long, continuous sequences of identical bits (consecutive zeros or ones). This article explains the fundamental",
+    false
+  ],
+  [
+    280,
+    "64b/66b vs 8b/10b: Overhead and Clock Synchronization",
+    "High-speed serial communication protocols transitioned from 8b/10b to 64b/66b line coding to drastically improve transmission efficiency while preserving essential signal integrity features. While 8b/10b encoding incurs a heavy 20% protocol overhead to g",
+    false
+  ],
+  [
+    279,
+    "Why 8b/10b Encoding Is Used for DC Balance",
+    "In high-speed serial communications, transmitting unencoded binary data can cause severe signal degradation, receiver synchronization failures, and data corruption. 8b/10b encoding resolves these challenges by converting 8-bit data bytes into 10-bit symb",
+    false
+  ],
+  [
+    278,
+    "How NRZI Encodes Binary Data Using Transitions",
+    "Non-Return-to-Zero-Inverted (NRZI) is a line-coding method that maps binary data to physical signal changes rather than static voltage levels. In contrast to traditional Non-Return-to-Zero-Level (NRZ-L) encoding—where a high or low voltage directly cor",
+    false
+  ],
+  [
+    277,
+    "What is PAM4 Signaling and How Does It Work?",
+    "Pulse Amplitude Modulation 4-Level (PAM4) is a multi-level signal modulation technique that doubles the data capacity of high-speed digital communications compared to traditional binary signaling. By utilizing four distinct voltage levels instead of two,",
+    false
+  ],
+  [
+    276,
+    "How Optical Interconnects Encode Binary Data",
+    "Optical interconnects transmit high-speed digital information by converting electrical binary data streams into modulated light signals produced by semiconductor lasers. This process involves translating streams of binary digits (0s and 1s) into distinct",
+    false
+  ],
+  [
+    275,
+    "Clock Drift and Framing Errors in Asynchronous Data",
+    "Asynchronous communication channels transmit binary data without a shared external clock signal, relying instead on synchronized local oscillators within both the transmitter and receiver. When these local oscillators deviate in frequency due to hardware",
+    false
+  ],
+  [
+    274,
+    "UART Framing: Start, Stop, and Parity Bits Explained",
+    "Universal Asynchronous Receiver-Transmitter (UART) serial communication packages binary data into structured units called data frames to transmit information across a single data line without a shared clock signal. Because the transmitter and receiver do",
+    false
+  ],
+  [
+    273,
+    "What Is SPI and How Does It Shift Binary Data?",
+    "Serial Peripheral Interface (SPI) is a synchronous, full-duplex communication protocol commonly used to transmit data over short distances between microcontrollers and peripheral devices like sensors, displays, and memory chips. This article explains the",
+    false
+  ],
+  [
+    272,
+    "I2C Bus Signaling: Clock Stretching and ACK States",
+    "The Inter-Integrated Circuit (I2C) bus protocol utilizes a synchronous, two-wire serial interface to facilitate communication between master and slave devices. Grounded in binary states, I2C uses open-drain hardware architecture to coordinate bidirection",
+    false
+  ],
+  [
+    271,
+    "Open-Collector Bus and Wired-AND Logic Explained",
+    "This article provides an overview of open-collector and open-drain bus configurations and explains how they create wired-AND logic in digital electronics. An open-collector (bipolar junction transistor) or open-drain (field-effect transistor) setup allow",
+    false
+  ],
+  [
+    270,
+    "How CAN Bus Arbitration Uses Dominant and Recessive Bits",
+    "This article provides an overview of how Controller Area Network (CAN) bus systems manage data traffic without collisions using physical bitwise arbitration. In a CAN network, binary values are mapped directly to electrical states known as dominant and r",
+    false
+  ],
+  [
+    269,
+    "How CAN Bus Bit Stuffing Preserves Synchronization",
+    "The Controller Area Network (CAN) bus protocol relies on a mechanism known as bit stuffing to maintain clock synchronization across all communicating nodes and detect transmission errors. Because CAN uses Non-Return-to-Zero (NRZ) bit coding, long sequenc",
+    false
+  ],
+  [
+    268,
+    "HDLC Bit Stuffing: Zero-Bit Insertion Explained",
+    "High-Level Data Link Control (HDLC) uses a process known as bit stuffing to ensure transparent data transmission and maintain proper frame synchronization. This article explains how the HDLC protocol monitors the binary data stream to insert a zero bit a",
+    false
+  ],
+  [
+    267,
+    "What Is Bit Stuffing in Framing Protocols?",
+    "Bit stuffing is a data link layer technique used in network framing protocols to achieve data transparency and prevent payload data from being mistaken for control characters. In binary communication systems, protocols mark the boundaries of frames using",
+    false
+  ],
+  [
+    266,
+    "BSD Sockets: How htons and ntohl Convert Endianness",
+    "In network programming, devices with different internal hardware architectures must exchange multi-byte data consistently over a shared network. The BSD socket API provides conversion utilities—namely htons, htonl, ntohs, and ntohl—to translate integ",
+    false
+  ],
+  [
+    265,
+    "Why Is Network Byte Order Big-Endian?",
+    "Network byte order is the standardized method of transmitting multi-byte binary data across computer networks. Because different computer hardware architectures store binary numbers in memory using different byte sequences—primarily big-endian and litt",
+    false
+  ],
+  [
+    264,
+    "What Is BSWAP and How Does Endianness Swap Work?",
+    "This article provides an overview of endianness swap instructions, such as x86's BSWAP, explaining their purpose and mechanics. You will learn the difference between Big-Endian and Little-Endian formats, why CPUs require dedicated instructions for byte r",
+    false
+  ],
+  [
+    263,
+    "How MessagePack Uses Binary Formats Over JSON",
+    "MessagePack is an efficient binary serialization format that serves as a high-performance alternative to JSON. While it retains JSON's flexible data model of objects, arrays, numbers, and strings, it converts this information into compact binary layouts",
+    false
+  ],
+  [
+    262,
+    "Understanding ZigZag Encoding for Varints",
+    "ZigZag encoding is a data compression technique that transforms signed integers into unsigned integers so that numbers with small absolute values—regardless of whether they are positive or negative—are represented by small positive numbers. In binary",
+    false
+  ],
+  [
+    261,
+    "How Protobuf Encodes Varints Using MSB",
+    "Protocol Buffers (Protobuf) uses variable-length quantities, known as varints, to serialize integers efficiently by using fewer bytes for smaller numeric values. By dividing binary representations into 7-bit payloads and using the Most Significant Bit (M",
+    false
+  ],
+  [
+    260,
+    "What Is Binary Serialization and How It Works",
+    "Binary serialization is the process of converting structured in-memory data objects into a contiguous, compact stream of binary digits (zeros and ones) for storage or network transmission. Unlike human-readable formats such as JSON or XML that rely on pl",
+    false
+  ],
+  [
+    259,
+    "How UUEncoding Converts Binary Data to Text",
+    "UUEncoding (Unix-to-Unix encoding) is a legacy binary-to-text encoding method designed to transmit binary files over communication channels that strictly supported 7-bit ASCII text, such as early email systems and Usenet via UUCP. This article details th",
+    false
+  ],
+  [
+    258,
+    "How Base-32 Encoding Avoids Ambiguous Characters",
+    "Base-32 encoding translates binary data into a restricted set of 32 printable characters, balancing machine readability with human usability. Because 32 is a power of two ($2^5$), the system cleanly maps five-bit binary chunks directly into text without",
+    false
+  ],
+  [
+    257,
+    "Base64 Bitwise Padding in Binary Conversion",
+    "Base64 encoding translates 8-bit binary data into a restricted set of 64 ASCII characters by processing input in 6-bit increments. Because standard byte streams consist of 8-bit units, data streams whose byte counts are not divisible by three create an u",
+    false
+  ],
+  [
+    256,
+    "How Base64 Converts 3 Bytes to 4 ASCII Characters",
+    "Base64 encoding is a binary-to-text translation process designed to represent arbitrary binary data in a human-readable and network-safe ASCII format. It operates on a fundamental mathematical alignment: taking 24 bits of input data—equivalent to three",
+    false
+  ],
+  [
+    255,
+    "Why Bit-Slicing Eliminates Cache Timing Attacks",
+    "Bit-slicing is a software technique that reconstructs algorithms entirely out of bitwise Boolean logic, eliminating data-dependent memory lookup latencies in cryptographic operations. By replacing memory-based lookup tables (such as S-boxes) with purely",
+    false
+  ],
+  [
+    254,
+    "How Bit-Slicing Works in Cryptography",
+    "Bit-slicing is an implementation technique that transforms standard cryptographic algorithms into software-emulated hardware circuits by restructuring data layout. By transposing independent data blocks across processor registers, bit-slicing enables sta",
+    false
+  ],
+  [
+    253,
+    "Constant-Time Programming in Cryptography",
+    "Constant-time programming is a foundational software security paradigm designed to eliminate timing side-channel attacks by ensuring that code execution duration remains identical regardless of the input values. In modern cryptography, sensitive data suc",
+    false
+  ],
+  [
+    252,
+    "Branch Timing Side-Channel Leakage in Cryptography",
+    "Branch timing side-channel leakage occurs when the execution time of a cryptographic operation fluctuates depending on the secret binary values being processed. When software uses conditional branches to handle private key bits—such as choosing whether",
+    false
+  ],
+  [
+    251,
+    "What Is an Opmask Register and How Does It Work?",
+    "An opmask register is a dedicated hardware register used in modern SIMD (Single Instruction, Multiple Data) architectures, such as Intel AVX-512 and ARM SVE, to control vector operations on an element-by-element basis. By leveraging binary bitmasks—whe",
+    false
+  ],
+  [
+    250,
+    "How AVX-512 Manages 512-Bit Binary Registers",
+    "This article provides an overview of how Intel's AVX-512 (Advanced Vector Extensions 512) architecture organizes, interprets, and executes operations across 512-bit wide register files. It explores the physical allocation of binary data in ZMM registers,",
+    false
+  ],
+  [
+    249,
+    "What Is Vectorization and SIMD in Binary Computing",
+    "Vectorization is a computational technique that transforms scalar operations—processing one data element at a time—into vector operations that process multiple data points simultaneously. By utilizing Single Instruction, Multiple Data (SIMD) architec",
+    false
+  ],
+  [
+    248,
+    "How Compilers Optimize Branches with CMOV Instructions",
+    "Modern optimizing compilers enhance execution speed by converting high-level conditional logic into conditional move (CMOV) instructions, replacing traditional branch-and-jump operations. This optimization transforms control-flow dependencies into data d",
+    false
+  ],
+  [
+    247,
+    "Why Signed 32-Bit Integer Left Shift by 31 Causes UB",
+    "In systems programming languages like C and C++, shifting a signed 32-bit integer left by 31 positions (1 << 31) triggers undefined behavior because the operation attempts to produce a value that exceeds the maximum representable positive value of the si",
+    false
+  ],
+  [
+    246,
+    "Oversized Bit Shift Amounts and Undefined Behavior",
+    "In systems programming languages like C and C++, applying a bitwise shift operation with a count that is negative or greater than or equal to the width of the target data type results in undefined behavior. This article explains the technical mechanics b",
+    false
+  ],
+  [
+    245,
+    "How Bitwise Operators Work in C, Rust, and Python",
+    "Bitwise operators manipulate the individual bits of integers directly at the binary level, bypassing arithmetic logic to provide low-level control, high computational efficiency, and direct memory manipulation. While languages like C, Rust, and Python sh",
+    false
+  ],
+  [
+    244,
+    "What Is a Bitfield and How Does Bit Packing Work?",
+    "A bitfield is a specialized data structure feature in high-level programming languages that allows developers to allocate memory at the individual bit level rather than the standard byte level. This article explains what bitfields are, how compilers pack",
+    false
+  ],
+  [
+    243,
+    "How Resistive RAM (ReRAM) Records Binary Data",
+    "Resistive Random-Access Memory (ReRAM) is a next-generation non-volatile storage technology that stores digital information by modulating the electrical resistance of a solid dielectric material. Unlike traditional silicon memory like DRAM or flash, whic",
+    false
+  ],
+  [
+    242,
+    "How Phase-Change Memory Stores Binary Data",
+    "Phase-Change Memory (PCM) is a non-volatile data storage technology that relies on the reversible physical transition of chalcogenide glass between amorphous and crystalline states. By applying controlled electrical pulses, the material is thermally mani",
+    false
+  ],
+  [
+    241,
+    "How MRAM Uses Electron Spin to Store Binary States",
+    "Magnetoresistive Random-Access Memory (MRAM) is an advanced non-volatile storage technology that stores binary data using electron spin rather than electrical charges. By utilizing the Tunnel Magnetoresistance (TMR) effect inside nanoscopic Magnetic Tunn",
+    false
+  ],
+  [
+    240,
+    "How Magnetic Bubble Memory Stores Binary Data",
+    "Magnetic bubble memory is an early non-volatile computer memory technology developed in the late 1960s and popular through the 1970s and 1980s. It stores data by utilizing tiny, cylindrical magnetized regions—known as \"bubbles\"—formed on a thin film",
+    false
+  ],
+  [
+    239,
+    "What Is TCAM? Ternary CAM and Wildcard States",
+    "Ternary Content-Addressable Memory (TCAM) is a specialized type of high-speed computer memory that searches its entire contents in a single clock cycle using a third \"wildcard\" state alongside standard binary values. While traditional binary memory syste",
+    false
+  ],
+  [
+    238,
+    "How CAM Performs Parallel Binary Data Searches",
+    "Content-Addressable Memory (CAM) is a specialized hardware storage architecture designed to search its entire memory space simultaneously in a single clock cycle. Unlike conventional Random Access Memory (RAM), which accepts an address and returns the st",
+    false
+  ],
+  [
+    237,
+    "How FPGA Bitstreams Program Internal Routing Matrices",
+    "A configuration bitstream is the fundamental binary file used to program a Field-Programmable Gate Array (FPGA). This article explores what a configuration bitstream is, the role of binary data in hardware configuration, and the step-by-step mechanism by",
+    false
+  ],
+  [
+    236,
+    "How FPGAs Use Look-Up Tables to Synthesize Logic",
+    "Field-programmable gate arrays (FPGAs) achieve their hardware flexibility by using Look-Up Tables (LUTs) as their primary functional building blocks. Instead of physically wiring together fixed logic gates (like AND, OR, or XOR gates), an FPGA implements",
+    false
+  ],
+  [
+    235,
+    "How Pulse-Width Modulation Converts Binary to Analog",
+    "Pulse-width modulation (PWM) is a digital technique used to control analog devices by rapidly switching a direct current (DC) signal between fully on and fully off states. By varying the proportion of time the signal remains high relative to its total pe",
+    false
+  ],
+  [
+    234,
+    "How Sigma-Delta ADCs Use Oversampling and Noise Shaping",
+    "A sigma-delta ($\\Sigma$-$\\Delta$) analog-to-digital converter (ADC) converts continuous analog signals into high-resolution binary representations by combining oversampling, noise shaping, and digital filtering. Rather than relying on high-precision mult",
+    false
+  ],
+  [
+    233,
+    "What Is a SAR ADC and How Does It Work?",
+    "A Successive-Approximation-Register (SAR) Analog-to-Digital Converter (ADC) is a widely used data converter that translates continuous analog voltage signals into discrete digital values using a binary search algorithm. This article explains the fundamen",
+    false
+  ],
+  [
+    232,
+    "Flash ADC Explained: How Ultra-Fast ADCs Work",
+    "A Flash Analog-to-Digital Converter (ADC), also known as a direct-conversion ADC, is the fastest type of ADC available, capable of digitizing high-frequency analog signals in a single clock cycle. It achieves this ultra-fast conversion speed by using a p",
+    false
+  ],
+  [
+    231,
+    "Gray Coded Asynchronous FIFO Addressing Explained",
+    "Asynchronous First-In, First-Out (FIFO) buffers are critical digital circuits used to reliably transfer data between two independent clock domains. The integrity of an asynchronous FIFO depends heavily on tracking read and write pointers across these clo",
+    false
+  ],
+  [
+    230,
+    "How Dual-Rank Synchronizers Mitigate Metastability",
+    "When asynchronous external inputs enter a synchronous binary digital system, timing violations can cause flip-flops to enter an unstable state known as metastability. A dual-rank synchronizer—consisting of two flip-flops connected in series and driven",
+    false
+  ],
+  [
+    229,
+    "What Is Metastability in Digital Circuits?",
+    "Metastability in digital systems occurs when a flip-flop enters an unstable intermediate state between binary 0 and 1, usually triggered by an asynchronous input signal violating setup or hold time requirements. This article explains the fundamental conc",
+    false
+  ],
+  [
+    228,
+    "Clock Skew and Timing Violations in Digital Systems",
+    "Clock skew is a fundamental challenge in synchronous digital circuit design that occurs when a clock signal arrives at different components at different times. This article explains the mechanics of clock skew, details how it triggers setup and hold timi",
+    false
+  ],
+  [
+    227,
+    "How Capacitive Load Affects Switching Delay",
+    "This article explains how capacitive load influences the switching delay between high and low binary voltage levels in digital circuits. It explores the physics behind signal transitions, detailing how parasitic and load capacitances increase rise, fall,",
+    false
+  ],
+  [
+    226,
+    "Dynamic Power Dissipation and Switching Frequency",
+    "Dynamic power dissipation is the primary component of power consumption in active digital circuits, occurring whenever transistors switch logic states. This article provides a comprehensive look at what dynamic power dissipation is, the physical mechanis",
+    false
+  ],
+  [
+    225,
+    "Why CMOS Circuits Consume Minimal Static Power",
+    "Complementary Metal-Oxide-Semiconductor (CMOS) technology is the foundation of modern digital integrated circuits, largely due to its remarkable power efficiency. While active computing causes dynamic power consumption, CMOS logic draws virtually zero st",
+    false
+  ],
+  [
+    224,
+    "Understanding CMOS Logic: PMOS and NMOS Transistors",
+    "Complementary Metal-Oxide-Semiconductor (CMOS) logic is the foundational technology behind modern integrated circuits, microprocessors, and digital systems. This article explores how CMOS technology utilizes complementary pairs of p-channel (PMOS) and n-",
+    false
+  ],
+  [
+    223,
+    "Pull-Up and Pull-Down Resistors Explained",
+    "Pull-up and pull-down resistors are fundamental components in digital electronics used to ensure that input pins settle at predictable binary logic states (HIGH or LOW) when external components are disconnected or inactive. Without these resistors, high-",
+    false
+  ],
+  [
+    222,
+    "High-Impedance State (Z-State) in Digital Bus Systems",
+    "The high-impedance state, commonly referred to as the Z-state or High-Z, is a neutral electrical state where an output pin behaves as if it is physically disconnected from the circuit. In standard digital electronics, circuits operate using binary logic",
+    false
+  ],
+  [
+    221,
+    "Modeling Vector Types in Verilog and VHDL",
+    "Hardware Description Languages (HDLs) like Verilog and VHDL bridge abstract mathematical concepts and physical digital circuitry by modeling multi-bit data paths as vector types. Grounded in the binary number system ($0$ and $1$), these languages provide",
+    false
+  ],
+  [
+    220,
+    "What Is Register-Transfer Level RTL in Digital Design",
+    "Register-transfer level (RTL) is an abstraction used in digital circuit design to model how digital signals and data move between hardware registers and how that data is transformed by logic operations. This article explains the fundamentals of RTL, its",
+    false
+  ],
+  [
+    219,
+    "How Bit-Slice Processors Build Custom Word Lengths",
+    "Bit-slice processors are modular computing building blocks that allow engineers to design central processing units (CPUs) with arbitrary, custom word lengths by cascading multiple smaller, fixed-width processing units. Rather than relying on a monolithic",
+    false
+  ],
+  [
+    218,
+    "What Is an Accumulator Register in Computing?",
+    "An accumulator register is a fundamental CPU component used to temporarily hold intermediate arithmetic and logical results during processing. In early computing systems utilizing the binary number system, particularly those with serial arithmetic archit",
+    false
+  ],
+  [
+    217,
+    "How the Parity Flag Checks Binary Low-Order Bytes",
+    "The Parity Flag (PF) is a dedicated processor status flag found in computer architectures like x86 that reflects whether the lowest 8 bits of an operation's result contain an even or odd number of set bits (binary 1s). This article explains how the proce",
+    false
+  ],
+  [
+    216,
+    "Understanding the Auxiliary Carry Flag in BCD Arithmetic",
+    "This article provides an overview of the Auxiliary Carry Flag (AF), its operational mechanism within processor architecture, and its specialized role in Binary-Coded Decimal (BCD) operations. You will learn how central processing units (CPUs) monitor ari",
+    false
+  ],
+  [
+    215,
+    "Carry Flag vs Overflow Flag in Binary Arithmetic",
+    "The Carry Flag (CF) and the Overflow Flag (OF) are processor status flags used to determine whether the result of a binary arithmetic operation exceeds the storage capacity of a fixed-width register. The fundamental conceptual difference between them lie",
+    false
+  ],
+  [
+    214,
+    "How the Zero Flag Evaluates Low Binary Outputs",
+    "The Zero Flag (ZF) is a dedicated single-bit register inside a Central Processing Unit (CPU) status register that indicates whether the result of the most recent arithmetic or logical operation is zero. In digital logic, a result of zero means that every",
+    false
+  ],
+  [
+    213,
+    "Status Registers: Zero, Carry, and Overflow Flags",
+    "A status register, often called a flags register or condition code register, is a dedicated hardware register in a central processing unit (CPU) that records the outcome of arithmetic, logical, and comparison operations. This article explores the archite",
+    false
+  ],
+  [
+    212,
+    "How an ALU Uses Binary Control Signals",
+    "This article provides an overview of how an Arithmetic Logic Unit (ALU) processes instructions by directing data through specific hardware paths. An ALU relies on binary control signals generated by the processor's control unit to select between arithmet",
+    false
+  ],
+  [
+    211,
+    "What Is Microcode in CPU Architecture",
+    "Microcode is an internal hardware-level translation layer that converts complex machine-language instructions into a sequence of simpler, primitive micro-operations within a central processing unit (CPU). Acting as a bridge between the processor's archit",
+    false
+  ],
+  [
+    210,
+    "Calculating Jump and Branch Offsets with Byte Shifts",
+    "In computer architecture, jump and branch target offsets determine the destination address of an execution redirect relative to the current instruction pointer. This article explains how processors compute these targets in binary using Program Counter (P",
+    false
+  ],
+  [
+    209,
+    "Immediate Encoding: Packing Literals in Machine Code",
+    "Immediate encoding is a CPU instruction format technique where constant numeric values—known as literal values or immediates—are embedded directly inside the binary instruction word rather than stored in separate memory locations or registers. This a",
+    false
+  ],
+  [
+    208,
+    "Binary Instruction Encoding in RISC-V Architectures",
+    "This article examines how the binary number system dictates instruction register encodings in Reduced Instruction Set Computer (RISC) architectures, using RISC-V as a primary model. It breaks down the fixed-width bit allocation system, explaining how bin",
+    false
+  ],
+  [
+    207,
+    "Understanding Turbo Codes and Iterative Decoding",
+    "Turbo codes are a class of high-performance forward error correction (FEC) codes that revolutionized digital communications by enabling data transmission rates exceptionally close to the theoretical Shannon limit. By combining parallel convolutional enco",
+    false
+  ],
+  [
+    206,
+    "How LDPC Codes Achieve Near-Shannon-Limit Performance",
+    "Low-Density Parity-Check (LDPC) codes are a class of high-performance forward error correction codes capable of transmitting data across noisy channels at rates remarkably close to the theoretical maximum, known as the Shannon limit. This article explain",
+    false
+  ],
+  [
+    205,
+    "Reed-Solomon Codes and Multi-Bit Symbols Explained",
+    "Reed-Solomon codes are non-binary, polynomial-based error-correcting codes widely utilized in digital communications, optical storage media, and data transmission systems. Unlike traditional bit-level error correction algorithms, Reed-Solomon codes opera",
+    false
+  ],
+  [
+    204,
+    "How FEC Protects Data Integrity on Long-Haul Links",
+    "Forward Error Correction (FEC) is a crucial digital signal processing method used to protect binary data across long-haul telecommunication links such as undersea cables, terrestrial optical fiber, and deep-space communication channels. Over vast distanc",
+    false
+  ],
+  [
+    203,
+    "What Is Bit Error Rate in Digital Communications?",
+    "Bit Error Rate (BER) is a fundamental metric used to evaluate the performance and reliability of digital communication systems. It quantifies the accuracy of data transmission by calculating the percentage of binary bits received in error relative to the",
+    false
+  ],
+  [
+    202,
+    "Eye Diagrams for Signal Integrity and Jitter Analysis",
+    "An eye diagram is a fundamental oscilloscope measurement tool used by electrical engineers to assess the physical health of high-speed digital communications. By superimposing thousands of repetitive binary waveform segments onto a common time base, the",
+    false
+  ],
+  [
+    201,
+    "What Is Intersymbol Interference in Digital Systems?",
+    "Intersymbol interference (ISI) is a form of signal distortion in digital telecommunications where individual pulses blur into adjacent time slots, degrading signal clarity. This article explains what ISI is, how physical transmission limits cause signal",
+    false
+  ],
+  [
+    200,
+    "How Baseband Signaling Transmits Data on Copper",
+    "Baseband signaling is a foundational networking method that transmits unmodulated digital bit streams directly over physical media such as copper cabling. Instead of modulating data onto a high-frequency carrier wave, baseband communication converts the",
+    false
+  ],
+  [
+    199,
+    "What Is QAM and How Constellation Maps to Binary",
+    "Quadrature Amplitude Modulation (QAM) is an efficient modulation technique that transmits digital data by altering both the amplitude and phase of carrier signals. This article explains the fundamentals of QAM, the structure of its constellation diagram,",
+    false
+  ],
+  [
+    198,
+    "Trellis Coded Modulation Explained",
+    "Trellis Coded Modulation (TCM) is a bandwidth-efficient transmission technique that unifies error-correction coding and digital modulation into a single operational process. By combining a convolutional encoder with a multi-level phase-amplitude constell",
+    false
+  ],
+  [
+    197,
+    "Soft vs Hard Decision Decoding for Binary Symbols",
+    "This article provides an overview of hard-decision and soft-decision decoding, two fundamental approaches used to interpret binary symbols transmitted over noisy digital communication channels. When a digital system receives transmitted data, the receive",
+    false
+  ],
+  [
+    196,
+    "How Viterbi Algorithm Decodes Convolutional Codes",
+    "The Viterbi algorithm is a dynamic programming method designed to find the most likely sequence of hidden states—known as the Viterbi path—that corresponds to an observed sequence of received signals. In digital communications, it serves as the maxim",
+    false
+  ],
+  [
+    195,
+    "Binary LFSR Maximum Length Sequences Explained",
+    "A maximum-length sequence, commonly referred to as an m-sequence, is the longest periodic binary sequence that an $n$-bit Linear Feedback Shift Register (LFSR) can generate before repeating its state. In a binary LFSR, the sequence achieves an optimal pe",
+    false
+  ],
+  [
+    194,
+    "How Shift Registers Generate Pseudorandom Noise",
+    "This article explains how shift-register generators, specifically Linear Feedback Shift Registers (LFSRs), use feedback taps and binary arithmetic to produce deterministic, pseudorandom noise (PRN) sequences. It breaks down the mechanical operation of bi",
+    false
+  ],
+  [
+    193,
+    "How Circular Shift Registers Generate Periodic Sequences",
+    "A circular shift register is a digital sequential circuit that continuously recirculates binary data to produce repeating, deterministic output patterns. By feeding the output of the final stage directly back into the input of the initial stage, the regi",
+    false
+  ],
+  [
+    192,
+    "How Two's Complement Isolates the Lowest Set Bit",
+    "In computer science, isolating the lowest set bit of an integer is commonly achieved using the bitwise expression x & (-x). This operation relies fundamentally on the two's complement system, where a number is negated by flipping all of its bits and addi",
+    false
+  ],
+  [
+    191,
+    "How x & -x Extracts the Lowest Set Bit in Binary",
+    "In low-level bitwise manipulation, the expression x & -x is an efficient technique used to isolate the least significant set bit (the rightmost bit equal to 1) of an integer. This operation works because modern computers represent negative integers using",
+    false
+  ],
+  [
+    190,
+    "How Fenwick Trees Use the LSB for Prefix Sums",
+    "A Fenwick tree, also known as a Binary Indexed Tree (BIT), is a data structure that calculates prefix sums and updates elements in an array in $O(\\log n)$ time. It achieves this efficiency by exploiting the binary representation of array indices—specif",
+    false
+  ],
+  [
+    189,
+    "Bitwise Interleaving and Morton Code Explained",
+    "Bitwise interleaving, commonly known as generating a Morton code or Z-order curve, is a computational technique used to map multidimensional coordinates into a single one-dimensional index. By alternating the binary bits of coordinate values, this operat",
+    false
+  ],
+  [
+    188,
+    "Branchless Min and Max with Bitwise Operations",
+    "Branchless computation of the minimum or maximum of two integers is an optimization technique used in high-performance computing to avoid CPU branch mispredictions. By replacing conditional jump instructions with a fixed sequence of bitwise and arithmeti",
+    false
+  ],
+  [
+    187,
+    "Carryless Multiplication in Galois Counter Mode GCM",
+    "Carryless multiplication is the foundational operation that enables high-throughput, hardware-accelerated authenticated encryption in Galois/Counter Mode (GCM). By eliminating the standard carry propagation found in traditional integer arithmetic, carryl",
+    false
+  ],
+  [
+    186,
+    "GF(2) Polynomial vs Binary Integer Multiplication",
+    "Polynomial multiplication over the Galois Field $\\text{GF}(2)$ and standard binary integer multiplication both process sequences of binary digits (0s and 1s) using a shift-and-add approach, but they differ fundamentally in how partial products are accumu",
+    false
+  ],
+  [
+    185,
+    "Why GF(2) Arithmetic Matches Binary Bit Operations",
+    "Galois Field 2, denoted as $\\text{GF}(2)$, is the smallest non-trivial finite field, consisting strictly of the set $\\{0, 1\\}$. Its fundamental arithmetic operations—addition and multiplication modulo 2—map perfectly to basic single-bit logical gates",
+    false
+  ],
+  [
+    184,
+    "Linear Algebra Over GF(2) for Binary Operations",
+    "This article explores how vector spaces defined over the Galois Field of two elements, $\\text{GF}(2)$, provide a rigorous algebraic framework for standard binary operations. By viewing bit strings as coordinate vectors and fundamental logic gates as alge",
+    false
+  ],
+  [
+    183,
+    "What Is a Parity-Check Matrix in Binary Coding?",
+    "A parity-check matrix is a fundamental linear algebra tool used in error-detecting and error-correcting codes to verify whether a transmitted binary message has arrived intact. In digital communications, binary data is grouped into structured blocks call",
+    false
+  ],
+  [
+    182,
+    "Calculating Hamming Distance Using XOR and Popcount",
+    "Hamming distance measures the number of bit positions in which two binary sequences of equal length differ. In computer science and digital communications, this metric is calculated with optimal efficiency by chaining two fundamental operations: a bitwis",
+    false
+  ],
+  [
+    181,
+    "Hamming Distance in Binary: Definition and Calculation",
+    "The Hamming distance is a fundamental metric in information theory and computer science used to measure the difference between two equal-length strings of data. In the binary number system, it directly quantifies structural variation by counting the mini",
+    false
+  ],
+  [
+    180,
+    "Conditionally Set or Clear Bits Without Branching",
+    "This article explores techniques for modifying binary bits based on a condition without using standard conditional jump or branch instructions (if/else or ternary operators). In performance-critical software, avoiding branch mispredictions can significan",
+    false
+  ],
+  [
+    179,
+    "Understanding Integer Sign Check with x >> 31",
+    "In 32-bit computer architecture, the bitwise expression (x >> 31) is a fast, branchless technique used to extract the sign of a signed integer. This operation leverages the two's complement binary format and the behavior of the arithmetic right shift. By",
+    false
+  ],
+  [
+    178,
+    "Branchless Absolute Value: Bit-Level Hacks Explained",
+    "A bit-level hack is an algorithmic technique that manipulates data at the individual bit level using binary operators to perform computations faster and more efficiently than standard high-level operations. One classic example is computing the absolute v",
+    false
+  ],
+  [
+    177,
+    "Fast Integer Division by Reciprocal Multiplication",
+    "Reciprocal multiplication is a fundamental compiler optimization technique that replaces slow hardware integer division instructions with a faster sequence of integer multiplications and bit shifts. Because hardware division units often require significa",
+    false
+  ],
+  [
+    176,
+    "Optimizing Integer Division with Magic Constants",
+    "In modern computing, integer division is one of the most computationally expensive arithmetic instructions an execution unit can perform. To maximize processing speed, optimizing compilers routinely replace division by a known constant with a sequence of",
+    false
+  ],
+  [
+    175,
+    "Integer Division Truncation Toward Zero in Binary",
+    "Integer division that truncates toward zero discards the fractional part of a quotient, moving the result toward zero on the number line. In modern binary systems using two's complement representation, this operation produces an asymmetry between positiv",
+    false
+  ],
+  [
+    174,
+    "What Are Fused Multiply-Add Instructions",
+    "Fused Multiply-Add (FMA) instructions are specialized processor operations that calculate the product of two numbers and add a third number to that product in a single execution step. In mathematical terms, FMA computes the expression $(A \\times B) + C$.",
+    false
+  ],
+  [
+    173,
+    "Banker's Rounding in Binary: Preventing Bias",
+    "Rounding to nearest, ties to even—commonly known as banker's rounding—is the standard rounding mode defined by IEEE 754 floating-point arithmetic to eliminate cumulative arithmetic distortion. In computational systems, repeated operations introduce m",
+    false
+  ],
+  [
+    172,
+    "Smallest Normalized Single-Precision Float Value",
+    "This article explains the exact value of the smallest positive normalized single-precision floating-point number defined by the IEEE 754 standard. It covers the underlying binary representation, the formula used to calculate its magnitude, and both its e",
+    false
+  ],
+  [
+    171,
+    "How Gradual Underflow Prevents Binary Data Loss",
+    "Gradual underflow is a technique used in computer systems to maintain numerical precision when floating-point calculations produce numbers smaller than the minimum normalized limit. Instead of abruptly rounding these tiny numbers down to zero, gradual un",
+    false
+  ],
+  [
+    170,
+    "Quiet NaN vs Signaling NaN in Floating-Point",
+    "In binary floating-point arithmetic compliant with the IEEE 754 standard, NaN (Not a Number) represents values that are undefined or unrepresentable, such as the result of $0/0$ or the square root of a negative number. The standard divides NaNs into two",
+    false
+  ],
+  [
+    169,
+    "IEEE 754 Double-Precision 64-Bit Allocation",
+    "The IEEE 754 standard for double-precision floating-point arithmetic uses a fixed 64-bit binary format to represent real numbers across a vast dynamic range. These 64 bits are segmented into three distinct components: 1 bit for the sign, 11 bits for the",
+    false
+  ],
+  [
+    168,
+    "Excess-K Representation in Binary Exponents",
+    "Excess-K representation, also known as biased representation or offset binary, is a method used in digital computing to store signed numbers as non-negative binary integers by adding a constant bias value, $K$, to the original number. In standard binary",
+    false
+  ],
+  [
+    167,
+    "Offset Binary for Signed Comparisons in Hardware",
+    "Offset binary representation, also known as biased representation or excess-K, solves a fundamental computing challenge by mapping signed integers onto an unsigned scale. By adding a fixed positive bias to every signed value, the most negative integer co",
+    false
+  ],
+  [
+    166,
+    "Hardware Complications of Signed Zero in Binary",
+    "In binary computer architectures, representations such as sign-magnitude, ones' complement, and IEEE 754 floating-point introduce two distinct bit patterns for zero: positive zero (+0) and negative zero (-0). While mathematically identical in value, main",
+    false
+  ],
+  [
+    165,
+    "Why Early Computers Used One's Complement Arithmetic",
+    "Early computing architectures, such as the UNIVAC 1100 series, CDC 6000 series, and PDP-1, utilized one's complement arithmetic primarily to maximize hardware efficiency and operational speed under strict component limitations. Representing negative numb",
+    false
+  ],
+  [
+    164,
+    "What Is End-Around Carry in One's Complement?",
+    "End-around carry is an arithmetic adjustment technique used in one's complement binary systems, where an overflow carry generated from the most significant bit (MSB) during addition is looped back and added to the least significant bit (LSB). This articl",
+    false
+  ],
+  [
+    163,
+    "Diminished Radix and One's Complement Explained",
+    "This article explores how the mathematical framework of the diminished radix complement establishes the operational mechanics of one's complement in binary arithmetic. It covers the core mathematical definition, explains why bit inversion occurs naturall",
+    false
+  ],
+  [
+    162,
+    "Radix Complement and Twos Complement in Binary",
+    "This article explains how the mathematical framework of the radix complement generalizes to establish the two's complement system in digital computing. By defining complement arithmetic in an arbitrary base $b$, we demonstrate how setting the base to 2 n",
+    false
+  ],
+  [
+    161,
+    "Why Every Integer Has a Unique Binary Representation",
+    "Every non-negative integer maps to exactly one representation in the standard positional binary (base-2) system. This fundamental property of computer science and mathematics rests on two mathematical guarantees: existence, which ensures every non-negati",
+    false
+  ],
+  [
+    160,
+    "Unique Binary Representation of Integers Explained",
+    "This article explores the fundamental mathematical properties that guarantee every integer can be uniquely represented as a sum of distinct powers of two. At the core of this binary system is the Radix Representation Theorem, supported by Euclidean divis",
+    false
+  ],
+  [
+    159,
+    "Binary Reflected Gray Code Algorithm Explained",
+    "The Binary Reflected Gray Code (BRGC) algorithm is a method used to order binary numbers such that consecutive values differ by exactly one bit. This article explains how the BRGC generation process works, detailing its recursive reflection technique, th",
+    false
+  ],
+  [
+    158,
+    "Bit-Reversal Permutation in FFT Algorithms",
+    "A bit-reversal permutation is a data reordering technique where the position of each element in an array of size $N = 2^k$ is swapped with the index obtained by reversing the binary digits of its original position. This permutation is a fundamental requi",
+    false
+  ],
+  [
+    157,
+    "How Binary de Bruijn Sequences Work",
+    "A binary de Bruijn sequence of order $n$ is a cyclic bit sequence of length $2^n$ that contains every possible $n$-bit binary pattern exactly once as a contiguous sub-sequence. This article explains how these compact combinatorial sequences are construct",
+    false
+  ],
+  [
+    156,
+    "What Is Fibonacci Coding? Prefix-Free Codes Explained",
+    "Fibonacci coding is a universal data compression method that encodes positive integers into binary sequences using Fibonacci numbers rather than traditional powers of two. Unlike standard binary encoding, Fibonacci coding produces self-delimiting, prefix",
+    false
+  ],
+  [
+    155,
+    "Unary Coding Explained: How It Compares to Binary",
+    "This article provides a concise guide to unary coding, explaining its fundamental mechanics and mathematical structure. It breaks down how numbers are encoded using this tally-based method and provides a direct storage efficiency comparison against the s",
+    false
+  ],
+  [
+    154,
+    "What Is Golomb Coding: Unary and Binary Systems",
+    "Golomb coding is a lossless data compression method designed to efficiently encode non-negative integers, particularly when smaller values occur more frequently than larger ones. This article provides a clear overview of how Golomb coding works by splitt",
+    false
+  ],
+  [
+    153,
+    "How Elias Delta Coding Compresses Large Integers",
+    "Elias delta coding is a universal compression algorithm designed to encode positive integers into variable-length bitstreams without requiring predefined boundaries. By applying Elias gamma coding directly to the bit-length of a target number rather than",
+    false
+  ],
+  [
+    152,
+    "Elias Gamma Coding: Variable-Length Integer Encoding",
+    "Elias gamma coding is a universal variable-length encoding scheme designed to represent positive integers using binary sequences. Unlike fixed-width binary formats that require a predetermined bit-depth, Elias gamma coding dynamically scales the length o",
+    false
+  ],
+  [
+    151,
+    "How Branch History Tables Use Binary Address Bits",
+    "Modern microprocessors use dynamic branch prediction to guess the outcome of conditional branches before they execute, preventing costly pipeline stalls. This hardware relies on Branch History Tables (BHT) and Pattern History Tables (PHT) indexed using s",
+    false
+  ],
+  [
+    150,
+    "Why Cache Line Sizes Are Powers of Two",
+    "Modern computer architectures rely on spatial locality to accelerate data access, fetching contiguous blocks of memory whenever a single address is requested. Designing cache line sizes as exact powers of two (such as 32, 64, or 128 bytes) directly match",
+    false
+  ],
+  [
+    149,
+    "Direct Mapping vs Set-Associative Mapping in CPU Cache",
+    "This article explains the operational differences between direct-mapped and set-associative CPU cache architectures through the lens of binary address division. You will learn how modern processors break down memory addresses into binary fields—Tag, In",
+    false
+  ],
+  [
+    148,
+    "Cache Address Partitioning: Tag, Index, and Offset",
+    "Modern processor caches use physical address partitioning to rapidly determine whether requested data resides in cache memory or must be fetched from main memory. By interpreting a standard binary physical address as three distinct bitfields—the Block",
+    false
+  ],
+  [
+    147,
+    "TLB Associative Matching for Binary Addresses",
+    "A Translation Lookaside Buffer (TLB) is a specialized hardware cache that accelerates virtual memory management by storing recent virtual-to-physical address translations. This article explains how the TLB leverages binary representation to split virtual",
+    false
+  ],
+  [
+    146,
+    "Page Faults and Binary Page Offset Calculations",
+    "This article explains the concept of a page fault in modern operating systems and explores the mathematical mechanics of virtual address translation. It breaks down what happens when the memory management unit encounters unmapped data, and details how bi",
+    false
+  ],
+  [
+    145,
+    "How Binary Governs Paging and Memory Segmentation",
+    "Virtual memory systems rely entirely on the binary number system to manage hardware resources, isolate processes, and translate virtual addresses into physical locations. Because digital hardware operates using base-2 logic, memory architectures structur",
+    false
+  ],
+  [
+    144,
+    "Why IEC Binary Prefixes Were Introduced",
+    "The International Electrotechnical Commission (IEC) introduced binary prefixes—such as kibibyte (KiB), mebibyte (MiB), and gibibyte (GiB)—in 1998 to resolve a long-standing ambiguity in computing. For decades, the tech industry repurposed Internation",
+    false
+  ],
+  [
+    143,
+    "Difference Between Kibibyte (KiB) and Kilobyte (kB)",
+    "This article examines the core differences between a kilobyte (kB) and a kibibyte (KiB), focusing on how the binary numeral system defines data measurement standards. While the terms are frequently conflated, a kilobyte is technically defined using the d",
+    false
+  ],
+  [
+    142,
+    "Why Memory Capacity Scales with Address Bus Width",
+    "This article explains the fundamental relationship between a computer's address bus width and its total memory capacity. In digital computing, memory relies on the binary number system, meaning every address line can only exist in one of two physical sta",
+    false
+  ],
+  [
+    141,
+    "How RAS and CAS Decode Binary Memory Addresses",
+    "This article explains how Dynamic Random-Access Memory (DRAM) uses Row Address Strobe (RAS) and Column Address Strobe (CAS) signals in conjunction with binary decoding to locate and access individual memory cells. By multiplexing binary address inputs ov",
+    false
+  ],
+  [
+    140,
+    "How Binary Numbers Define RAM Address Space",
+    "This article explains how the binary number system functions as the foundational architecture for addressing Random Access Memory (RAM). It details how binary digits directly correspond to physical hardware lines, the mathematical relationship governing",
+    false
+  ],
+  [
+    139,
+    "How Edge-Triggered D Flip-Flops Store Data",
+    "An edge-triggered D (Data) flip-flop is a foundational building block of synchronous digital electronics that samples and stores a single binary bit—a 0 or a 1. Rather than continuously reacting to input changes, this circuit only captures the logic st",
+    false
+  ],
+  [
+    138,
+    "How Flip-Flops and Latches Store Binary Bits",
+    "Flip-flops and latches are the fundamental building blocks of digital memory, responsible for storing individual binary digits (bits) as either a 0 or a 1. This article explains the core mechanisms behind these bistable circuits, exploring how cross-coup",
+    false
+  ],
+  [
+    137,
+    "What Is a Multiplexer and How It Routes Data",
+    "A multiplexer, often abbreviated as a MUX or referred to as a data selector, is a fundamental combinational logic circuit in digital electronics designed to consolidate multiple input signals into a single shared output line. This article provides a clea",
+    false
+  ],
+  [
+    136,
+    "How a Binary Decoder Converts N-Bit Inputs",
+    "A binary decoder is a combinational logic circuit that translates an $n$-bit coded binary input into a maximum of $2^n$ unique output lines. By evaluating the specific combination of high and low voltage states across its input pins, the decoder activate",
+    false
+  ],
+  [
+    135,
+    "How Priority Encoders Convert Active Bits to Binary",
+    "A priority encoder is a combinational digital circuit that monitors multiple input lines, identifies the highest-order asserted input, and translates its position into a corresponding binary output code. Unlike standard encoders, which produce erroneous",
+    false
+  ],
+  [
+    134,
+    "What Is a Binary Comparator and How Does It Work?",
+    "A binary comparator is a combinational logic circuit used in digital electronics to compare the values of two binary numbers. This article provides an overview of binary comparators, detailing their functional purpose and the digital logic mechanisms use",
+    false
+  ],
+  [
+    133,
+    "How SRT Division Uses Lookup Tables in Binary",
+    "The Sweeney, Robertson, and Tocher (SRT) division algorithm accelerates binary hardware division by using redundant number representations and small lookup tables to select quotient digits. Instead of performing slow, full-width comparisons at each itera",
+    false
+  ],
+  [
+    132,
+    "Non-Restoring Division in Binary Arithmetic",
+    "Non-restoring division is an efficient hardware algorithm used in digital computing to perform binary division without the performance penalty of restoring intermediate values. In traditional restoring division, if a trial subtraction yields a negative r",
+    false
+  ],
+  [
+    131,
+    "Booth's Algorithm for Signed Binary Multiplication",
+    "Booth's multiplication algorithm optimizes the multiplication of signed binary integers in two's complement representation by minimizing the number of required addition and subtraction operations. By scanning the multiplier and identifying contiguous blo",
+    false
+  ],
+  [
+    130,
+    "Binary Multipliers and Wallace Tree Explained",
+    "A binary multiplier circuit is a digital hardware block designed to perform the multiplication of two binary numbers using logic gates and adders. While basic binary multiplication relies on generating partial products and summing them sequentially, this",
+    false
+  ],
+  [
+    129,
+    "How Arbitrary-Precision Math Represents Large Integers",
+    "Arbitrary-precision arithmetic libraries—often called \"bignum\" or \"BigInt\" libraries—allow computers to perform calculations on integers of virtually unlimited size, constrained only by available system memory. While standard CPU architectures restri",
+    false
+  ],
+  [
+    128,
+    "Catastrophic Cancellation in Binary Floating-Point Math",
+    "Catastrophic cancellation occurs in binary floating-point arithmetic when subtracting two nearly equal numbers, leading to an extreme loss of relative precision. Because floating-point systems allocate a fixed number of bits to store the significand (man",
+    false
+  ],
+  [
+    127,
+    "IEEE 754 Hidden Bit: How It Increases Precision",
+    "The IEEE 754 standard maximizes floating-point precision by using an implicit or \"hidden\" leading bit in the significand. In normalized binary representations, the most significant bit is always 1, meaning hardware can omit it from storage while automati",
+    false
+  ],
+  [
+    126,
+    "Understanding Binary Scientific Notation",
+    "Binary scientific notation is a method used in computer systems to represent very large or very small real numbers efficiently using powers of two. Similar to decimal scientific notation, this format separates a number into a sign, a significand (also kn",
+    false
+  ],
+  [
+    125,
+    "How Binary Angular Measure Works in Digital Systems",
+    "Binary Angular Measure (BAM) is a method of representing angles in digital systems by mapping the continuous range of a full circle ($0^\\circ$ to $360^\\circ$ or $0$ to $2\\pi$ radians) directly onto the discrete range of an $n$-bit binary integer. By alig",
+    false
+  ],
+  [
+    124,
+    "What Is Arithmetic Underflow in Floating-Point Systems",
+    "Arithmetic underflow is a condition in computer science where the result of a mathematical calculation is a non-zero number with an absolute value so small that it cannot be represented by the system's floating-point format. This article explains what ar",
+    false
+  ],
+  [
+    123,
+    "How Saturating Arithmetic Prevents Binary Rollover",
+    "Saturating arithmetic is a digital computation model that prevents catastrophic rollover anomalies by clamping register values to their maximum or minimum limits when an operation exceeds hardware capacity. In standard binary systems, exceeding a registe",
+    false
+  ],
+  [
+    122,
+    "Representing Negative Fractions in Fixed-Point Binary",
+    "This article provides an overview of how negative fractions are represented in binary using two's complement fixed-point arithmetic. Fixed-point representation places an implicit radix point between integer and fractional bits, while two's complement ass",
+    false
+  ],
+  [
+    121,
+    "Landauer's Principle: Thermodynamic Limit of Bit Erasure",
+    "Landauer's principle establishes a fundamental physical link between information theory and thermodynamics, asserting that any logically irreversible operation—such as erasing information—must dissipate a minimal amount of heat into the environment.",
+    false
+  ],
+  [
+    120,
+    "Universal Reversible Logic with Fredkin and Toffoli Gates",
+    "Reversible computing allows computation without the loss of information, preventing the theoretical minimum energy dissipation described by Landauer's Principle. The Toffoli gate and the Fredkin gate are 3-bit reversible logic gates that serve as fundame",
+    false
+  ],
+  [
+    119,
+    "Reversible Computing and Zero Heat Dissipation",
+    "Reversible computing is a non-traditional paradigm of computation where operations can be undone, allowing information processing to occur without the theoretical requirement of energy dissipation. Traditional electronic computing generates heat primaril",
+    false
+  ],
+  [
+    118,
+    "How Quantum Measurement Collapses Qubits to Binary",
+    "This article explains the mechanism by which measuring a quantum bit (qubit) forces its continuous state vector to collapse into a discrete classical output. Before observation, a qubit exists in a superposition described mathematically by a state vector",
+    false
+  ],
+  [
+    117,
+    "Quantum Superposition vs Binary Computing Explained",
+    "This article explores the fundamental principles of quantum superposition and examines how it fundamentally contrasts with the deterministic dual-state model of the classical binary number system. By comparing the fixed states of binary bits with the pro",
+    false
+  ],
+  [
+    116,
+    "How Qubits Differ from Classical Bits",
+    "Quantum computing represents a fundamental shift from traditional computing by replacing classical binary bits with quantum bits, or qubits. While classical bits operate strictly within a deterministic binary framework of zeros and ones, qubits leverage",
+    false
+  ],
+  [
+    115,
+    "How the Colossus Computer Processed Binary Streams",
+    "During World War II, the Colossus computer was developed at Bletchley Park to decipher high-level German military communications encrypted by the Lorenz SZ40/42 cipher machine. Colossus achieved its unprecedented processing speed by combining high-speed",
+    false
+  ],
+  [
+    114,
+    "Why John von Neumann Chose Binary for EDVAC",
+    "In his landmark 1945 paper, \"First Draft of a Report on the EDVAC,\" John von Neumann proposed a foundational shift in computer design by advocating for the exclusive use of the binary number system over the decimal system. This article examines the techn",
+    false
+  ],
+  [
+    113,
+    "How ENIAC Used Ring Counters for Decimal Computing",
+    "The Electronic Numerical Integrator and Computer (ENIAC) utilized electronic ring counters to store and manipulate numbers in decimal format rather than standard binary logic. This article explains how ENIAC's ten-stage vacuum tube ring counters function",
+    false
+  ],
+  [
+    112,
+    "Magnetic Core Memory and the Binary Number System",
+    "Magnetic core memory served as the dominant form of computer random-access memory from the mid-1950s until the 1970s, fundamentally shaping modern digital computing. Its primary significance lies in its two-state (bistable) physical nature, which provide",
+    false
+  ],
+  [
+    111,
+    "How Bitwise SIMD Accelerates Parallel Data Processing",
+    "Single Instruction, Multiple Data (SIMD) bitwise instructions accelerate parallel data processing by applying basic binary logic across wide vector registers in a single CPU clock cycle. By packing multiple binary elements into registers ranging from 128",
+    false
+  ],
+  [
+    110,
+    "What Is a Bloom Filter and How Does It Work?",
+    "A Bloom filter is a space-efficient, probabilistic data structure used to test whether an element is a member of a set. This article explains how Bloom filters operate, focusing on their reliance on bit arrays rooted in the binary number system and crypt",
+    false
+  ],
+  [
+    109,
+    "Binary Representation of Sparse Matrices Using Bitsets",
+    "This article explains how the binary number system represents the structural patterns of sparse matrices using bit vectors and compressed bitset architectures. By decoupling matrix topology from numerical data, binary bit vectors map zero and non-zero st",
+    false
+  ],
+  [
+    108,
+    "Big-Endian vs Little-Endian Bit Ordering Explained",
+    "This article explains the difference between big-endian and little-endian bit ordering within a single byte in binary computer systems. While endianness most commonly describes the sequence of multiple bytes in memory, bit-level endianness refers to the",
+    false
+  ],
+  [
+    107,
+    "How RSA Converts Plaintext to Large Integers",
+    "RSA encryption relies on modular arithmetic, which requires inputs to be numbers rather than strings of characters. Before the mathematical operations of RSA can take place, raw plaintext—such as text, documents, or keys—must undergo a standardized t",
+    false
+  ],
+  [
+    106,
+    "Bitwise Rotation and XOR in Cryptography",
+    "Modern symmetric cryptography relies heavily on bitwise operations to build secure, high-performance primitives such as block ciphers, stream ciphers, and cryptographic hash functions. Bitwise rotations (circular shifts) and XOR (exclusive OR) are partic",
+    false
+  ],
+  [
+    105,
+    "How SHA-256 Processes Data in Binary Chunks",
+    "Cryptographic hash functions like SHA-256 transform arbitrary amounts of data into fixed-size 256-bit digests by utilizing the Merkle–Damgård construction. To achieve this, the algorithm converts input text or files into raw binary, applies determinis",
+    false
+  ],
+  [
+    104,
+    "How LFSRs Generate Pseudo-Random Binary Sequences",
+    "Linear Feedback Shift Registers (LFSRs) are foundational mechanisms in digital computing used to produce deterministic, statistically random binary sequences known as Pseudo-Random Binary Sequences (PRBS). This article examines the core architecture of L",
+    false
+  ],
+  [
+    103,
+    "How Binary Powers Symmetric Cryptography and AES",
+    "This article explores how the binary number system serves as the structural and operational foundation for modern symmetric cryptographic algorithms, specifically the Advanced Encryption Standard (AES). It details how data representation in bits, fundame",
+    false
+  ],
+  [
+    102,
+    "Alpha Channels and Binary Transparency Explained",
+    "An alpha channel is a dedicated component in digital image files that dictates the opacity or transparency of individual pixels. This article explains the core concept of the alpha channel, demonstrates how transparency is numerically mapped and stored u",
+    false
+  ],
+  [
+    101,
+    "Understanding RGB Color Depth in Binary Imaging",
+    "This article explains how digital imaging utilizes color depth to define the visual appearance of individual pixels using binary code. It details the mechanics of the additive RGB (Red, Green, Blue) color model, how bit depth dictates color precision, an",
+    false
+  ],
+  [
+    100,
+    "How Bit Depth Determines Audio Dynamic Range",
+    "In digital audio recording, bit depth defines the resolution of each audio sample's amplitude, directly establishing the system's theoretical dynamic range. Because digital systems rely on binary code, the number of bits allocated per sample limits the m",
+    false
+  ],
+  [
+    99,
+    "What Causes Quantization Error in Digital Signals",
+    "Quantization error is the inherent discrepancy that occurs during analog-to-digital conversion when an infinitely variable, continuous physical signal is rounded to the nearest discrete value supported by a digital system. Because binary systems rely on",
+    false
+  ],
+  [
+    98,
+    "What Is Pulse Code Modulation (PCM) in Audio?",
+    "Pulse Code Modulation (PCM) is the foundational method used to digitally represent analog audio signals. This article explains how PCM transforms continuous, real-world sound waves into discrete binary code—the language of computers and digital media",
+    false
+  ],
+  [
+    97,
+    "How DACs Convert Binary to Analog Voltage",
+    "Digital-to-Analog Converters (DACs) are fundamental electronic devices that bridge discrete digital computing and the continuous physical world by translating binary code into corresponding analog voltage levels. This article explains the underlying mech",
+    false
+  ],
+  [
+    96,
+    "Bitwise AND in IP Address Network Prefix Extraction",
+    "The bitwise AND operation is the fundamental mathematical mechanism used by routers and networking devices to extract the network prefix (or network address) from an IP address. By comparing the binary representation of an IP address with its correspondi",
+    false
+  ],
+  [
+    95,
+    "Understanding IPv6 128-Bit Binary Address Space",
+    "This article explains how Internet Protocol version 6 (IPv6) solves network address exhaustion by expanding address architecture into a 128-bit sequence. It details the underlying binary mathematics that allow this expansion, breaks down how 128 individu",
+    false
+  ],
+  [
+    94,
+    "How IPv4 Converts to a 32-Bit Binary Sequence",
+    "An Internet Protocol version 4 (IPv4) address is fundamentally a 32-bit unsigned integer represented in a human-readable format known as dotted-decimal notation. While users and network administrators interact with four decimal numbers separated by perio",
+    false
+  ],
+  [
+    93,
+    "Understanding Subnets and CIDR via Bitmasking",
+    "Network subnetting and Classless Inter-Domain Routing (CIDR) rely on binary bitmasking to segment IP addresses into network and host identifiers. This article explains the binary foundation of IPv4 addressing, how the bitwise AND operation isolates netwo",
+    false
+  ],
+  [
+    92,
+    "What Is Binary Phase Shift Keying (BPSK)?",
+    "Binary Phase Shift Keying (BPSK) is a foundational digital modulation technique used to transmit digital data wirelessly by altering the phase of a radio frequency carrier wave. This article explains the fundamental principles of BPSK, details how binary",
+    false
+  ],
+  [
+    91,
+    "How Manchester Encoding Embeds Clock Synchronization",
+    "Manchester encoding is a digital line-coding technique that integrates data and clock synchronization signals into a single physical transmission stream. By ensuring a guaranteed voltage transition at the exact midpoint of every binary bit interval, this",
+    false
+  ],
+  [
+    90,
+    "How NRZ Line Coding Converts Voltage to Binary",
+    "Non-Return-to-Zero (NRZ) line coding is a fundamental digital data transmission method that maps binary digits directly to distinct electrical voltage levels. Unlike coding schemes that return to a neutral or zero-voltage state between consecutive bits,",
+    false
+  ],
+  [
+    89,
+    "Maximum Information Density of Binary Channels",
+    "The theoretical maximum information density of a transmission channel operating over the binary number system is determined by fundamental principles of information theory, primarily Claude Shannon's channel capacity theorems and Harry Nyquist's signalin",
+    false
+  ],
+  [
+    88,
+    "How Information Entropy Quantifies Data in Bits",
+    "Information entropy, formulated by Claude Shannon in 1948, provides a mathematical framework for measuring the uncertainty, surprise, and information content within a data source. Measured in units called shannons—commonly referred to as bits—this me",
+    false
+  ],
+  [
+    87,
+    "What Is a Binary Decision Diagram (BDD)?",
+    "A Binary Decision Diagram (BDD) is a specialized data structure used in computer science and digital circuit design to efficiently represent, manipulate, and evaluate Boolean functions. By translating truth tables and algebraic expressions into a directe",
+    false
+  ],
+  [
+    86,
+    "Binary Search: Divide and Conquer in Base-2 Logic",
+    "This article explores how the binary search algorithm utilizes the divide-and-conquer paradigm and examines its deep conceptual and mathematical connection to the binary (base-2) number system. By breaking a sorted dataset into halves, binary search mirr",
+    false
+  ],
+  [
+    85,
+    "Binary Numbers in Binary Tree Storage and Traversal",
+    "The binary number system provides a foundational mathematical framework for representing, indexing, and traversing binary trees in computer science. Because binary trees branch by a factor of two at each node, base-2 arithmetic and bitwise operations inh",
+    false
+  ],
+  [
+    84,
+    "How (x & (x - 1)) == 0 Checks for Powers of Two",
+    "In binary computation, the bitwise expression (x & (x - 1)) == 0 is an efficient, constant-time method used to verify whether a positive integer x is a power of two. This technique works by leveraging the unique binary structure of powers of two—which",
+    false
+  ],
+  [
+    83,
+    "Why Subtracting One Flips Binary Bits",
+    "In binary arithmetic, subtracting one from an integer flips the lowest set bit (the least significant bit with a value of 1) to zero and transforms all preceding lower-order zeros into ones. This behavior is the foundation of numerous low-level bitwise o",
+    false
+  ],
+  [
+    82,
+    "Swap Variables Without Temporary Memory Using XOR",
+    "This article explains how to use the bitwise XOR (Exclusive OR) operator to swap the values of two variables without allocating any temporary memory or intermediate variables. By understanding the core mathematical and binary properties of the XOR operat",
+    false
+  ],
+  [
+    81,
+    "Finding the First Set Bit Using Bitwise Algorithms",
+    "Finding the index of the first set bit—the position of the least significant 1 in a binary representation—is a fundamental operation in computer science with applications in graphics, chess engines, and data compression. Bitwise algorithms solve this",
+    false
+  ],
+  [
+    80,
+    "What Is Bitwise Population Count (Popcount)?",
+    "The bitwise population count, commonly abbreviated as popcount, is a fundamental computer science operation that counts the total number of set bits (bits with a value of 1) in a binary sequence. Also known as the Hamming weight or sideways sum, popcount",
+    false
+  ],
+  [
+    79,
+    "How Barrel Shifters Perform Single-Cycle Shifts",
+    "A barrel shifter is a specialized digital circuit that can shift or rotate a data word by an arbitrary number of bits within a single clock cycle. Unlike traditional shift registers that require multiple clock cycles to shift data one bit at a time, a ba",
+    false
+  ],
+  [
+    78,
+    "How Opcodes Work as Binary Identifiers",
+    "An operation code, or opcode, serves as the fundamental binary identifier in computer architecture that specifies the exact operation a Central Processing Unit (CPU) must perform. As the core component of machine language instructions, the opcode transla",
+    false
+  ],
+  [
+    77,
+    "How Machine Code Translates Instructions to Binary",
+    "Machine code is the lowest-level programming language that a computer’s central processing unit (CPU) can execute directly. This article explores what constitutes machine code, examines its structural components, and explains the step-by-step process o",
+    false
+  ],
+  [
+    76,
+    "How Binary Powers Modern Microprocessor ISAs",
+    "This article explores how the binary number system serves as the foundational layer for microprocessor instruction set architectures (ISAs). At the physical level, microprocessors rely on transistors operating in two distinct electrical states, which dir",
+    false
+  ],
+  [
+    75,
+    "Understanding Noise Margin in Digital Electronics",
+    "This article explores how noise margin functions as a critical tolerance threshold in digital electronic circuits, preserving the distinct states of binary logic—logic 0 and logic 1. By establishing defined electrical boundaries between output and inpu",
+    false
+  ],
+  [
+    74,
+    "Binary vs Analog Computing Hardware Reliability",
+    "The transition from multi-voltage analog computing to the binary digital system was a pivotal shift driven primarily by physical hardware constraints. While analog and multi-state systems theoretically process more information per signal line, their phys",
+    false
+  ],
+  [
+    73,
+    "Why Early Computers Used Decimal and Ternary Systems",
+    "In the dawn of modern computing, binary was not the foregone conclusion it is today; early engineers actively explored decimal (base-10) and ternary (base-3) architectures to match human intuition and maximize mathematical efficiency. Decimal computers s",
+    false
+  ],
+  [
+    72,
+    "How CPU Register Files Manipulate Binary Words",
+    "Register files are ultra-fast, multi-port internal memory arrays situated within central processing units (CPUs) to stage and manipulate fixed-width binary data. This article explores the internal mechanics of register files, detailing how fixed-width bi",
+    false
+  ],
+  [
+    71,
+    "Byte Boundaries and Word Alignment Explained",
+    "This article explores the fundamental relationship between byte boundaries and word alignment during CPU instruction execution within the binary number system. It examines how memory is structured at the binary level, why word alignment relies on specifi",
+    false
+  ],
+  [
+    70,
+    "How UTF-8 Encodes Unicode Code Points in Binary",
+    "UTF-8 is a variable-length character encoding system that translates Unicode code points into one to four 8-bit bytes. By using specific binary prefixes for each byte, UTF-8 preserves backward compatibility with standard 7-bit ASCII, prevents byte-synchr",
+    false
+  ],
+  [
+    69,
+    "How Binary Enables ASCII Text Encoding",
+    "Computers fundamentally operate using electrical signals that represent binary data—zeros and ones. Because hardware cannot inherently understand human language, it relies on standardized translation frameworks to interpret and display alphanumeric tex",
+    false
+  ],
+  [
+    68,
+    "How MLC and TLC Flash Store Multiple Bits Per Cell",
+    "This article explains how Multi-Level Cell (MLC) and Triple-Level Cell (TLC) NAND flash memory architectures store multiple binary states within a single physical memory cell. By using precise voltage thresholds to trap varying amounts of electrons, thes",
+    false
+  ],
+  [
+    67,
+    "SLC Flash Memory and Binary Mapping Explained",
+    "Single-Level Cell (SLC) flash memory is a high-performance solid-state storage technology that stores exactly one bit of data per physical memory cell. Because each cell is designed to hold only one of two discrete electrical states, it provides a direct",
+    false
+  ],
+  [
+    66,
+    "How Floating-Gate Transistors Trap Electrons",
+    "Flash memory relies on floating-gate transistors (FGMOS) to store digital data non-voluntarily, retaining information even when power is disconnected. By using quantum tunneling and high electric fields, these specialized semiconductor devices trap or re",
+    false
+  ],
+  [
+    65,
+    "How CDs and DVDs Encode Binary Data Using Pits and Lands",
+    "Optical discs like CDs and DVDs store digital information physically on a microscopic scale using a continuous spiral track of microscopic indentations known as \"pits\" and flat spaces known as \"lands.\" Rather than a pit simply equaling a zero and a land",
+    false
+  ],
+  [
+    64,
+    "Binary Data and Magnetic Orientation in HDDs",
+    "This article explores the direct relationship between the binary number system and the physical storage mechanisms of traditional hard disk drives (HDDs). It details how abstract digital bits (0s and 1s) are translated into physical magnetic polarities a",
+    false
+  ],
+  [
+    63,
+    "How Run-Length Encoding Compresses Binary Data",
+    "Run-Length Encoding (RLE) is a simple, lossless data compression algorithm that reduces the size of binary sequences by replacing consecutive, identical bits with a count of their occurrences. In binary systems, where the only possible values are 0 and 1",
+    false
+  ],
+  [
+    62,
+    "Huffman Coding and Variable-Length Binary Codes",
+    "Huffman coding is a foundational lossless data compression algorithm that reduces file sizes by assigning variable-length binary codes to characters based on their frequency of occurrence. Instead of using standard, fixed-length representations like 8-bi",
+    false
+  ],
+  [
+    61,
+    "What Is a Bitboard in Chess Programming?",
+    "A bitboard is a specialized data structure used in computer chess to represent board states and piece placements using a single 64-bit binary integer. This article explains the fundamental architecture of bitboards, how each bit maps directly to the 64 s",
+    false
+  ],
+  [
+    60,
+    "Binary in Database Lookup Tables and Bitmap Indices",
+    "The binary number system provides the fundamental architectural foundation for database optimization techniques, specifically lookup tables and bitmap indices. By representing data as base-2 values (bits), database engines can execute high-speed direct m",
+    false
+  ],
+  [
+    59,
+    "What Is Cyclic Redundancy Check (CRC) and How It Works",
+    "A Cyclic Redundancy Check (CRC) is a widely used error-detecting code designed to detect accidental changes to raw digital data in storage devices and communication networks. At its core, a CRC treats binary data strings as algebraic polynomials and perf",
+    false
+  ],
+  [
+    58,
+    "How Hamming Codes Detect and Correct Bit Flips",
+    "Hamming codes are a foundational class of linear error-correcting codes designed to detect and repair single-bit errors in transmitted or stored binary data. By inserting calculated redundant bits—known as parity bits—at specific powers-of-two positi",
+    false
+  ],
+  [
+    57,
+    "Odd vs Even Parity in Binary Data Transmission",
+    "Parity checking is a fundamental mathematical method used in telecommunications and computer systems to detect single-bit errors in binary data transmission. By appending a single parity bit to a string of binary data, the system ensures that the total c",
+    false
+  ],
+  [
+    56,
+    "How Parity Checking Works for Error Detection",
+    "Parity checking is a fundamental, lightweight error-detection mechanism used in digital communication and computing systems to ensure binary data integrity. It operates by appending a single additional binary digit, known as a parity bit, to a block of d",
+    false
+  ],
+  [
+    55,
+    "What Is the Least Significant Bit in Binary?",
+    "The Least Significant Bit (LSB) is the rightmost bit in a binary number, representing the lowest positional value and having the smallest effect on the overall magnitude of the number. This article defines the LSB, explains its fundamental mathematical f",
+    false
+  ],
+  [
+    54,
+    "Most Significant Bit (MSB): Definition and Function",
+    "This article provides a concise overview of the Most Significant Bit (MSB) within the binary number system. It explains the fundamental definition of the MSB, its positional significance, its exact mathematical function in both unsigned and signed repres",
+    false
+  ],
+  [
+    53,
+    "How Little-Endian Format Arranges Bytes in Binary",
+    "This article explains how the little-endian byte ordering format arranges binary data in computer memory. It covers the breakdown of multi-byte binary values into distinct bytes, the identification of significance, and the precise sequential mapping of t",
+    false
+  ],
+  [
+    52,
+    "How Big-Endian Stores the Most Significant Byte",
+    "The big-endian format is an endianness scheme used in computer architecture where data is stored starting with the most significant byte at the lowest memory address. This article explains the exact mechanism big-endian systems use to organize binary dat",
+    false
+  ],
+  [
+    51,
+    "Understanding Endianness and Byte Ordering",
+    "Endianness refers to the sequence in which bytes of a multi-byte digital word are stored in computer memory or transmitted over a network. This article covers the fundamental concept of endianness, explains the difference between Big-Endian and Little-En",
+    false
+  ],
+  [
+    50,
+    "I Ching Hexagrams and Leibniz Binary System",
+    "This article explores the historical and conceptual connection between the ancient Chinese divination text, the I Ching (Book of Changes), and the modern binary numeral system developed by German polymath Gottfried Wilhelm Leibniz. In the late 17th and e",
+    false
+  ],
+  [
+    49,
+    "How Bacon's Biliteral Cipher Predated Binary Code",
+    "In 1605, English philosopher and statesman Francis Bacon introduced the biliteral cipher, an ingenious steganographic method that predated the modern binary number system by decades. While binary arithmetic was later formalized by Gottfried Wilhelm Leibn",
+    false
+  ],
+  [
+    48,
+    "How Boolean Logic Built Modern Binary Systems",
+    "George Boole revolutionized computation by transforming philosophical logic into a formal mathematical language where statements are evaluated strictly as true or false. Decades after its introduction, this algebraic framework provided the exact mathemat",
+    false
+  ],
+  [
+    47,
+    "Significance of Claude Shannon's 1937 Thesis",
+    "Claude Shannon’s 1937 master’s thesis, A Symbolic Analysis of Relay and Switching Circuits, is widely considered one of the most influential scientific works of the twentieth century. Written when Shannon was just 21 years old at MIT, the paper estab",
+    false
+  ],
+  [
+    46,
+    "Excess-3 Code: Self-Complementing Binary Explained",
+    "Excess-3 code, often abbreviated as XS-3 or Stibitz code, is a non-weighted Binary Coded Decimal (BCD) system designed to simplify digital arithmetic. Derived by adding a value of three (binary 0011) to each standard BCD digit, this encoding scheme posse",
+    false
+  ],
+  [
+    45,
+    "Why Rotary Encoders Use Gray Code Instead of Binary",
+    "Mechanical rotary encoders convert angular position into digital signals, and Gray code is preferred over standard binary to prevent read errors caused by physical switching delays. In standard binary systems, multiple bits often change simultaneously be",
+    false
+  ],
+  [
+    44,
+    "What Is Gray Code and How Does It Work?",
+    "Gray code, also known as Reflected Binary Code (RBC), is an alternative binary numeral system designed to minimize errors during transitions between consecutive values. This article explains the fundamental concept of Gray code, examines how it alters bi",
+    false
+  ],
+  [
+    43,
+    "BCD vs Binary: Efficiency Trade-offs Explained",
+    "Binary Coded Decimal (BCD) encodes each decimal digit of a number into a dedicated four-bit binary sequence, contrasting with standard binary systems that represent entire numerical values as continuous base-2 numbers. While BCD eliminates rounding error",
+    false
+  ],
+  [
+    42,
+    "BCD vs Pure Binary Representation",
+    "Binary Coded Decimal (BCD) and pure positional binary representation are two distinct methods used by computing systems to represent numerical values using bits. While pure positional binary converts an entire numerical magnitude into a base-2 sequence b",
+    false
+  ],
+  [
+    41,
+    "Convert Hexadecimal to Binary Step-by-Step",
+    "Converting a hexadecimal (base-16) number directly to a binary (base-2) number is a fast and simple process because 16 is an exact power of 2 ($2^4 = 16$). This mathematical relationship means that each individual hexadecimal digit corresponds directly t",
+    false
+  ],
+  [
+    40,
+    "Binary Digits in One Hexadecimal Digit",
+    "Exactly four binary digits (bits) correspond to one digit in the hexadecimal numbering system. This article explains the mathematical basis behind this direct 4-to-1 relationship, demonstrates how binary and hexadecimal values align, and details why this",
+    false
+  ],
+  [
+    39,
+    "Why Octal Is a Convenient Shorthand for Binary",
+    "The octal number system is widely considered a convenient shorthand for binary data because of its direct mathematical compatibility with the base-2 system. By grouping binary digits into sets of three, octal allows programmers and computer engineers to",
+    false
+  ],
+  [
+    38,
+    "How Bitwise NOT Inverts Binary Values",
+    "The bitwise NOT operator is a fundamental unary operation in computer science that flips every individual bit of a binary number, transforming zeros into ones and ones into zeros. This article explains how the bitwise NOT operation functions at the binar",
+    false
+  ],
+  [
+    37,
+    "What Is Bit Masking and How Does It Work?",
+    "Bit masking is a technique used in computer programming to manipulate, extract, or toggle individual bits within a binary value using bitwise operations. This article explains the fundamental concept of bit masking, demonstrates step-by-step how to isola",
+    false
+  ],
+  [
+    36,
+    "How Circular Bit Shift Works in Binary Registers",
+    "A circular bit shift, commonly known as a bitwise rotation, is a fundamental binary operation that shifts all bits in a register while wrapping the overflowing bits back to the opposite end. Unlike standard logical or arithmetic shifts that discard overf",
+    false
+  ],
+  [
+    35,
+    "Logical Right Shift vs Arithmetic Right Shift",
+    "In binary computing, right shift operations move bits to the right by a specified number of positions, but they differ fundamentally in how they handle the vacated bits at the most significant bit (MSB) position. A logical right shift always fills the le",
+    false
+  ],
+  [
+    34,
+    "Bitwise Shift Multiplication and Division Explained",
+    "Bitwise shift operations provide an efficient, low-level mechanism to perform arithmetic multiplication and division by powers of two. In the positional binary number system, shifting the bit pattern of an integer to the left multiplies the number by two",
+    false
+  ],
+  [
+    33,
+    "Carry-Lookahead vs Ripple-Carry Adders",
+    "Binary addition is a foundational operation in modern digital computing, directly impacting the performance of Arithmetic Logic Units (ALUs) in CPUs and GPUs. While ripple-carry adders (RCAs) offer a simple design using minimal circuit area, they suffer",
+    false
+  ],
+  [
+    32,
+    "How Ripple Carry Adders Propagate Carry Bits",
+    "A ripple-carry adder (RCA) is a fundamental digital circuit used to perform addition on multi-bit binary numbers by cascading single-bit full adders. This article explains the sequential mechanism of carry propagation across multiple stages, details the",
+    false
+  ],
+  [
+    31,
+    "Full Adder vs Half Adder: Key Structural Differences",
+    "This article explains the fundamental differences between half adders and full adders in digital binary arithmetic, focusing specifically on the structural addition that sets them apart. While both circuits compute binary addition, the full adder incorpo",
+    false
+  ],
+  [
+    30,
+    "How a Half Adder Computes Binary Sum and Carry",
+    "A half adder is a fundamental digital logic circuit that performs the addition of two single-bit binary numbers. It produces two distinct outputs: the Sum ($S$) and the Carry ($C$). The circuit achieves this by combining two basic logic gates—an Exclus",
+    false
+  ],
+  [
+    29,
+    "XOR Gate Function in Binary Bitwise Addition",
+    "In digital electronics and computer science, the XOR (Exclusive OR) gate serves as the fundamental building block for binary arithmetic, specifically acting as the single-bit sum generator. When adding two binary digits, the XOR gate determines the resul",
+    false
+  ],
+  [
+    28,
+    "Binary Numbers and Boolean Logic Gates Explained",
+    "The binary number system and Boolean logic gates form the foundational architecture of all modern digital computing. Binary represents data using only two digits, 0 and 1, which map directly to the false and true states of Boolean algebra. Physical logic",
+    false
+  ],
+  [
+    27,
+    "Why Binary Cannot Accurately Represent Decimal 0.1",
+    "Certain decimal fractions like 0.1 cannot be represented with finite precision in the standard binary number system because of how number bases handle fractional values. Just as the fraction 1/3 produces an infinitely repeating sequence in decimal notati",
+    false
+  ],
+  [
+    26,
+    "How to Convert Fractional Decimal to Binary",
+    "Converting a fractional decimal number to its binary equivalent is a straightforward process that uses repeated multiplication by 2. This guide provides a clear, step-by-step walkthrough of the conversion algorithm, demonstrates the process using the exa",
+    false
+  ],
+  [
+    25,
+    "What Are Subnormal Numbers in Floating-Point?",
+    "In binary floating-point arithmetic, subnormal numbers (also known as denormalized numbers) are special values that fill the underflow gap around zero. This article covers the fundamental mechanics of subnormal numbers under the IEEE 754 standard, why th",
+    false
+  ],
+  [
+    24,
+    "How Binary Represents Infinity and NaN",
+    "In modern computer science, binary systems represent special non-finite numerical states—specifically positive infinity, negative infinity, and Not-a-Number (NaN)—using standardized floating-point formats, primarily the IEEE 754 standard. Instead of",
+    false
+  ],
+  [
+    23,
+    "Role of Exponent Bias in Floating Point Numbers",
+    "The exponent bias is a crucial component in computer systems that enables the representation of both very large and exceedingly small numbers in floating-point format. By adding a fixed constant—known as the bias—to the true exponent, floating-point",
+    false
+  ],
+  [
+    22,
+    "How the Mantissa Works in Binary Floating-Point",
+    "This article provides an overview of how the mantissa, also known as the significand, functions within binary floating-point standards such as IEEE 754. It explains the mechanics of representing fractional precision in binary, the role of normalization,",
+    false
+  ],
+  [
+    21,
+    "IEEE 754 Floating-Point Standard Explained",
+    "The IEEE 754 standard is the universal technical benchmark for representing and computing floating-point numbers in modern computer systems. This article explains the architectural structure of the IEEE 754 format, details its core components—the sign",
+    false
+  ],
+  [
+    20,
+    "Binary Fractions and Negative Powers of Two",
+    "In computing and mathematics, fractional quantities in the binary number system are represented using negative powers of two placed to the right of a binary point (also known as a radix point). Just as the decimal system uses negative powers of ten ($10^",
+    false
+  ],
+  [
+    19,
+    "How Fixed-Point Binary Represents Fractional Values",
+    "Fixed-point binary representation is a method used by digital systems to store and calculate fractional values without the overhead of floating-point hardware. By assigning a predetermined, unmoving position to the radix point (the binary equivalent of a",
+    false
+  ],
+  [
+    18,
+    "Sign-Magnitude Representation Drawbacks in Hardware",
+    "Sign-magnitude representation encodes signed numbers by dedicating the most significant bit to the sign and the remaining bits to the value's magnitude. While conceptually intuitive, this system introduces significant hardware design inefficiencies. The",
+    false
+  ],
+  [
+    17,
+    "Sign-Magnitude Representation in Binary",
+    "Sign-magnitude representation is one of the simplest methods used in digital computing to encode both positive and negative integers in the binary number system. By dedicating the most significant bit solely to indicating the sign of the number, this for",
+    false
+  ],
+  [
+    16,
+    "Signed Integer Overflow in Binary Addition Explained",
+    "Arithmetic overflow in binary addition occurs when the sum of two signed integers exceeds the fixed bit-width storage limit of a computing system, resulting in an incorrect sign and value. In standard two's complement representation, this error happens s",
+    false
+  ],
+  [
+    15,
+    "One's Complement vs Two's Complement in Binary",
+    "In digital computing, one's complement and two's complement are two distinct mathematical representations used to store signed (positive and negative) integers in binary. While both systems use the most significant bit (MSB) as a sign indicator—where 0",
+    false
+  ],
+  [
+    14,
+    "Why Two's Complement Has Only One Zero",
+    "In digital computing, two's complement is the standard binary encoding method for signed integers because it provides seamless arithmetic and eliminates redundant values. Unlike systems such as sign-and-magnitude or ones' complement—both of which produ",
+    false
+  ],
+  [
+    13,
+    "How Two's Complement Handles Negative Binary Numbers",
+    "Two's complement is the standard mathematical method used by modern computers to represent and manipulate signed integers in binary. This article explores how two's complement solves the fundamental challenges of negative binary numbers—specifically el",
+    false
+  ],
+  [
+    12,
+    "Difference Between a Bit, Nibble, and Byte",
+    "In modern computing and the binary number system, data is structured into fundamental units of measurement based on powers of two. The most basic of these units are the bit, the nibble, and the byte. This guide provides a clear and straightforward breakd",
+    false
+  ],
+  [
+    11,
+    "Binary Multiplication vs Decimal: Why Binary Is Simpler",
+    "Binary multiplication is significantly simpler than decimal multiplication because the binary system relies on only two digits: 0 and 1. This article explores how this base-2 foundation reduces single-digit multiplication to basic logical decisions, comp",
+    false
+  ],
+  [
+    10,
+    "Binary Long Division Method Explained",
+    "Binary long division is the standard mathematical procedure used to divide numbers in base-2, operating on the same fundamental principles as decimal long division but with much simpler arithmetic. Because the binary system contains only the digits 0 and",
+    false
+  ],
+  [
+    9,
+    "How to Do Binary Subtraction Without Complements",
+    "Direct binary subtraction is an arithmetic process used to find the difference between two base-2 numbers without relying on complement methods like 1's or 2's complement. This technique operates identically to traditional base-10 long subtraction, utili",
+    false
+  ],
+  [
+    8,
+    "Binary Addition Carry Bit Generation Rules",
+    "In binary addition, a carry bit is generated whenever the sum of the digits in a specific column meets or exceeds the base value of two. Because the binary system only uses the digits 0 and 1, any operation resulting in a value of two ($102$) or three ($",
+    false
+  ],
+  [
+    7,
+    "How Binary Addition Works Compared to Decimal",
+    "This article explores how binary addition functions in comparison to everyday decimal addition. While both systems rely on positional notation and the concept of carrying values to higher-value columns, they operate on different numerical bases. By under",
+    false
+  ],
+  [
+    6,
+    "Significance of Base-2 Radix in Binary Numbers",
+    "This article explores the fundamental role of the base-2 radix in the binary number system. It examines how a radix of two dictates positional notation, restricts symbolic states to zero and one, shapes arithmetic operations, and bridges numerical comput",
+    false
+  ],
+  [
+    5,
+    "Convert Decimal to Binary Using Repeated Division",
+    "Converting a positive decimal (base-10) integer into its binary (base-2) equivalent is a fundamental computing concept that can be accomplished quickly using the repeated division-by-2 method. This article explains the step-by-step algorithm for performi",
+    false
+  ],
+  [
+    4,
+    "Pingala Chandas Shastra and the Binary System",
+    "The ancient Indian text Chandaḥśāstra (also known as the Pingala-sūtras), authored by the scholar Pingala around the 3rd to 2nd century BCE, is the earliest known work to conceptualize the foundations of the binary number system. Although composed a",
+    false
+  ],
+  [
+    3,
+    "Why Transistors Use the Binary Number System",
+    "The binary number system is the foundational language of modern computing because it perfectly mirrors the physical characteristics of transistors. Digital electronic circuits rely on billions of microscopic transistors that act as simple electronic swit",
+    false
+  ],
+  [
+    2,
+    "How Binary Numbers Use Positional Notation",
+    "The binary number system represents all numerical values using only two digits, 0 and 1, through a method known as positional notation. In this system, the value of a digit is determined by its position within a number, with each position corresponding t",
+    false
+  ],
+  [
+    1,
+    "Leibniz and the History of the Binary Number System",
+    "Gottfried Wilhelm Leibniz played a foundational role in the history of mathematics and computer science by formalizing the modern binary number system. Although rudimentary binary concepts existed in ancient cultures, Leibniz was the first to systematica",
+    false
+  ]
+]

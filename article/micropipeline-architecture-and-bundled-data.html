@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micropipeline Architecture and Bundled Data - binary</title>
+    <meta name="description" content="Micropipeline architecture is a modular, event-driven framework used to design asynchronous digital circuits without relying on a global clock signal. This article examines how micropipelines operate, explores their reliance on bundled-data protocols to">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/micropipeline-architecture-and-bundled-data">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Micropipeline Architecture and Bundled Data - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/micropipeline-architecture-and-bundled-data" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Micropipeline architecture is a modular, event-driven framework used to design asynchronous digital circuits without relying on a global clock signal. This article examines how micropipelines operate, explores their reliance on bundled-data protocols to" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="micropipeline-architecture-and-bundled-data">Micropipeline
+Architecture and Bundled Data</h1>
+<p>Micropipeline architecture is a modular, event-driven framework used
+to design asynchronous digital circuits without relying on a global
+clock signal. This article examines how micropipelines operate, explores
+their reliance on bundled-data protocols to transmit standard binary
+information, and breaks down the control-handshake mechanisms that
+ensure reliable data progression through processing stages.</p>
+<h2 id="what-is-micropipeline-architecture">What is Micropipeline
+Architecture?</h2>
+<p>Introduced by Ivan Sutherland in his 1989 Turing Award lecture, a
+micropipeline is an elastic, asynchronous FIFO (First-In, First-Out)
+pipeline structure. Unlike conventional synchronous processors that
+synchronize register transfers via a centralized clock tree,
+micropipelines regulate data flow locally using event-based handshaking
+signals. Each stage operates independently, processing and passing data
+only when the preceding stage has valid output and the succeeding stage
+has capacity to receive it. This elasticity allows stages with variable
+processing latencies to interface without stalling the entire
+system.</p>
+<h2 id="the-bundled-data-protocol">The Bundled-Data Protocol</h2>
+<p>A bundled-data protocol is an interface convention that separates the
+data path from the control path while keeping them functionally coupled.
+In this scheme:</p>
+<ul>
+<li><strong>The Data Path:</strong> Consists of conventional <span
+class="math inline">\(N\)</span>-bit binary buses (using standard
+boolean logic levels of 0 and 1) carrying binary words.</li>
+<li><strong>The Control Path:</strong> Consists of two dedicated
+handshake wires—typically named <strong>Request</strong> (from sender to
+receiver) and <strong>Acknowledge</strong> (from receiver to
+sender).</li>
+</ul>
+<p>The term "bundled" denotes that the bundle of binary data lines is
+associated with a single set of control wires. The control signals
+dictate the validity and consumption of the binary values present on the
+data bus.</p>
+<h2 id="implementing-bundled-data-in-binary-systems">Implementing
+Bundled Data in Binary Systems</h2>
+<p>Because the binary data lines do not contain self-synchronizing codes
+(unlike delay-insensitive dual-rail encodings), micropipelines enforce a
+strict timing requirement known as the <strong>bundling
+constraint</strong>.</p>
+<ol type="1">
+<li><strong>Setup and Propagation:</strong> The sender places an <span
+class="math inline">\(N\)</span>-bit binary value onto the data
+lines.</li>
+<li><strong>Matched Delay:</strong> The sender generates a
+<code>Request</code> event that is passed through a calibrated delay
+element. This delay matches or slightly exceeds the worst-case
+propagation delay of the combinational logic and wire routing for the
+binary data path.</li>
+<li><strong>Validation (<code>Request</code>):</strong> The
+<code>Request</code> signal arrives at the receiver stage only after the
+binary data signals have settled and met standard setup times.</li>
+<li><strong>Latching and Consumption:</strong> The receiver latches the
+binary inputs upon detecting the <code>Request</code> transition.</li>
+<li><strong>Confirmation (<code>Acknowledge</code>):</strong> The
+receiver asserts an <code>Acknowledge</code> signal back to the sender,
+signaling that the latches are closed and the data bus can transition to
+a new binary state.</li>
+</ol>
+<h2 id="control-signaling-two-phase-vs-four-phase">Control Signaling:
+Two-Phase vs. Four-Phase</h2>
+<p>Micropipelines generally use one of two signaling protocols to
+coordinate data movement:</p>
+<ul>
+<li><strong>Two-Phase Transition Signaling:</strong> Every voltage
+transition (both low-to-high and high-to-low) on the control lines
+represents a discrete control event (<code>Request</code> or
+<code>Acknowledge</code>). This approach minimizes signal transitions,
+reducing dynamic power consumption.</li>
+<li><strong>Four-Phase Return-to-Zero (RZ) Signaling:</strong> A full
+handshake requires the signal to transition high and then return to low.
+While introducing extra transitions, four-phase control often simplifies
+the underlying silicon layout and latch control logic.</li>
+</ul>
+<h2 id="control-logic-the-muller-c-element">Control Logic: The Muller
+C-Element</h2>
+<p>At the core of a micropipeline's control path is the Muller
+C-element. This specialized asynchronous logic gate outputs a 1 when all
+its inputs are 1, outputs a 0 when all its inputs are 0, and retains its
+previous state when inputs disagree. In a micropipeline, Muller
+C-elements manage the event tokens, ensuring that a pipeline register
+only captures incoming binary data when the current stage is empty and
+the upstream stage indicates that valid binary data is ready.</p>
+<p>By combining standard binary data paths with localized delay-matched
+control circuits, micropipeline architectures provide the power
+efficiency, modularity, and clock-skew immunity of asynchronous design
+while maintaining compatibility with standard binary arithmetic
+logic.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

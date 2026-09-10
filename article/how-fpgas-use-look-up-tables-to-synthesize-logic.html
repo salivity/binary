@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How FPGAs Use Look-Up Tables to Synthesize Logic - binary</title>
+    <meta name="description" content="Field-programmable gate arrays (FPGAs) achieve their hardware flexibility by using Look-Up Tables (LUTs) as their primary functional building blocks. Instead of physically wiring together fixed logic gates (like AND, OR, or XOR gates), an FPGA implements">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-fpgas-use-look-up-tables-to-synthesize-logic">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How FPGAs Use Look-Up Tables to Synthesize Logic - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-fpgas-use-look-up-tables-to-synthesize-logic" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Field-programmable gate arrays (FPGAs) achieve their hardware flexibility by using Look-Up Tables (LUTs) as their primary functional building blocks. Instead of physically wiring together fixed logic gates (like AND, OR, or XOR gates), an FPGA implements" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-fpgas-use-look-up-tables-to-synthesize-logic">How FPGAs Use
+Look-Up Tables to Synthesize Logic</h1>
+<p>Field-programmable gate arrays (FPGAs) achieve their hardware
+flexibility by using Look-Up Tables (LUTs) as their primary functional
+building blocks. Instead of physically wiring together fixed logic gates
+(like AND, OR, or XOR gates), an FPGA implements digital logic by
+storing the truth table of a desired binary function inside small,
+high-speed static memory cells. When input signals are applied to a LUT,
+they act as memory addresses to retrieve the pre-computed binary result,
+allowing the FPGA to synthesize any arbitrary Boolean function in the
+binary number system.</p>
+<h3 id="the-architecture-of-a-look-up-table">The Architecture of a
+Look-Up Table</h3>
+<p>At its core, a LUT consists of two main hardware components:</p>
+<ol type="1">
+<li><strong>SRAM Configuration Memory:</strong> A bank of 1-bit static
+RAM cells that hold the pre-calculated output values of a logic
+function.</li>
+<li><strong>A Multiplexer Tree:</strong> An array of transmission gates
+or multiplexers controlled by the LUT's input lines to select and output
+a specific memory cell.</li>
+</ol>
+<p>An <span class="math inline">\(N\)</span>-input LUT (referred to as
+an <span class="math inline">\(N\)</span>-LUT) contains <span
+class="math inline">\(2^N\)</span> configuration bits. For example:</p>
+<ul>
+<li>A <strong>3-input LUT</strong> contains <span
+class="math inline">\(2^3 = 8\)</span> SRAM cells.</li>
+<li>A <strong>6-input LUT</strong> (standard in modern FPGA
+architectures) contains <span class="math inline">\(2^6 = 64\)</span>
+SRAM cells.</li>
+</ul>
+<p>Because <span class="math inline">\(N\)</span> binary variables yield
+exactly <span class="math inline">\(2^N\)</span> possible input
+combinations, an <span class="math inline">\(N\)</span>-LUT can store
+the entire truth table of any arbitrary <span
+class="math inline">\(N\)</span>-variable Boolean function.</p>
+<h3 id="how-binary-truth-tables-are-evaluated">How Binary Truth Tables
+Are Evaluated</h3>
+<p>In traditional digital circuits, logic gates evaluate binary
+equations in real time through silicon gate transitions. In an FPGA,
+logic evaluation is transformed into a memory look-up operation:</p>
+<ol type="1">
+<li><strong>Truth Table Generation:</strong> During the compilation
+(synthesis) phase, the FPGA toolchain converts high-level hardware
+description code (such as VHDL or Verilog) into Boolean logic and
+generates a truth table for each sub-function.</li>
+<li><strong>Bitstream Programming:</strong> The truth table outputs are
+loaded into the LUT’s SRAM cells during FPGA configuration.</li>
+<li><strong>Addressing and Output:</strong> When the circuit runs, the
+binary input signals (<span class="math inline">\(A, B, C,
+\dots\)</span>) drive the select lines of the multiplexer tree. The
+multiplexer routes the data stored in the addressed SRAM cell directly
+to the LUT's output pin.</li>
+</ol>
+<p>For example, consider a 3-input function defined as <span
+class="math inline">\(F = (A \land B) \lor \neg C\)</span>. The
+synthesis tool generates the 8-bit truth table sequence corresponding to
+inputs <code>000</code> through <code>111</code> and writes these 8 bits
+into the LUT. When the physical inputs arrive as binary
+<code>110</code>, the internal multiplexer selects memory location
+<code>6</code>, instantly driving the output to binary
+<code>1</code>.</p>
+<h3 id="handling-arbitrary-and-complex-functions">Handling Arbitrary and
+Complex Functions</h3>
+<p>When a Boolean function requires more inputs than a single LUT can
+provide, the FPGA toolchain combines multiple LUTs through several
+methods:</p>
+<ul>
+<li><strong>LUT Cascading:</strong> Complex equations are decomposed
+into smaller sub-functions via algorithms like Shannon’s expansion. The
+output of one LUT feeds into the input of another, creating deeper logic
+networks.</li>
+<li><strong>Dedicated Multiplexers:</strong> Modern FPGA logic slices
+include hardwired wide-multiplexers (such as F7 and F8 multiplexers)
+adjacent to the LUTs. These allow two 6-LUTs to combine into a 7-input
+function, or four 6-LUTs into an 8-input function, with minimal
+propagation delay.</li>
+<li><strong>Fracturable LUTs:</strong> Advanced architectures utilize
+dual-output LUTs that can either function as a single <span
+class="math inline">\(N\)</span>-input LUT or split into two independent
+<span class="math inline">\((N-1)\)</span>-input LUTs sharing common
+inputs, maximizing silicon utilization.</li>
+</ul>
+<p>By replacing fixed logic networks with truth-table memory arrays,
+LUTs provide a universal, reprogrammable foundation capable of
+implementing any binary function that can be mathematically
+expressed.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

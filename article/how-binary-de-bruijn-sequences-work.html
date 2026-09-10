@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Binary de Bruijn Sequences Work - binary</title>
+    <meta name="description" content="A binary de Bruijn sequence of order $n$ is a cyclic bit sequence of length $2^n$ that contains every possible $n$-bit binary pattern exactly once as a contiguous sub-sequence. This article explains how these compact combinatorial sequences are construct">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-binary-de-bruijn-sequences-work">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Binary de Bruijn Sequences Work - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-binary-de-bruijn-sequences-work" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A binary de Bruijn sequence of order $n$ is a cyclic bit sequence of length $2^n$ that contains every possible $n$-bit binary pattern exactly once as a contiguous sub-sequence. This article explains how these compact combinatorial sequences are construct" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-binary-de-bruijn-sequences-work">How Binary de Bruijn
+Sequences Work</h1>
+<p>A binary de Bruijn sequence of order <span
+class="math inline">\(n\)</span> is a cyclic bit sequence of length
+<span class="math inline">\(2^n\)</span> that contains every possible
+<span class="math inline">\(n\)</span>-bit binary pattern exactly once
+as a contiguous sub-sequence. This article explains how these compact
+combinatorial sequences are constructed, detailing the graph theory
+principles, shift-register operations, and algorithmic generation
+methods that make them possible.</p>
+<h2 id="the-mathematical-foundation">The Mathematical Foundation</h2>
+<p>In a standard binary system, there are <span
+class="math inline">\(2^n\)</span> distinct combinations for an <span
+class="math inline">\(n\)</span>-bit word. Listing all these
+combinations separately requires <span class="math inline">\(n \times
+2^n\)</span> bits. A de Bruijn sequence eliminates redundancy by
+overlapping adjacent patterns by <span
+class="math inline">\(n-1\)</span> bits.</p>
+<p>Because the sequence is cyclic, the end of the sequence wraps around
+to the beginning. Moving a sliding window of length <span
+class="math inline">\(n\)</span> along the cycle one bit at a time
+reveals each of the <span class="math inline">\(2^n\)</span> unique
+binary configurations exactly once before returning to the initial
+state.</p>
+<h2 id="graph-theory-construction-de-bruijn-graphs">Graph Theory
+Construction: De Bruijn Graphs</h2>
+<p>The most common way to generate and conceptualize a binary de Bruijn
+sequence is through graph theory using a directed graph known as a de
+Bruijn graph.</p>
+<h3 id="1-defining-vertices-and-edges">1. Defining Vertices and
+Edges</h3>
+<ul>
+<li><strong>Vertices:</strong> Each vertex represents a unique binary
+string of length <span class="math inline">\(n - 1\)</span>. There are
+<span class="math inline">\(2^{n-1}\)</span> total vertices.</li>
+<li><strong>Edges:</strong> A directed edge exists from vertex <span
+class="math inline">\(u\)</span> to vertex <span
+class="math inline">\(v\)</span> if the suffix of length <span
+class="math inline">\(n-2\)</span> of <span
+class="math inline">\(u\)</span> matches the prefix of length <span
+class="math inline">\(n-2\)</span> of <span
+class="math inline">\(v\)</span>. Each edge represents a transition
+formed by shifting in a new bit (either <code>0</code> or
+<code>1</code>), corresponding to an <span
+class="math inline">\(n\)</span>-bit sequence.</li>
+</ul>
+<h3 id="2-finding-an-eulerian-path">2. Finding an Eulerian Path</h3>
+<p>In a binary de Bruijn graph:</p>
+<ul>
+<li>Every vertex has an in-degree of 2 (two incoming edges).</li>
+<li>Every vertex has an out-degree of 2 (two outgoing edges).</li>
+</ul>
+<p>Because the in-degree equals the out-degree for every vertex and the
+graph is strongly connected, the graph is Eulerian. An <strong>Eulerian
+circuit</strong> visits every single edge exactly once. Recording the
+binary value associated with each edge traversal along this circuit
+yields a complete de Bruijn sequence of length <span
+class="math inline">\(2^n\)</span>.</p>
+<h2 id="generation-methods">Generation Methods</h2>
+<p>Several practical algorithms can generate binary de Bruijn sequences
+without needing to store the entire graph in memory.</p>
+<h3 id="linear-feedback-shift-registers-lfsrs">Linear-Feedback Shift
+Registers (LFSRs)</h3>
+<p>A maximal-length linear-feedback shift register (m-sequence) of order
+<span class="math inline">\(n\)</span> naturally generates a
+pseudo-random cyclic sequence of length <span class="math inline">\(2^n
+- 1\)</span>. This sequence contains all non-zero <span
+class="math inline">\(n\)</span>-bit patterns. A full de Bruijn sequence
+of length <span class="math inline">\(2^n\)</span> is created by
+identifying the sequence of <span class="math inline">\(n-1\)</span>
+consecutive zeros and inserting an additional <code>0</code> into that
+run.</p>
+<h3 id="the-prefer-opposite-greedy-algorithm">The Prefer-Opposite
+(Greedy) Algorithm</h3>
+<p>A sequence can be constructed sequentially using a greedy
+approach:</p>
+<ol type="1">
+<li>Start with an initial state of <span
+class="math inline">\(n\)</span> zeros (<code>00...0</code>).</li>
+<li>At each step, attempt to append a bit that is the complement
+(opposite) of the bit shifted out <span class="math inline">\(n\)</span>
+steps prior.</li>
+<li>If appending that bit forms an <span
+class="math inline">\(n\)</span>-bit pattern that has already appeared,
+append the alternative bit instead.</li>
+<li>Repeat until all <span class="math inline">\(2^n\)</span> unique
+<span class="math inline">\(n\)</span>-bit sequences have been
+generated.</li>
+</ol>
+<h3 id="concatenation-of-lyndon-words">Concatenation of Lyndon
+Words</h3>
+<p>The Fredricksen-Maiorana algorithm generates de Bruijn sequences in
+lexicographic order. A Lyndon word is a non-empty string that is
+strictly smaller in lexicographic order than all of its non-trivial
+cyclic rotations. By generating all Lyndon words whose lengths divide
+<span class="math inline">\(n\)</span> and concatenating them in
+lexicographical order, the resulting string forms a valid de Bruijn
+sequence.</p>
+<h2 id="example-order-n--3">Example: Order <span class="math inline">\(n
+= 3\)</span></h2>
+<p>For <span class="math inline">\(n = 3\)</span>, there are <span
+class="math inline">\(2^3 = 8\)</span> unique combinations:
+<code>000</code>, <code>001</code>, <code>010</code>, <code>011</code>,
+<code>100</code>, <code>101</code>, <code>110</code>, and
+<code>111</code>.</p>
+<p>A valid cyclic de Bruijn sequence for <span class="math inline">\(n =
+3\)</span> is:</p>
+<p><code>0 0 0 1 1 1 0 1</code></p>
+<p>Evaluating the 3-bit sliding window around the cycle:</p>
+<ul>
+<li><code>000</code> (indices 0, 1, 2)</li>
+<li><code>001</code> (indices 1, 2, 3)</li>
+<li><code>011</code> (indices 2, 3, 4)</li>
+<li><code>111</code> (indices 3, 4, 5)</li>
+<li><code>110</code> (indices 4, 5, 6)</li>
+<li><code>101</code> (indices 5, 6, 7)</li>
+<li><code>010</code> (indices 6, 7, 0 - wrap-around)</li>
+<li><code>100</code> (indices 7, 0, 1 - wrap-around)</li>
+</ul>
+<p>Every 3-bit pattern appears exactly once in only 8 total bits.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

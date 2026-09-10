@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Hazards in Combinational Circuits - binary</title>
+    <meta name="description" content="In digital logic design, hazards and glitches are temporary timing anomalies that cause a circuit's output to switch to an incorrect logic state before settling into its intended value. This article explores the root causes of hazards in combinational di">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/understanding-hazards-in-combinational-circuits">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Understanding Hazards in Combinational Circuits - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/understanding-hazards-in-combinational-circuits" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In digital logic design, hazards and glitches are temporary timing anomalies that cause a circuit's output to switch to an incorrect logic state before settling into its intended value. This article explores the root causes of hazards in combinational di" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="understanding-hazards-in-combinational-circuits">Understanding
+Hazards in Combinational Circuits</h1>
+<p>In digital logic design, hazards and glitches are temporary timing
+anomalies that cause a circuit's output to switch to an incorrect logic
+state before settling into its intended value. This article explores the
+root causes of hazards in combinational digital circuits, explains the
+primary classifications of these phenomena (static and dynamic hazards),
+and details how the resulting glitches temporarily disrupt binary
+representation, potentially corrupting data across synchronous and
+asynchronous systems.</p>
+<h3 id="what-are-hazards-and-glitches">What Are Hazards and
+Glitches?</h3>
+<p>A <strong>hazard</strong> is an unwanted switching condition in a
+combinational logic design caused by unequal propagation delays along
+different signal paths. When an input transition occurs, signals
+traveling through different logic gates take varying amounts of time to
+reach the output.</p>
+<p>A <strong>glitch</strong> is the physical manifestation of a hazard—a
+brief, spurious voltage spike or drop (a transient pulse) that appears
+at the output node before the circuit reaches a steady state.</p>
+<h3 id="types-of-hazards">Types of Hazards</h3>
+<p>Hazards are broadly classified into two categories based on the
+expected behavior of the output:</p>
+<ol type="1">
+<li><p><strong>Static Hazards:</strong> Occur when an input change is
+supposed to leave the output unchanged, but the output momentarily
+flips.</p>
+<ul>
+<li><strong>Static-1 Hazard:</strong> The output is expected to remain
+at logic <code>1</code>, but momentarily drops to logic <code>0</code>
+before returning to <code>1</code>.</li>
+<li><strong>Static-0 Hazard:</strong> The output is expected to remain
+at logic <code>0</code>, but momentarily spikes to logic <code>1</code>
+before returning to <code>0</code>.</li>
+</ul></li>
+<li><p><strong>Dynamic Hazards:</strong> Occur when an input change is
+intended to transition the output from one state to another (e.g.,
+<code>0</code> to <code>1</code> or <code>1</code> to <code>0</code>),
+but the output oscillates multiple times (such as <code>0</code> <span
+class="math inline">\(\rightarrow\)</span> <code>1</code> <span
+class="math inline">\(\rightarrow\)</span> <code>0</code> <span
+class="math inline">\(\rightarrow\)</span> <code>1</code>) before
+stabilizing. Dynamic hazards typically occur in multi-level logic
+circuits with multiple reconvergent paths having different
+delays.</p></li>
+</ol>
+<h3 id="how-hazards-temporarily-disrupt-the-binary-number-system">How
+Hazards Temporarily Disrupt the Binary Number System</h3>
+<p>The binary number system relies on two distinct, well-defined
+discrete states: logic high (<code>1</code>) and logic low
+(<code>0</code>). These states correspond to specific voltage
+thresholds. Combinational hazards disrupt this fundamental abstraction
+in several key ways:</p>
+<h4 id="1-invalid-transient-states">1. Invalid Transient States</h4>
+<p>In an ideal binary system, arithmetic and logic operations map inputs
+directly to mathematically correct outputs. When a hazard occurs,
+intermediate values appear on data buses. For instance, if an adder
+transitions from outputting binary <code>0111</code> (decimal 7) to
+<code>1000</code> (decimal 8), unequal path delays might briefly produce
+<code>1111</code> (decimal 15) or <code>0000</code> (decimal 0). While
+temporary, this invalid binary word exists on the physical wire for the
+duration of the glitch.</p>
+<h4 id="2-propagation-to-sequential-storage">2. Propagation to
+Sequential Storage</h4>
+<p>Combinational circuits frequently feed into sequential elements, such
+as flip-flops and registers. If a glitch occurs at the exact moment a
+clock edge triggers a register (violating setup or hold times), the
+register will capture the incorrect binary state. This latches the
+corrupt value permanently into memory or a processor pipeline, leading
+to arithmetic errors, invalid branch decisions, or system crashes.</p>
+<h4 id="3-erroneous-clock-and-control-signals">3. Erroneous Clock and
+Control Signals</h4>
+<p>When combinational logic is used to generate asynchronous control
+signals (such as reset, write-enable, or clock gating lines), glitches
+can cause catastrophic failures. A momentary static-0 hazard on a
+write-enable line can cause an unintended write operation to a memory
+address, permanently overwriting valid binary data.</p>
+<h3 id="preventing-and-eliminating-hazards">Preventing and Eliminating
+Hazards</h3>
+<p>Designers eliminate hazards in combinational logic using several
+techniques:</p>
+<ul>
+<li><strong>Adding Redundant Logic:</strong> Covering adjacent 1s in a
+Karnaugh map with extra consensus terms prevents static-1 hazards by
+maintaining continuity during single-variable transitions.</li>
+<li><strong>Synchronous Design Practices:</strong> Registering outputs
+ensures that data is only sampled after all combinational glitches have
+settled.</li>
+<li><strong>Low-Pass Filtering:</strong> In specific high-noise
+analog/digital interfaces, small capacitors or deglitchers can filter
+out high-frequency transient spikes.</li>
+</ul></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Base-32 Encoding Avoids Ambiguous Characters - binary</title>
+    <meta name="description" content="Base-32 encoding translates binary data into a restricted set of 32 printable characters, balancing machine readability with human usability. Because 32 is a power of two ($2^5$), the system cleanly maps five-bit binary chunks directly into text without">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-base-32-encoding-avoids-ambiguous-characters">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Base-32 Encoding Avoids Ambiguous Characters - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-base-32-encoding-avoids-ambiguous-characters" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Base-32 encoding translates binary data into a restricted set of 32 printable characters, balancing machine readability with human usability. Because 32 is a power of two ($2^5$), the system cleanly maps five-bit binary chunks directly into text without" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-base-32-encoding-avoids-ambiguous-characters">How Base-32
+Encoding Avoids Ambiguous Characters</h1>
+<p>Base-32 encoding translates binary data into a restricted set of 32
+printable characters, balancing machine readability with human
+usability. Because 32 is a power of two (<span
+class="math inline">\(2^5\)</span>), the system cleanly maps five-bit
+binary chunks directly into text without complex mathematical
+conversions. To prevent user transcription errors, Base-32
+implementations carefully select their character sets to omit visually
+similar letters and digits—such as the number <code>0</code> and letter
+<code>O</code>, or the number <code>1</code> and letters <code>I</code>
+and <code>L</code>—ensuring reliable manual entry for security tokens,
+cryptographic keys, and recovery codes.</p>
+<h3 id="the-binary-foundation-of-base-32">The Binary Foundation of
+Base-32</h3>
+<p>Digital computers operate natively in base-2 (binary). Standard
+Base-32 encoding relies on the mathematical property that <span
+class="math inline">\(2^5 = 32\)</span>. This allows arbitrary streams
+of binary data to be divided into uniform blocks of 5 bits each:</p>
+<ul>
+<li>A single byte consists of 8 bits.</li>
+<li>The least common multiple between an 8-bit byte and a 5-bit Base-32
+unit is 40 bits.</li>
+<li>Consequently, 5 bytes (40 bits) of raw binary data convert evenly
+into exactly 8 Base-32 characters.</li>
+</ul>
+<p>This clean mathematical relationship avoids fractional bits, making
+bitwise shifting and masking operations computationally lightweight and
+lossless.</p>
+<h3 id="eliminating-visually-ambiguous-glyphs">Eliminating Visually
+Ambiguous Glyphs</h3>
+<p>When binary data must be transcribed or read aloud by humans,
+standard encoding schemes like Base-64 present significant challenges
+due to case sensitivity and lookalike characters. Base-32 resolves this
+by restricting the alphabet to 32 safe characters and enforcing case
+insensitivity.</p>
+<p>Different Base-32 standards achieve visual clarity through distinct
+exclusion strategies:</p>
+<ol type="1">
+<li><p><strong>RFC 4648 (Standard Base32 Alphabet)</strong></p>
+<ul>
+<li>Uses uppercase letters <code>A–Z</code> and digits
+<code>2–7</code>.</li>
+<li><strong>Excluded Characters:</strong> The digits <code>0</code>,
+<code>1</code>, <code>8</code>, and <code>9</code> are entirely excluded
+from the alphabet.</li>
+<li><strong>Why:</strong> Excluding <code>0</code> and <code>1</code>
+eliminates direct confusion with the letters <code>O</code> and
+<code>I</code>.</li>
+</ul></li>
+<li><p><strong>Crockford's Base32</strong></p>
+<ul>
+<li>Designed specifically for human readability and verbal
+communication.</li>
+<li>Uses digits <code>0–9</code> and 22 letters.</li>
+<li><strong>Excluded Characters:</strong> The letters <code>I</code>,
+<code>L</code>, and <code>O</code> are excluded to avoid confusion with
+<code>1</code> and <code>0</code>. The letter <code>U</code> is also
+excluded to prevent the accidental formation of unintended
+profanities.</li>
+<li><strong>Error Tolerance:</strong> During decoding, Crockford’s
+specification treats <code>I</code> and <code>L</code> as
+<code>1</code>, and <code>O</code> as <code>0</code>, correcting common
+human typos automatically.</li>
+</ul></li>
+<li><p><strong>z-base-32</strong></p>
+<ul>
+<li>Designed for human ergonomics, particularly on mobile
+keyboards.</li>
+<li>Prioritizes characters that are visually distinct in standard fonts
+and easy to type.</li>
+<li><strong>Excluded Characters:</strong> Eliminates <code>0</code>,
+<code>l</code>, <code>v</code>, and <code>2</code> to minimize confusion
+with <code>o</code>, <code>1</code>, <code>u</code>, and
+<code>z</code>.</li>
+</ul></li>
+</ol>
+<h3 id="practical-application-and-resilience">Practical Application and
+Resilience</h3>
+<p>By combining 5-bit binary mapping with selective character sets,
+Base-32 ensures that binary payloads remain compact while minimizing
+human error. It is widely adopted in contexts requiring human
+verification, including Time-based One-Time Password (TOTP) setup keys,
+Bitcoin address formats (such as Bech32), and software license
+activation codes.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

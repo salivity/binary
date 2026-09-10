@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bit-Reversal Permutation in FFT Algorithms - binary</title>
+    <meta name="description" content="A bit-reversal permutation is a data reordering technique where the position of each element in an array of size $N = 2^k$ is swapped with the index obtained by reversing the binary digits of its original position. This permutation is a fundamental requi">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/bit-reversal-permutation-in-fft-algorithms">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Bit-Reversal Permutation in FFT Algorithms - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/bit-reversal-permutation-in-fft-algorithms" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A bit-reversal permutation is a data reordering technique where the position of each element in an array of size $N = 2^k$ is swapped with the index obtained by reversing the binary digits of its original position. This permutation is a fundamental requi" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="bit-reversal-permutation-in-fft-algorithms">Bit-Reversal
+Permutation in FFT Algorithms</h1>
+<p>A bit-reversal permutation is a data reordering technique where the
+position of each element in an array of size <span
+class="math inline">\(N = 2^k\)</span> is swapped with the index
+obtained by reversing the binary digits of its original position. This
+permutation is a fundamental requirement in radix-2 Fast Fourier
+Transform (FFT) implementations, particularly the Cooley-Tukey
+algorithm, because it enables in-place computation, eliminates the need
+for auxiliary memory, and aligns recursively divided sub-problems with
+the hardware's sequential memory access.</p>
+<h3 id="what-is-a-bit-reversal-permutation">What is a Bit-Reversal
+Permutation?</h3>
+<p>In an array of length <span class="math inline">\(N = 2^k\)</span>,
+each index can be represented as a <span
+class="math inline">\(k\)</span>-bit binary number. A bit-reversal
+permutation maps the element at index <span
+class="math inline">\(i\)</span> to a new index <span
+class="math inline">\(j\)</span>, where the binary representation of
+<span class="math inline">\(j\)</span> is the exact mirror image of the
+binary representation of <span class="math inline">\(i\)</span>.</p>
+<p>For an array of size <span class="math inline">\(N = 8\)</span>
+(<span class="math inline">\(k = 3\)</span> bits), the mapping works as
+follows:</p>
+<ul>
+<li>Index 0 (<code>000</code>₂) <span
+class="math inline">\(\rightarrow\)</span> <code>000</code>₂ = Index
+0</li>
+<li>Index 1 (<code>001</code>₂) <span
+class="math inline">\(\rightarrow\)</span> <code>100</code>₂ = Index
+4</li>
+<li>Index 2 (<code>010</code>₂) <span
+class="math inline">\(\rightarrow\)</span> <code>010</code>₂ = Index
+2</li>
+<li>Index 3 (<code>011</code>₂) <span
+class="math inline">\(\rightarrow\)</span> <code>110</code>₂ = Index
+6</li>
+<li>Index 4 (<code>100</code>₂) <span
+class="math inline">\(\rightarrow\)</span> <code>001</code>₂ = Index
+1</li>
+<li>Index 5 (<code>101</code>₂) <span
+class="math inline">\(\rightarrow\)</span> <code>101</code>₂ = Index
+5</li>
+<li>Index 6 (<code>110</code>₂) <span
+class="math inline">\(\rightarrow\)</span> <code>011</code>₂ = Index
+3</li>
+<li>Index 7 (<code>111</code>₂) <span
+class="math inline">\(\rightarrow\)</span> <code>111</code>₂ = Index
+7</li>
+</ul>
+<p>Indices that are binary palindromes (such as 0, 2, 5, and 7 in a
+3-bit space) remain in their original positions, while the remaining
+pairs (1 and 4, 3 and 6) swap places.</p>
+<h3 id="why-it-is-essential-for-the-fast-fourier-transform">Why It Is
+Essential for the Fast Fourier Transform</h3>
+<p>The standard Discrete Fourier Transform (DFT) requires <span
+class="math inline">\(O(N^2)\)</span> operations. The Cooley-Tukey FFT
+reduces this complexity to <span class="math inline">\(O(N \log
+N)\)</span> by applying a divide-and-conquer strategy, recursively
+splitting an <span class="math inline">\(N\)</span>-point transform into
+two <span class="math inline">\(N/2\)</span>-point transforms: one
+containing the even-indexed elements and the other containing the
+odd-indexed elements.</p>
+<h4 id="1-binary-nature-of-decimation">1. Binary Nature of
+Decimation</h4>
+<p>In Decimation-in-Time (DIT) FFT, the first level of division
+separates elements based on whether their index is even or
+odd—determined strictly by the least significant bit (LSB) being
+<code>0</code> or <code>1</code>. The second level divides those subsets
+based on the second-least significant bit, and this process continues
+until base-case sub-transforms of size 2 are reached.</p>
+<p>Because the algorithm divides the data from the least significant bit
+to the most significant bit, the final order of inputs required at the
+base level corresponds to reading the original index bits in reverse
+order (from LSB to MSB).</p>
+<h4 id="2-enabling-in-place-computation">2. Enabling In-Place
+Computation</h4>
+<p>Without bit-reversal permutation, performing an FFT would require
+allocating temporary arrays at each recursive stage to hold the split
+even and odd sequences, consuming <span
+class="math inline">\(O(N)\)</span> auxiliary space.</p>
+<p>By applying a bit-reversal permutation to the input array upfront,
+the data is pre-arranged into the exact order needed for the base-level
+computations. The algorithm can then execute its "butterfly" operations
+iteratively from the bottom up, overwriting the input array in place
+with <span class="math inline">\(O(1)\)</span> auxiliary memory
+overhead.</p>
+<h4 id="3-dual-role-in-decimation-in-frequency-dif">3. Dual Role in
+Decimation-in-Frequency (DIF)</h4>
+<p>While Decimation-in-Time (DIT) algorithms take bit-reversed inputs
+and produce naturally ordered outputs, Decimation-in-Frequency (DIF)
+algorithms take naturally ordered inputs and produce bit-reversed
+outputs. In DIF implementations, the bit-reversal permutation is applied
+at the end of the transform to restore the frequency-domain coefficients
+to standard sequential order.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Reversible Logic with Fredkin and Toffoli Gates - binary</title>
+    <meta name="description" content="Reversible computing allows computation without the loss of information, preventing the theoretical minimum energy dissipation described by Landauer's Principle. The Toffoli gate and the Fredkin gate are 3-bit reversible logic gates that serve as fundame">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/universal-reversible-logic-with-fredkin-and-toffoli-gates">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Universal Reversible Logic with Fredkin and Toffoli Gates - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/universal-reversible-logic-with-fredkin-and-toffoli-gates" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Reversible computing allows computation without the loss of information, preventing the theoretical minimum energy dissipation described by Landauer's Principle. The Toffoli gate and the Fredkin gate are 3-bit reversible logic gates that serve as fundame" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1
+id="universal-reversible-logic-with-fredkin-and-toffoli-gates">Universal
+Reversible Logic with Fredkin and Toffoli Gates</h1>
+<p>Reversible computing allows computation without the loss of
+information, preventing the theoretical minimum energy dissipation
+described by Landauer's Principle. The Toffoli gate and the Fredkin gate
+are 3-bit reversible logic gates that serve as fundamental building
+blocks for reversible and quantum computing. This article explains how
+each gate functions within the binary system, how their bijective
+input-output mappings preserve information, and how they can be
+configured to synthesize any standard Boolean logic operation to achieve
+computational universality.</p>
+<h2 id="principles-of-reversible-computing">Principles of Reversible
+Computing</h2>
+<p>Traditional binary logic gates like AND, OR, and NAND are
+irreversible because they take two input bits and produce one output
+bit. Because information is lost during computation, the original inputs
+cannot be reconstructed from the output.</p>
+<p>A reversible logic gate must have an equal number of inputs and
+outputs (<span class="math inline">\(n \times n\)</span>), forming a
+bijective (one-to-one and onto) mapping. This ensures that every unique
+input pattern produces a unique output pattern, allowing computations to
+run both forward and backward without information loss.</p>
+<h2 id="the-toffoli-gate-controlled-controlled-not">The Toffoli Gate
+(Controlled-Controlled-NOT)</h2>
+<p>The Toffoli gate, often called the CCNOT gate, operates on three
+binary inputs: two control bits (<span class="math inline">\(A,
+B\)</span>) and one target bit (<span
+class="math inline">\(C\)</span>).</p>
+<h3 id="operation-and-truth-table">Operation and Truth Table</h3>
+<p>The Toffoli gate leaves the control bits unchanged and inverts the
+target bit if and only if both control bits are <code>1</code>.</p>
+<ul>
+<li><strong>Inputs:</strong> <span class="math inline">\((A, B,
+C)\)</span></li>
+<li><strong>Outputs:</strong> <span class="math inline">\((A&#39;,
+B&#39;, C&#39;)\)</span> where:
+<ul>
+<li><span class="math inline">\(A&#39; = A\)</span></li>
+<li><span class="math inline">\(B&#39; = B\)</span></li>
+<li><span class="math inline">\(C&#39; = C \oplus (A \land B)\)</span>
+(<span class="math inline">\(\oplus\)</span> denotes the XOR
+operation)</li>
+</ul></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><span class="math inline">\(A\)</span></th>
+<th><span class="math inline">\(B\)</span></th>
+<th><span class="math inline">\(C\)</span></th>
+<th><span class="math inline">\(A&#39;\)</span></th>
+<th><span class="math inline">\(B&#39;\)</span></th>
+<th><span class="math inline">\(C&#39;\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="achieving-universality">Achieving Universality</h3>
+<p>To prove universality, the Toffoli gate can reproduce a functionally
+complete set of Boolean logic operations (such as NOT, AND, and FAN-OUT)
+by setting fixed input values (ancilla bits):</p>
+<ul>
+<li><strong>NOT Gate:</strong> Set <span class="math inline">\(A =
+1\)</span> and <span class="math inline">\(B = 1\)</span>. The output
+<span class="math inline">\(C&#39;\)</span> becomes <span
+class="math inline">\(C \oplus (1 \land 1) = \neg C\)</span>.</li>
+<li><strong>AND Gate:</strong> Set <span class="math inline">\(C =
+0\)</span>. The output <span class="math inline">\(C&#39;\)</span>
+becomes <span class="math inline">\(0 \oplus (A \land B) = A \land
+B\)</span>.</li>
+<li><strong>FAN-OUT (Copy):</strong> Set <span class="math inline">\(B =
+1\)</span> and <span class="math inline">\(C = 0\)</span>. The output
+<span class="math inline">\(C&#39;\)</span> becomes <span
+class="math inline">\(A\)</span>, producing two copies of <span
+class="math inline">\(A\)</span> (at <span
+class="math inline">\(A&#39;\)</span> and <span
+class="math inline">\(C&#39;\)</span>).</li>
+<li><strong>NAND Gate:</strong> Set <span class="math inline">\(C =
+1\)</span>. The output <span class="math inline">\(C&#39;\)</span>
+becomes <span class="math inline">\(1 \oplus (A \land B) = \neg(A \land
+B)\)</span>.</li>
+</ul>
+<p>Because the NAND operation alone is universal, the Toffoli gate is
+universal for classical computation.</p>
+<h2 id="the-fredkin-gate-controlled-swap">The Fredkin Gate
+(Controlled-SWAP)</h2>
+<p>The Fredkin gate operates on a control bit (<span
+class="math inline">\(C\)</span>) and two data bits (<span
+class="math inline">\(I_1, I_2\)</span>). It is a conservative logic
+gate, meaning it preserves the total number of <code>0</code>s and
+<code>1</code>s from input to output.</p>
+<h3 id="operation-and-truth-table-1">Operation and Truth Table</h3>
+<p>If the control bit is <code>0</code>, the data bits pass through
+unchanged. If the control bit is <code>1</code>, the data bits are
+swapped.</p>
+<ul>
+<li><strong>Inputs:</strong> <span class="math inline">\((C, I_1,
+I_2)\)</span></li>
+<li><strong>Outputs:</strong> <span class="math inline">\((C&#39;, O_1,
+O_2)\)</span> where:
+<ul>
+<li><span class="math inline">\(C&#39; = C\)</span></li>
+<li><span class="math inline">\(O_1 = (\neg C \land I_1) \lor (C \land
+I_2)\)</span></li>
+<li><span class="math inline">\(O_2 = (C \land I_1) \lor (\neg C \land
+I_2)\)</span></li>
+</ul></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><span class="math inline">\(C\)</span></th>
+<th><span class="math inline">\(I_1\)</span></th>
+<th><span class="math inline">\(I_2\)</span></th>
+<th><span class="math inline">\(C&#39;\)</span></th>
+<th><span class="math inline">\(O_1\)</span></th>
+<th><span class="math inline">\(O_2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="achieving-universality-1">Achieving Universality</h3>
+<p>The Fredkin gate achieves computational universality by synthesizing
+fundamental logic operations using fixed ancilla inputs:</p>
+<ul>
+<li><strong>AND Gate:</strong> Set <span class="math inline">\(I_1 =
+A\)</span>, <span class="math inline">\(I_2 = 0\)</span>, and <span
+class="math inline">\(C = B\)</span>. The output <span
+class="math inline">\(O_2\)</span> produces <span
+class="math inline">\(A \land B\)</span>.</li>
+<li><strong>NOT Gate / FAN-OUT:</strong> Set <span
+class="math inline">\(I_1 = 0\)</span> and <span
+class="math inline">\(I_2 = 1\)</span>. The output <span
+class="math inline">\(O_1\)</span> produces <span
+class="math inline">\(C\)</span>, and <span
+class="math inline">\(O_2\)</span> produces <span
+class="math inline">\(\neg C\)</span>.</li>
+<li><strong>OR Gate:</strong> Set <span class="math inline">\(I_1 =
+1\)</span>, <span class="math inline">\(I_2 = B\)</span>, and <span
+class="math inline">\(C = A\)</span>. The output <span
+class="math inline">\(O_1\)</span> produces <span
+class="math inline">\(A \lor B\)</span>.</li>
+</ul>
+<p>By providing AND, OR, NOT, and FAN-OUT operations, the Fredkin gate
+can construct any arbitrary combinatorial binary circuit while remaining
+entirely reversible and conservative.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

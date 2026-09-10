@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Signed 32-Bit Integer Left Shift by 31 Causes UB - binary</title>
+    <meta name="description" content="In systems programming languages like C and C++, shifting a signed 32-bit integer left by 31 positions (1 << 31) triggers undefined behavior because the operation attempts to produce a value that exceeds the maximum representable positive value of the si">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/why-signed-32-bit-integer-left-shift-by-31-causes-ub">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Signed 32-Bit Integer Left Shift by 31 Causes UB - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/why-signed-32-bit-integer-left-shift-by-31-causes-ub" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In systems programming languages like C and C++, shifting a signed 32-bit integer left by 31 positions (1 << 31) triggers undefined behavior because the operation attempts to produce a value that exceeds the maximum representable positive value of the si" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="why-signed-32-bit-integer-left-shift-by-31-causes-ub">Why Signed
+32-Bit Integer Left Shift by 31 Causes UB</h1>
+<p>In systems programming languages like C and C++, shifting a signed
+32-bit integer left by 31 positions (<code>1 &lt;&lt; 31</code>)
+triggers undefined behavior because the operation attempts to produce a
+value that exceeds the maximum representable positive value of the
+signed type. A 32-bit signed integer reserves its most significant bit
+as the sign bit, leaving only 31 bits for the magnitude of non-negative
+values. Shifting a positive value into the sign bit causes an arithmetic
+overflow according to the language specifications, leading standard
+compilers to treat the operation as undefined.</p>
+<h3 id="the-bit-layout-of-a-signed-32-bit-integer">The Bit Layout of a
+Signed 32-Bit Integer</h3>
+<p>A standard signed 32-bit integer (such as <code>int32_t</code> or a
+typical 32-bit <code>int</code>) consists of 32 binary digits:</p>
+<ul>
+<li><strong>Bits 0 to 30:</strong> 31 magnitude (value) bits.</li>
+<li><strong>Bit 31 (MSB):</strong> 1 sign bit, where <code>0</code>
+indicates a positive number and <code>1</code> indicates a negative
+number in two's complement representation.</li>
+</ul>
+<p>Because bit 31 is designated for the sign, the maximum positive value
+that can be represented is <span class="math inline">\(2^{31} -
+1\)</span>, which equals <span
+class="math inline">\(2,147,483,647\)</span>. The minimum negative value
+representable in two's complement is <span
+class="math inline">\(-2^{31}\)</span>, which equals <span
+class="math inline">\(-2,147,483,648\)</span>.</p>
+<h3 id="mathematical-definition-of-the-left-shift">Mathematical
+Definition of the Left Shift</h3>
+<p>In the C and C++ language standards, the left-shift operator
+<code>E1 &lt;&lt; E2</code> on a signed integer is defined
+mathematically as:</p>
+<p><span class="math display">\[\text{Result} = E1 \times
+2^{E2}\]</span></p>
+<p>When evaluating <code>1 &lt;&lt; 31</code>:</p>
+<ol type="1">
+<li>The operand <code>1</code> is multiplied by <span
+class="math inline">\(2^{31}\)</span>.</li>
+<li>The mathematical result is <span
+class="math inline">\(2,147,483,648\)</span>.</li>
+<li>This value (<span class="math inline">\(2,147,483,648\)</span>) is
+strictly greater than the maximum representable signed positive integer
+(<span class="math inline">\(2,147,483,647\)</span>).</li>
+</ol>
+<p>Because the true mathematical product cannot fit inside the positive
+range of a signed 32-bit integer, an arithmetic overflow occurs.</p>
+<h3 id="language-specifications-and-undefined-behavior">Language
+Specifications and Undefined Behavior</h3>
+<p>According to ISO C standards (such as C99 and C11 §6.5.7), if the
+operand <code>E1</code> has a signed type and non-negative value, and
+<span class="math inline">\(E1 \times 2^{E2}\)</span> is not
+representable in the result type, the behavior is explicitly
+undefined.</p>
+<p>This rule was established for several reasons:</p>
+<ul>
+<li><strong>Hardware Portability:</strong> Early computing architectures
+did not universally use two's complement arithmetic. Ones' complement
+and sign-magnitude systems handle bit 31 differently, making
+bit-shifting directly into the sign bit non-portable.</li>
+<li><strong>Compiler Optimizations:</strong> Defining signed overflow as
+undefined behavior allows optimizing compilers to assume signed integers
+will never overflow. This enables aggressive loop vectorization,
+constant folding, and dead code elimination.</li>
+</ul>
+<h3 id="modern-standards-and-safe-alternatives">Modern Standards and
+Safe Alternatives</h3>
+<p>While C++20 formally adopted two's complement arithmetic and defined
+<code>1 &lt;&lt; 31</code> as yielding the signed value <span
+class="math inline">\(-2,147,483,648\)</span>, the operation remains
+undefined behavior in standard C (up through C17) and pre-C++20
+standards.</p>
+<p>To safely shift 31 bits without invoking undefined behavior, the
+shift must be performed using an unsigned 32-bit integer, where bit 31
+is part of the standard numeric range:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Undefined Behavior in C99/C11/C17:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int32_t</span> a <span class="op">=</span> <span class="dv">1</span> <span class="op">&lt;&lt;</span> <span class="dv">31</span><span class="op">;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Defined and Safe:</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="dt">uint32_t</span> b <span class="op">=</span> <span class="dv">1</span><span class="bu">U</span> <span class="op">&lt;&lt;</span> <span class="dv">31</span><span class="op">;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="dt">int32_t</span> c <span class="op">=</span> <span class="op">(</span><span class="dt">int32_t</span><span class="op">)(</span><span class="dv">1</span><span class="bu">U</span> <span class="op">&lt;&lt;</span> <span class="dv">31</span><span class="op">);</span> <span class="co">// Explicit cast to signed</span></span></code></pre></div>
+<p>Using <code>1U &lt;&lt; 31</code> ensures that the calculation
+operates within the unsigned range of <span
+class="math inline">\(0\)</span> to <span
+class="math inline">\(4,294,967,295\)</span>, preventing signed
+arithmetic overflow.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

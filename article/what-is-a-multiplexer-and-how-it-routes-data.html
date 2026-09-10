@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is a Multiplexer and How It Routes Data - binary</title>
+    <meta name="description" content="A multiplexer, often abbreviated as a MUX or referred to as a data selector, is a fundamental combinational logic circuit in digital electronics designed to consolidate multiple input signals into a single shared output line. This article provides a clea">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-a-multiplexer-and-how-it-routes-data">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is a Multiplexer and How It Routes Data - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-a-multiplexer-and-how-it-routes-data" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A multiplexer, often abbreviated as a MUX or referred to as a data selector, is a fundamental combinational logic circuit in digital electronics designed to consolidate multiple input signals into a single shared output line. This article provides a clea" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-a-multiplexer-and-how-it-routes-data">What Is a
+Multiplexer and How It Routes Data</h1>
+<p>A multiplexer, often abbreviated as a MUX or referred to as a data
+selector, is a fundamental combinational logic circuit in digital
+electronics designed to consolidate multiple input signals into a single
+shared output line. This article provides a clear explanation of what a
+multiplexer is, how binary select lines control the internal signal
+path, and the mathematical principles of the binary number system that
+govern data routing.</p>
+<h3 id="what-is-a-multiplexer">What Is a Multiplexer?</h3>
+<p>A multiplexer acts as a high-speed digital switch. It takes <span
+class="math inline">\(2^n\)</span> data input channels, evaluates the
+condition of <span class="math inline">\(n\)</span> control or "select"
+lines, and routes the data from one chosen input directly to a single
+output channel. Instead of requiring dedicated wiring for every data
+source, a multiplexer allows multiple devices or registers to share a
+single communication line or bus, significantly reducing circuit
+complexity and hardware cost.</p>
+<h3 id="how-binary-select-lines-work">How Binary Select Lines Work</h3>
+<p>The selection of the active input is determined entirely by binary
+control inputs known as select lines. The relationship between the
+number of select lines (<span class="math inline">\(n\)</span>) and the
+maximum number of data inputs (<span class="math inline">\(N\)</span>)
+is defined by the exponential formula:</p>
+<p><span class="math display">\[N = 2^n\]</span></p>
+<ul>
+<li><strong>1 select line (<span
+class="math inline">\(n=1\)</span>):</strong> Controls up to <span
+class="math inline">\(2^1 = 2\)</span> inputs (2-to-1 MUX).</li>
+<li><strong>2 select lines (<span
+class="math inline">\(n=2\)</span>):</strong> Controls up to <span
+class="math inline">\(2^2 = 4\)</span> inputs (4-to-1 MUX).</li>
+<li><strong>3 select lines (<span
+class="math inline">\(n=3\)</span>):</strong> Controls up to <span
+class="math inline">\(2^3 = 8\)</span> inputs (8-to-1 MUX).</li>
+<li><strong>4 select lines (<span
+class="math inline">\(n=4\)</span>):</strong> Controls up to <span
+class="math inline">\(2^4 = 16\)</span> inputs (16-to-1 MUX).</li>
+</ul>
+<p>Each select line carries a digital logic level: either <code>0</code>
+(LOW / ground) or <code>1</code> (HIGH / supply voltage).</p>
+<h3 id="routing-governed-by-the-binary-number-system">Routing Governed
+by the Binary Number System</h3>
+<p>The binary values applied to the select lines form a multi-bit binary
+address. The multiplexer's internal logic decodes this binary number
+into its decimal equivalent to open the corresponding data gate.</p>
+<p>For example, in a 4-to-1 multiplexer with inputs <span
+class="math inline">\(D_0, D_1, D_2, D_3\)</span> and two select lines
+<span class="math inline">\(S_1\)</span> (most significant bit) and
+<span class="math inline">\(S_0\)</span> (least significant bit), the
+routing operates as follows:</p>
+<ul>
+<li>When <span class="math inline">\(S_1S_0 = 00_2\)</span> (decimal 0),
+input <span class="math inline">\(D_0\)</span> is connected to the
+output.</li>
+<li>When <span class="math inline">\(S_1S_0 = 01_2\)</span> (decimal 1),
+input <span class="math inline">\(D_1\)</span> is connected to the
+output.</li>
+<li>When <span class="math inline">\(S_1S_0 = 10_2\)</span> (decimal 2),
+input <span class="math inline">\(D_2\)</span> is connected to the
+output.</li>
+<li>When <span class="math inline">\(S_1S_0 = 11_2\)</span> (decimal 3),
+input <span class="math inline">\(D_3\)</span> is connected to the
+output.</li>
+</ul>
+<h3 id="internal-logic-execution">Internal Logic Execution</h3>
+<p>Internally, this binary decoding is accomplished through an array of
+logic gates—typically an arrangement of NOT (inverter), AND, and OR
+gates:</p>
+<ol type="1">
+<li><strong>Inverters</strong> generate the complement of each select
+line (<span class="math inline">\(\overline{S_1},
+\overline{S_0}\)</span>).</li>
+<li><strong>AND Gates</strong> act as enable gates for each input. Each
+AND gate receives one data input and a unique combination of true or
+inverted select signals representing that input's binary address. Only
+the AND gate whose select line combination evaluates entirely to
+<code>1</code> will allow its data input to pass through.</li>
+<li><strong>An OR Gate</strong> combines the outputs of all the AND
+gates into the final single output channel. Because only one AND gate is
+enabled at any given moment, the OR gate outputs the exact logic state
+of the selected data line.</li>
+</ol>
+<p>Through this straightforward binary addressing mechanism,
+multiplexers provide efficient data routing, time-division multiplexing,
+parallel-to-serial data conversion, and complex logic function
+implementation across microprocessors and telecommunication systems.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

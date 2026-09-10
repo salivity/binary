@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Bit-Slice Processors Build Custom Word Lengths - binary</title>
+    <meta name="description" content="Bit-slice processors are modular computing building blocks that allow engineers to design central processing units (CPUs) with arbitrary, custom word lengths by cascading multiple smaller, fixed-width processing units. Rather than relying on a monolithic">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-bit-slice-processors-build-custom-word-lengths">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Bit-Slice Processors Build Custom Word Lengths - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-bit-slice-processors-build-custom-word-lengths" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Bit-slice processors are modular computing building blocks that allow engineers to design central processing units (CPUs) with arbitrary, custom word lengths by cascading multiple smaller, fixed-width processing units. Rather than relying on a monolithic" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-bit-slice-processors-build-custom-word-lengths">How
+Bit-Slice Processors Build Custom Word Lengths</h1>
+<p>Bit-slice processors are modular computing building blocks that allow
+engineers to design central processing units (CPUs) with arbitrary,
+custom word lengths by cascading multiple smaller, fixed-width
+processing units. Rather than relying on a monolithic CPU with a fixed
+bit-width (such as 8, 16, or 32 bits), a bit-slice architecture uses
+standardized components—typically 2-bit or 4-bit wide—that are linked
+together horizontally. This modular approach provides the flexibility to
+create specialized computing hardware tailored for unique data precision
+requirements in telecommunications, digital signal processing, and
+high-performance computing.</p>
+<h3 id="the-modular-unit-the-bit-slice-component">The Modular Unit: The
+Bit-Slice Component</h3>
+<p>A single bit-slice integrated circuit contains a complete vertical
+section of a standard CPU datapath. It typically integrates:</p>
+<ul>
+<li>An Arithmetic Logic Unit (ALU) capable of basic logic (AND, OR, XOR)
+and arithmetic operations (addition, subtraction).</li>
+<li>A set of internal registers or a small register file.</li>
+<li>Multiplexers for routing data between internal registers, external
+buses, and the ALU.</li>
+</ul>
+<p>Because these internal components represent a slice of a larger
+binary datapath, they include input and output lines specifically
+designed for cascading, such as carry-in (<span
+class="math inline">\(C_{in}\)</span>), carry-out (<span
+class="math inline">\(C_{out}\)</span>), shift-left/right inputs, and
+status flag outputs.</p>
+<h3 id="cascading-slices-for-custom-word-lengths">Cascading Slices for
+Custom Word Lengths</h3>
+<p>To construct a custom-width processor, multiple bit-slices are placed
+in parallel. The total processor word length (<span
+class="math inline">\(N\)</span>) is the sum of the widths (<span
+class="math inline">\(k\)</span>) of all combined slices:</p>
+<p><span class="math display">\[N = k \times \text{number of
+slices}\]</span></p>
+<p>For example, using industry-standard 4-bit slices (such as the AMD
+Am2901):</p>
+<ul>
+<li>Connecting two 4-bit slices produces an 8-bit processor.</li>
+<li>Connecting four 4-bit slices produces a 16-bit processor.</li>
+<li>Connecting six 4-bit slices produces a custom 24-bit processor.</li>
+<li>Connecting nine 4-bit slices produces a non-standard 36-bit
+processor.</li>
+</ul>
+<h3 id="interconnecting-the-binary-datapath">Interconnecting the Binary
+Datapath</h3>
+<p>When slices are chained together, binary operations are preserved
+across the entire custom word length through specific signal
+routings:</p>
+<ol type="1">
+<li><strong>Arithmetic Carry Propagation:</strong> The least significant
+slice receives the initial system carry-in. Its carry-out (<span
+class="math inline">\(C_{out}\)</span>) is connected to the carry-in
+(<span class="math inline">\(C_{in}\)</span>) of the adjacent slice. To
+avoid speed bottlenecks in wider word configurations, external
+Look-Ahead Carry (LAC) generators are often used to compute carries in
+parallel.</li>
+<li><strong>Bit Shifts and Rotations:</strong> Shift-left and
+shift-right bidirectional pins are wired sequentially from slice to
+slice, allowing binary shift operations to propagate across the entire
+multi-chip datapath seamlessly.</li>
+<li><strong>Condition and Status Flags:</strong> Status flags (such as
+zero, overflow, sign, and negative) are extracted from the most
+significant slice or computed collectively across all slices.</li>
+</ol>
+<h3 id="microprogram-control">Microprogram Control</h3>
+<p>While the bit-slices handle the data execution path, they do not
+contain instruction decoding logic. Instead, a shared microprogram
+sequencer generates microinstructions that control all connected slices
+simultaneously. The identical control signals (microcode words) are
+broadcast to every slice, ensuring that all modular units execute the
+same operation on their respective binary segments during each clock
+cycle.</p>
+<p>By separating the control logic from modular data-slice components,
+bit-slice processing allows system designers to scale binary precision
+directly to match application-specific algorithms without redesigning an
+entire CPU from scratch.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

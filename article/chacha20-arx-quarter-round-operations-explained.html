@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChaCha20 ARX Quarter-Round Operations Explained - binary</title>
+    <meta name="description" content="This article explores how the ChaCha20 stream cipher uses ARX (Addition, Rotation, and XOR) primitives within its quarter-round function to transform binary data. It details the structure of ChaCha20's 512-bit internal state, breaks down the mathematical">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/chacha20-arx-quarter-round-operations-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="ChaCha20 ARX Quarter-Round Operations Explained - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/chacha20-arx-quarter-round-operations-explained" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores how the ChaCha20 stream cipher uses ARX (Addition, Rotation, and XOR) primitives within its quarter-round function to transform binary data. It details the structure of ChaCha20's 512-bit internal state, breaks down the mathematical" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="chacha20-arx-quarter-round-operations-explained">ChaCha20 ARX
+Quarter-Round Operations Explained</h1>
+<p>This article explores how the ChaCha20 stream cipher uses ARX
+(Addition, Rotation, and XOR) primitives within its quarter-round
+function to transform binary data. It details the structure of
+ChaCha20's 512-bit internal state, breaks down the mathematical and
+binary mechanics of the four-step quarter-round modification, and
+explains how repeated alternating rounds achieve cryptographic diffusion
+and non-linearity on binary systems without vulnerable lookup
+tables.</p>
+<h2 id="the-chacha20-state-matrix">The ChaCha20 State Matrix</h2>
+<p>ChaCha20 operates on an internal state defined as a 4x4 matrix
+containing 16 32-bit unsigned integers (words), totaling 512 bits. The
+state is initialized with:</p>
+<ul>
+<li><strong>Constants (Words 0–3):</strong> Four fixed 32-bit words that
+prevent symmetry and eliminate all-zero states (<code>0x61707865</code>,
+<code>0x3320646e</code>, <code>0x79622d32</code>,
+<code>0x6b206574</code>).</li>
+<li><strong>Key (Words 4–11):</strong> An eight-word (256-bit) secret
+key.</li>
+<li><strong>Block Counter (Words 12):</strong> A 32-bit block counter
+that increments for every 64-byte block generated.</li>
+<li><strong>Nonce (Words 13–15):</strong> A 96-bit unique initialization
+vector (three 32-bit words).</li>
+</ul>
+<h2 id="the-arx-primitive-set">The ARX Primitive Set</h2>
+<p>The cipher relies strictly on three low-level binary operations,
+collectively known as ARX, to ensure constant-time execution on standard
+CPU hardware:</p>
+<ol type="1">
+<li><strong>Modular Addition (<span class="math inline">\(a \boxplus
+b\)</span>):</strong> Adds two 32-bit words modulo <span
+class="math inline">\(2^{32}\)</span>. In binary, this is standard
+integer addition with overflow discarded. The carry bits propagate from
+least significant bits to most significant bits, introducing algebraic
+non-linearity.</li>
+<li><strong>Bitwise Exclusive-OR (<span class="math inline">\(a \oplus
+b\)</span>):</strong> Standard binary XOR applied bit-by-bit. It
+provides fast linear mixing and ensures changes in one input invert
+corresponding bits in the output.</li>
+<li><strong>Bitwise Left Rotation (<span class="math inline">\(a \lll
+n\)</span>):</strong> Shifts all 32 bits to the left by <span
+class="math inline">\(n\)</span> positions, wrapping overflowed
+high-order bits back to the lowest positions. This disperses the
+influence of specific bit positions across the entire 32-bit
+register.</li>
+</ol>
+<h2 id="the-quarter-round-transformation">The Quarter-Round
+Transformation</h2>
+<p>The fundamental transformation in ChaCha20 is the quarter-round
+function (<span class="math inline">\(\text{QR}\)</span>). It accepts
+four state words <span class="math inline">\((a, b, c, d)\)</span> and
+updates them in place through four distinct steps:</p>
+<ol type="1">
+<li><span class="math inline">\(a \leftarrow a \boxplus b;\quad d
+\leftarrow (d \oplus a) \lll 16\)</span></li>
+<li><span class="math inline">\(c \leftarrow c \boxplus d;\quad b
+\leftarrow (b \oplus c) \lll 12\)</span></li>
+<li><span class="math inline">\(a \leftarrow a \boxplus b;\quad d
+\leftarrow (d \oplus a) \lll 8\)</span></li>
+<li><span class="math inline">\(c \leftarrow c \boxplus d;\quad b
+\leftarrow (b \oplus c) \lll 7\)</span></li>
+</ol>
+<h3 id="mechanics-of-the-four-steps">Mechanics of the Four Steps</h3>
+<ul>
+<li><strong>Step 1:</strong> Word <span class="math inline">\(a\)</span>
+absorbs <span class="math inline">\(b\)</span> via modular addition,
+causing carry bit propagation. The updated <span
+class="math inline">\(a\)</span> is XORed into <span
+class="math inline">\(d\)</span>, and <span
+class="math inline">\(d\)</span> is rotated by 16 bits. This immediately
+swaps the upper and lower 16-bit halves of the binary word.</li>
+<li><strong>Step 2:</strong> Word <span class="math inline">\(c\)</span>
+absorbs the newly modified <span class="math inline">\(d\)</span>. The
+result is XORed into <span class="math inline">\(b\)</span>, followed by
+a 12-bit left rotation.</li>
+<li><strong>Step 3:</strong> Word <span class="math inline">\(a\)</span>
+absorbs the newly modified <span class="math inline">\(b\)</span>. The
+updated <span class="math inline">\(a\)</span> is XORed into <span
+class="math inline">\(d\)</span>, which is then rotated left by 8 bits,
+shifting individual bytes across register boundaries.</li>
+<li><strong>Step 4:</strong> Word <span class="math inline">\(c\)</span>
+absorbs <span class="math inline">\(d\)</span>. The result is XORed into
+<span class="math inline">\(b\)</span>, and <span
+class="math inline">\(b\)</span> is rotated left by 7 bits, ensuring
+that no repeated power-of-two alignment remains.</li>
+</ul>
+<p>The specific rotation constants <span class="math inline">\((16, 12,
+8, 7)\)</span> ensure rapid binary diffusion across all 32 bit positions
+within minimal cycles.</p>
+<h2 id="full-rounds-column-and-diagonal-passes">Full Rounds: Column and
+Diagonal Passes</h2>
+<p>ChaCha20 runs 20 rounds of quarter-round applications, grouped as 10
+iterations of a "double round":</p>
+<ol type="1">
+<li><p><strong>Column Round (Odd Rounds):</strong> Applies <span
+class="math inline">\(\text{QR}\)</span> simultaneously to the four
+vertical columns of the state matrix:</p>
+<ul>
+<li><span class="math inline">\(\text{QR}(0, 4, 8, 12)\)</span></li>
+<li><span class="math inline">\(\text{QR}(1, 5, 9, 13)\)</span></li>
+<li><span class="math inline">\(\text{QR}(2, 6, 10, 14)\)</span></li>
+<li><span class="math inline">\(\text{QR}(3, 7, 11, 15)\)</span></li>
+</ul></li>
+<li><p><strong>Diagonal Round (Even Rounds):</strong> Applies <span
+class="math inline">\(\text{QR}\)</span> to four distinct diagonals of
+the matrix:</p>
+<ul>
+<li><span class="math inline">\(\text{QR}(0, 5, 10, 15)\)</span></li>
+<li><span class="math inline">\(\text{QR}(1, 6, 11, 12)\)</span></li>
+<li><span class="math inline">\(\text{QR}(2, 7, 8, 13)\)</span></li>
+<li><span class="math inline">\(\text{QR}(3, 4, 9, 14)\)</span></li>
+</ul></li>
+</ol>
+<p>Alternating between columns and diagonals ensures that every bit in
+the 512-bit state interacts with and influences every other bit after
+just a few rounds.</p>
+<h2 id="final-keystream-generation">Final Keystream Generation</h2>
+<p>After 20 rounds, the resulting 512-bit state is added word-by-word
+(modulo <span class="math inline">\(2^{32}\)</span>) to the original,
+un-modified initial state matrix. This final addition makes the round
+function non-invertible, preventing an attacker who observes the
+keystream from running the ARX operations backward to compute the secret
+key. The final output is serialized into a 64-byte keystream block and
+XORed with plaintext to produce ciphertext.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

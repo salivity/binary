@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schönhage-Strassen Algorithm and FFT Multiplication - binary</title>
+    <meta name="description" content="The Schönhage-Strassen algorithm is an asymptotically fast multiplication algorithm for large integers that reduces the computational complexity of multiplying $N$-bit numbers to $O(N \log N \log \log N)$. Developed by Arnold Schönhage and Volker Stras">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/schönhage-strassen-algorithm-and-fft-multiplication">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Schönhage-Strassen Algorithm and FFT Multiplication - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/schönhage-strassen-algorithm-and-fft-multiplication" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Schönhage-Strassen algorithm is an asymptotically fast multiplication algorithm for large integers that reduces the computational complexity of multiplying $N$-bit numbers to $O(N \log N \log \log N)$. Developed by Arnold Schönhage and Volker Stras" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1
+id="schönhage-strassen-algorithm-and-fft-multiplication">Schönhage-Strassen
+Algorithm and FFT Multiplication</h1>
+<p>The Schönhage-Strassen algorithm is an asymptotically fast
+multiplication algorithm for large integers that reduces the
+computational complexity of multiplying <span
+class="math inline">\(N\)</span>-bit numbers to <span
+class="math inline">\(O(N \log N \log \log N)\)</span>. Developed by
+Arnold Schönhage and Volker Strassen in 1971, the method treats large
+binary numbers as polynomials and computes their convolution using Fast
+Fourier Transforms (FFT). By operating over finite quotient rings rather
+than complex numbers, it achieves exact, error-free arithmetic entirely
+through efficient bit-shift and modular operations.</p>
+<h2 id="the-core-concept-integer-multiplication-as-convolution">The Core
+Concept: Integer Multiplication as Convolution</h2>
+<p>Standard integer multiplication requires <span
+class="math inline">\(O(N^2)\)</span> bit operations. The
+Schönhage-Strassen algorithm improves this by splitting two large binary
+integers into blocks of bits, effectively representing the numbers as
+polynomials:</p>
+<p><span class="math display">\[A(x) = \sum_{i=0}^{m-1} a_i x^i, \quad
+B(x) = \sum_{i=0}^{m-1} b_i x^i\]</span></p>
+<p>Multiplying <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> corresponds to evaluating the
+polynomial product <span class="math inline">\(C(x) = A(x)B(x)\)</span>,
+which represents the linear convolution of their coefficient vectors.
+Using the Discrete Fourier Transform (DFT), the convolution of two
+length-<span class="math inline">\(m\)</span> sequences can be evaluated
+in <span class="math inline">\(O(m \log m)\)</span> operations by:</p>
+<ol type="1">
+<li>Computing the DFT of both coefficient sequences.</li>
+<li>Multiplying the transformed sequences pointwise.</li>
+<li>Applying the Inverse DFT (IDFT) to recover the convolved
+coefficients.</li>
+<li>Performing carry propagation to compute the final binary
+integer.</li>
+</ol>
+<h2 id="fft-over-residue-rings-number-theoretic-transform">FFT Over
+Residue Rings (Number Theoretic Transform)</h2>
+<p>Standard FFT implementations use complex numbers (<span
+class="math inline">\(\mathbb{C}\)</span>), which introduce
+floating-point precision and rounding errors when dealing with integers
+containing millions of bits.</p>
+<p>Schönhage and Strassen solved this by executing the FFT over a finite
+mathematical structure—specifically, the residue ring <span
+class="math inline">\(\mathbb{Z} / (2^n + 1)\mathbb{Z}\)</span>, where
+<span class="math inline">\(n = 2^k\)</span>. This approach is a form of
+Number Theoretic Transform (NTT).</p>
+<p>Operating in the ring <span class="math inline">\(\mathbb{Z} / (2^n +
+1)\mathbb{Z}\)</span> (the Fermat ring) provides two distinct
+computational advantages:</p>
+<ul>
+<li><strong>Exact Arithmetic:</strong> All operations are integer-based
+modular arithmetic modulo <span class="math inline">\(2^n + 1\)</span>,
+eliminating any possibility of precision loss or rounding error.</li>
+<li><strong>Trivial Roots of Unity:</strong> In this ring, the number
+<span class="math inline">\(2\)</span> acts as a principal <span
+class="math inline">\(2n\)</span>-th root of unity (since <span
+class="math inline">\(2^n \equiv -1 \pmod{2^n + 1}\)</span>, meaning
+<span class="math inline">\(2^{2n} \equiv 1 \pmod{2^n + 1}\)</span>).
+Consequently, the "twiddle factor" multiplications required by the
+Cooley-Tukey FFT algorithm become simple bit-shift and negation
+operations in binary, avoiding costly full-precision sub-multiplications
+during the transform stage.</li>
+</ul>
+<h2 id="algorithmic-steps">Algorithmic Steps</h2>
+<p>The execution of the Schönhage-Strassen algorithm follows a
+structured pipeline:</p>
+<ol type="1">
+<li><strong>Splitting and Zero-Padding:</strong> The two input integers
+of size <span class="math inline">\(N\)</span> bits are broken into
+<span class="math inline">\(K\)</span> chunks of <span
+class="math inline">\(L\)</span> bits each. The length is chosen as a
+power of two to optimize FFT performance, with appropriate zero-padding
+to prevent circular wrap-around during convolution.</li>
+<li><strong>Forward NTT:</strong> The coefficient vectors are
+transformed into the frequency domain using a radix-2 FFT over the ring
+<span class="math inline">\(\mathbb{Z} / (2^{2L} +
+1)\mathbb{Z}\)</span>, where twiddle factors are powers of <span
+class="math inline">\(2\)</span>.</li>
+<li><strong>Pointwise Multiplication:</strong> The transformed vectors
+are multiplied component-by-component. Since the elements are smaller
+integers (relative to the original input size), this step is performed
+recursively using the Schönhage-Strassen algorithm itself.</li>
+<li><strong>Inverse NTT:</strong> The inverse transform is applied using
+negative bit-shifts and modular reduction to yield the raw convolution
+values.</li>
+<li><strong>Carry Resolution:</strong> The resulting sequence of
+coefficients contains the mixed-radix representation of the product.
+Carries are propagated from the least significant chunk to the most
+significant chunk to produce the final binary result.</li>
+</ol>
+<h2 id="significance-and-practical-application">Significance and
+Practical Application</h2>
+<p>The Schönhage-Strassen algorithm was the asymptotically fastest known
+multiplication algorithm from 1971 until Fürer's algorithm was published
+in 2007. In practice, it remains the standard algorithm for multiplying
+numbers with tens of thousands to millions of digits, forming the
+backbone of large-number arithmetic in modern computer algebra systems
+and arbitrary-precision libraries such as the GNU Multiple Precision
+Arithmetic Library (GMP).</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

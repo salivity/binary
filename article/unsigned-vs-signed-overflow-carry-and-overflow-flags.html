@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsigned vs Signed Overflow: Carry and Overflow Flags - binary</title>
+    <meta name="description" content="Central Processing Units (CPUs) handle binary arithmetic identically for both signed and unsigned numbers, relying on status flags in the flags register to indicate when an operation exceeds hardware limits. The processor evaluates unsigned overflow usin">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/unsigned-vs-signed-overflow-carry-and-overflow-flags">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Unsigned vs Signed Overflow: Carry and Overflow Flags - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/unsigned-vs-signed-overflow-carry-and-overflow-flags" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Central Processing Units (CPUs) handle binary arithmetic identically for both signed and unsigned numbers, relying on status flags in the flags register to indicate when an operation exceeds hardware limits. The processor evaluates unsigned overflow usin" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="unsigned-vs-signed-overflow-carry-and-overflow-flags">Unsigned
+vs Signed Overflow: Carry and Overflow Flags</h1>
+<p>Central Processing Units (CPUs) handle binary arithmetic identically
+for both signed and unsigned numbers, relying on status flags in the
+flags register to indicate when an operation exceeds hardware limits.
+The processor evaluates unsigned overflow using the Carry Flag (CF),
+which tracks whether an arithmetic operation generates a carry out of
+the most significant bit. Simultaneously, it evaluates signed overflow
+using the Overflow Flag (OF), which detects whether an operation
+produces a result that violates the range of two's complement signed
+representation. Understanding the distinction between these two hardware
+mechanisms allows software to correctly interpret arithmetic results
+based on data types.</p>
+<h2 id="the-dual-nature-of-cpu-binary-arithmetic">The Dual-Nature of CPU
+Binary Arithmetic</h2>
+<p>The Arithmetic Logic Unit (ALU) does not distinguish between signed
+and unsigned integers when performing addition or subtraction. For any
+given <span class="math inline">\(n\)</span>-bit binary addition, the
+ALU performs standard binary addition on the bits and updates both the
+Carry Flag and the Overflow Flag simultaneously. The programmer or
+compiler determines which flag matters based on whether the data is
+treated as signed or unsigned.</p>
+<h2 id="unsigned-overflow-the-carry-flag-cf">Unsigned Overflow: The
+Carry Flag (CF)</h2>
+<p>Unsigned numbers represent values from <span
+class="math inline">\(0\)</span> to <span class="math inline">\(2^n -
+1\)</span> for an <span class="math inline">\(n\)</span>-bit register.
+An unsigned overflow occurs when the true mathematical sum of an
+operation exceeds this maximum capacity, causing the value to wrap
+around to zero.</p>
+<p>The CPU evaluates the Carry Flag using a simple hardware
+condition:</p>
+<ul>
+<li><strong>Addition:</strong> The Carry Flag is set to <code>1</code>
+if there is a carry-out generated from the Most Significant Bit (MSB).
+If no carry-out occurs, it is set to <code>0</code>.</li>
+<li><strong>Subtraction:</strong> The Carry Flag acts as a "borrow"
+flag. It is set to <code>1</code> if the minuend is strictly less than
+the subtrahend (requiring a borrow from beyond the MSB).</li>
+</ul>
+<h3 id="8-bit-unsigned-example">8-Bit Unsigned Example</h3>
+<ul>
+<li>Operation: <code>255 + 1</code> (Binary:
+<code>1111 1111 + 0000 0001</code>)</li>
+<li>Result: <code>0000 0000</code> with a carry-out of <code>1</code>
+from bit 7.</li>
+<li><strong>Carry Flag:</strong> <code>1</code> (Unsigned overflow
+occurred; the true result 256 cannot fit in 8 bits).</li>
+</ul>
+<h2 id="signed-overflow-the-overflow-flag-of">Signed Overflow: The
+Overflow Flag (OF)</h2>
+<p>Signed numbers in modern architectures use two's complement
+representation, covering a range from <span
+class="math inline">\(-2^{n-1}\)</span> to <span
+class="math inline">\(2^{n-1} - 1\)</span>. A signed overflow occurs
+when an arithmetic operation on two numbers of the same sign produces a
+result with the opposite sign, representing an impossible mathematical
+outcome.</p>
+<p>The CPU evaluates the Overflow Flag through one of two equivalent
+hardware methods:</p>
+<ol type="1">
+<li><p><strong>Sign Bit Logic:</strong></p>
+<ul>
+<li>Adding two positive numbers yields a negative result (e.g.,
+<code>(+) + (+) = (-)</code>).</li>
+<li>Adding two negative numbers yields a positive result (e.g.,
+<code>(-) + (-) = (+)</code>).</li>
+<li>Adding operands of different signs cannot cause signed
+overflow.</li>
+</ul></li>
+<li><p><strong>Carry-In vs. Carry-Out XOR Logic (Internal
+ALU):</strong></p>
+<ul>
+<li>The ALU calculates the exclusive OR (XOR) between the carry going
+into the MSB (<span class="math inline">\(C_{in}\)</span>) and the carry
+coming out of the MSB (<span
+class="math inline">\(C_{out}\)</span>).</li>
+<li>Formula: <span class="math inline">\(\text{OF} = C_{in} \oplus
+C_{out}\)</span></li>
+<li>If a carry enters the MSB without leaving it, or leaves the MSB
+without entering it, the sign bit has been corrupted, setting the
+Overflow Flag to <code>1</code>.</li>
+</ul></li>
+</ol>
+<h3 id="8-bit-signed-example">8-Bit Signed Example</h3>
+<ul>
+<li>Operation: <code>127 + 1</code> (Binary:
+<code>0111 1111 + 0000 0001</code>)</li>
+<li>Result: <code>1000 0000</code> (-128 in two's complement)</li>
+<li>Carry-in to bit 7: <code>1</code></li>
+<li>Carry-out from bit 7: <code>0</code></li>
+<li><strong>Overflow Flag:</strong> <span class="math inline">\(1 \oplus
+0 = 1\)</span> (Signed overflow occurred; <span
+class="math inline">\(+127 + 1 \neq -128\)</span>).</li>
+<li><strong>Carry Flag:</strong> <code>0</code> (Valid unsigned
+operation; 128 fits in 8 unsigned bits).</li>
+</ul>
+<h2 id="summary-comparison">Summary Comparison</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Metric</th>
+<th style="text-align: left;">Carry Flag (CF)</th>
+<th style="text-align: left;">Overflow Flag (OF)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Data Interpretation</strong></td>
+<td style="text-align: left;">Unsigned integers</td>
+<td style="text-align: left;">Signed two's complement integers</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Valid Range (8-bit)</strong></td>
+<td style="text-align: left;"><span class="math inline">\(0\)</span> to
+<span class="math inline">\(255\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(-128\)</span>
+to <span class="math inline">\(+127\)</span></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Trigger Condition</strong></td>
+<td style="text-align: left;">Carry-out from MSB (<span
+class="math inline">\(C_{out} = 1\)</span>)</td>
+<td style="text-align: left;"><span class="math inline">\(C_{in} \neq
+C_{out}\)</span> at the MSB</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Meaning of Flag = 1</strong></td>
+<td style="text-align: left;">Result exceeded <span
+class="math inline">\(2^n - 1\)</span></td>
+<td style="text-align: left;">Sign bit inversion error occurred</td>
+</tr>
+</tbody>
+</table></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

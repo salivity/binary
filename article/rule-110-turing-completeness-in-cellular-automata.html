@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rule 110: Turing Completeness in Cellular Automata - binary</title>
+    <meta name="description" content="Rule 110 is an elementary one-dimensional cellular automaton that exhibits a balance between order and chaos, capable of universal computation despite its minimal ruleset. This article explores the mathematical definition of Rule 110 in the binary number">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/rule-110-turing-completeness-in-cellular-automata">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Rule 110: Turing Completeness in Cellular Automata - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/rule-110-turing-completeness-in-cellular-automata" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Rule 110 is an elementary one-dimensional cellular automaton that exhibits a balance between order and chaos, capable of universal computation despite its minimal ruleset. This article explores the mathematical definition of Rule 110 in the binary number" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="rule-110-turing-completeness-in-cellular-automata">Rule 110:
+Turing Completeness in Cellular Automata</h1>
+<p>Rule 110 is an elementary one-dimensional cellular automaton that
+exhibits a balance between order and chaos, capable of universal
+computation despite its minimal ruleset. This article explores the
+mathematical definition of Rule 110 in the binary number system, the
+mechanics of its state transitions, and how localized particle-like
+structures enable it to achieve Turing completeness by simulating cyclic
+tag systems.</p>
+<h3 id="what-is-rule-110">What Is Rule 110?</h3>
+<p>Rule 110 is one of the 256 elementary cellular automata introduced by
+Stephen Wolfram in the 1980s. It operates on a one-dimensional grid (a
+line) of binary cells, where each cell exists in one of two states:
+<code>0</code> (inactive/dead) or <code>1</code> (active/alive).</p>
+<p>The system evolves over discrete time steps. The future state of a
+given cell depends entirely on its current state and the states of its
+immediate left and right neighbors. Because each cell has two neighbors,
+there are <span class="math inline">\(2^3 = 8\)</span> possible
+configurations for any three-cell neighborhood.</p>
+<p>The rule derives its name from the binary representation of the
+decimal number 110, which is <code>01101110</code> in 8-bit binary. Each
+bit in this byte corresponds to the output of one of the eight
+neighborhood configurations:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Current Neighborhood (<code>Left</code>,
+<code>Center</code>, <code>Right</code>)</th>
+<th style="text-align: center;"><code>111</code></th>
+<th style="text-align: center;"><code>110</code></th>
+<th style="text-align: center;"><code>101</code></th>
+<th style="text-align: center;"><code>100</code></th>
+<th style="text-align: center;"><code>011</code></th>
+<th style="text-align: center;"><code>010</code></th>
+<th style="text-align: center;"><code>001</code></th>
+<th style="text-align: center;"><code>000</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>New Center State</strong></td>
+<td style="text-align: center;"><strong>0</strong></td>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: center;"><strong>0</strong></td>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: center;"><strong>0</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Reading the output row from left to right yields the binary sequence
+<code>01101110</code>, which equals 110 in decimal.</p>
+<h3 id="dynamics-and-emerging-structures">Dynamics and Emerging
+Structures</h3>
+<p>Unlike simple automata that quickly decay into uniform patterns or
+explode into pure randomness, Rule 110 falls into Wolfram’s "Class 4"
+category. Class 4 automata exhibit complex, localized structures that
+interact with one another over time against a repeating periodic
+background known as the "ether."</p>
+<p>The ether in Rule 110 is a repeating pattern with a period of 14
+steps horizontally and 7 steps vertically. Within this background,
+stable and moving patterns called "gliders" or "particles" emerge. There
+are multiple distinct types of gliders in Rule 110, each traveling at
+specific velocities and angles across the grid.</p>
+<h3 id="how-rule-110-achieves-turing-completeness">How Rule 110 Achieves
+Turing Completeness</h3>
+<p>A system is Turing complete if it can simulate any single-taped
+Turing machine, meaning it can perform any algorithmically computable
+operation given sufficient time and memory. In 1994, Matthew Cook proved
+that Rule 110 is Turing complete, a result formally published in
+2004.</p>
+<p>Rule 110 achieves universal computation through the following
+mechanisms:</p>
+<ol type="1">
+<li><strong>Information Transmission via Gliders:</strong> Gliders act
+as moving packets of information across space and time. Their positions
+and trajectories represent data within the system.</li>
+<li><strong>Logic Gates via Glider Collisions:</strong> When two or more
+gliders collide, they interact deterministically according to the
+underlying binary rule. A collision can destroy gliders, modify their
+paths, or produce new gliders. These interactions function as logic
+gates (such as <code>AND</code>, <code>OR</code>, and <code>NOT</code>),
+transforming inputs into distinct outputs.</li>
+<li><strong>Simulation of Cyclic Tag Systems:</strong> Cook’s proof
+showed that carefully arranged initial configurations of Rule 110 can
+emulate a <em>cyclic tag system</em>. Because cyclic tag systems are
+known to emulate standard tag systems, and standard tag systems can
+emulate universal Turing machines, Rule 110 inherits Turing
+completeness.</li>
+</ol>
+<h3 id="computational-significance">Computational Significance</h3>
+<p>Rule 110 is mathematically significant because it represents one of
+the simplest known computational systems capable of universal
+calculation. It requires only binary states, nearest-neighbor
+interactions, and a single deterministic update rule. The ability of
+Rule 110 to achieve Turing completeness demonstrates that complex,
+universal computation does not require complex fundamental components;
+rather, it can emerge naturally from basic, local binary rules.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

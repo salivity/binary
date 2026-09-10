@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How UTF-8 Encodes Unicode Code Points in Binary - binary</title>
+    <meta name="description" content="UTF-8 is a variable-length character encoding system that translates Unicode code points into one to four 8-bit bytes. By using specific binary prefixes for each byte, UTF-8 preserves backward compatibility with standard 7-bit ASCII, prevents byte-synchr">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-utf-8-encodes-unicode-code-points-in-binary">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How UTF-8 Encodes Unicode Code Points in Binary - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-utf-8-encodes-unicode-code-points-in-binary" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="UTF-8 is a variable-length character encoding system that translates Unicode code points into one to four 8-bit bytes. By using specific binary prefixes for each byte, UTF-8 preserves backward compatibility with standard 7-bit ASCII, prevents byte-synchr" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-utf-8-encodes-unicode-code-points-in-binary">How UTF-8
+Encodes Unicode Code Points in Binary</h1>
+<p>UTF-8 is a variable-length character encoding system that translates
+Unicode code points into one to four 8-bit bytes. By using specific
+binary prefixes for each byte, UTF-8 preserves backward compatibility
+with standard 7-bit ASCII, prevents byte-synchronization errors, and
+efficiently handles the entire Unicode character space ranging from
+U+0000 to U+10FFFF.</p>
+<h2 id="the-utf-8-binary-mapping-template">The UTF-8 Binary Mapping
+Template</h2>
+<p>Unicode assigns every character a unique numerical value known as a
+code point, denoted as <code>U+XXXX</code> in hexadecimal format. UTF-8
+divides these code points into four distinct numerical ranges. Each
+range corresponds to a fixed byte length determined by predefined binary
+prefix bits:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Code Point Range (Hex)</th>
+<th style="text-align: left;">Byte Length</th>
+<th style="text-align: left;">Byte 1</th>
+<th style="text-align: left;">Byte 2</th>
+<th style="text-align: left;">Byte 3</th>
+<th style="text-align: left;">Byte 4</th>
+<th style="text-align: left;">Usable Data Bits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>U+0000</code> to
+<code>U+007F</code></td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;"><code>0xxxxxxx</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">7</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>U+0080</code> to
+<code>U+07FF</code></td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;"><code>110xxxxx</code></td>
+<td style="text-align: left;"><code>10xxxxxx</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">11</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>U+0800</code> to
+<code>U+FFFF</code></td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;"><code>1110xxxx</code></td>
+<td style="text-align: left;"><code>10xxxxxx</code></td>
+<td style="text-align: left;"><code>10xxxxxx</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">16</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>U+10000</code> to
+<code>U+10FFFF</code></td>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;"><code>11110xxx</code></td>
+<td style="text-align: left;"><code>10xxxxxx</code></td>
+<td style="text-align: left;"><code>10xxxxxx</code></td>
+<td style="text-align: left;"><code>10xxxxxx</code></td>
+<td style="text-align: left;">21</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>x</code> positions represent the actual binary bits of the
+Unicode code point (payload), while the non-<code>x</code> bits serve as
+structural markers governed by UTF-8 rules.</p>
+<h2 id="prefix-rules-and-byte-roles">Prefix Rules and Byte Roles</h2>
+<p>The binary prefixes establish the role of each byte in a
+sequence:</p>
+<ul>
+<li><strong>Single-Byte Characters (<code>0xxxxxxx</code>):</strong> A
+leading bit of <code>0</code> signals a 1-byte sequence, matching
+standard ASCII character encoding identically.</li>
+<li><strong>Leading Bytes (<code>110...</code>, <code>1110...</code>,
+<code>11110...</code>):</strong> In a multi-byte sequence, the first
+byte indicates the total sequence length. The number of consecutive
+<code>1</code>s before the first <code>0</code> denotes how many bytes
+comprise the character.</li>
+<li><strong>Continuation Bytes (<code>10xxxxxx</code>):</strong> Every
+subsequent byte in a multi-byte sequence begins with the two-bit prefix
+<code>10</code>. This distinction guarantees that a continuation byte
+can never be mistaken for a leading byte or an ASCII character.</li>
+</ul>
+<h2 id="the-mapping-process-step-by-step">The Mapping Process:
+Step-by-Step</h2>
+<p>To map any Unicode code point to UTF-8 binary, follow these
+steps:</p>
+<ol type="1">
+<li><strong>Convert to Binary:</strong> Express the hexadecimal code
+point as a raw binary integer.</li>
+<li><strong>Select the Byte Structure:</strong> Determine which of the
+four ranges contains the code point.</li>
+<li><strong>Distribute Bits:</strong> Insert the binary digits into the
+<code>x</code> slots of the selected template from right to left (least
+significant bit to most significant bit).</li>
+<li><strong>Pad Remaining Slots:</strong> Fill any remaining unoccupied
+<code>x</code> bits on the far left of the payload with
+<code>0</code>s.</li>
+</ol>
+<h3 id="example-encoding-the-euro-sign---u20ac">Example: Encoding the
+Euro Sign (€ / U+20AC)</h3>
+<ol type="1">
+<li><strong>Hex to Binary:</strong> <code>U+20AC</code> converted to
+binary is <code>0010 0000 1010 1100</code>.</li>
+<li><strong>Determine Range:</strong> <code>U+20AC</code> falls between
+<code>U+0800</code> and <code>U+FFFF</code>, requiring a 3-byte
+template:<br />
+<code>1110xxxx 10xxxxxx 10xxxxxx</code></li>
+<li><strong>Fill the Template:</strong>
+<ul>
+<li>Payload: <code>0010 0000 1010 1100</code> (16 bits)</li>
+<li>Byte 1: <code>1110</code> + <code>0010</code> =
+<code>11100010</code> (<code>0xE2</code>)</li>
+<li>Byte 2: <code>10</code> + <code>000010</code> =
+<code>10000010</code> (<code>0x82</code>)</li>
+<li>Byte 3: <code>10</code> + <code>101100</code> =
+<code>10101100</code> (<code>0xAC</code>)</li>
+</ul></li>
+<li><strong>Result:</strong> The UTF-8 binary representation is
+<code>11100010 10000010 10101100</code> (Hex:
+<code>E2 82 AC</code>).</li>
+</ol>
+<h2 id="benefits-of-binary-prefix-encoding">Benefits of Binary Prefix
+Encoding</h2>
+<p>This structural design ensures that no valid UTF-8 sequence forms a
+subsequence of another valid sequence. Decoders can start reading at any
+random point in a byte stream and instantly identify whether a byte is a
+single-byte character, the beginning of a multi-byte character, or a
+continuation byte, enabling fast error recovery and stream
+resynchronization.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

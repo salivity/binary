@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is BSWAP and How Does Endianness Swap Work? - binary</title>
+    <meta name="description" content="This article provides an overview of endianness swap instructions, such as x86's BSWAP, explaining their purpose and mechanics. You will learn the difference between Big-Endian and Little-Endian formats, why CPUs require dedicated instructions for byte r">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/what-is-bswap-and-how-does-endianness-swap-work">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is BSWAP and How Does Endianness Swap Work? - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/what-is-bswap-and-how-does-endianness-swap-work" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article provides an overview of endianness swap instructions, such as x86's BSWAP, explaining their purpose and mechanics. You will learn the difference between Big-Endian and Little-Endian formats, why CPUs require dedicated instructions for byte r" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="what-is-bswap-and-how-does-endianness-swap-work">What Is BSWAP
+and How Does Endianness Swap Work?</h1>
+<p>This article provides an overview of endianness swap instructions,
+such as x86's <code>BSWAP</code>, explaining their purpose and
+mechanics. You will learn the difference between Big-Endian and
+Little-Endian formats, why CPUs require dedicated instructions for byte
+reversal, and how hardware reorders byte sequences of binary words
+without altering individual bit patterns.</p>
+<hr />
+<h2 id="understanding-endianness">Understanding Endianness</h2>
+<p>Endianness refers to the order in which bytes of a multi-byte word
+are arranged in computer memory:</p>
+<ul>
+<li><strong>Little-Endian:</strong> The least significant byte (LSB) is
+stored at the lowest memory address. Most modern desktop and server
+processors, including x86 and x64 architectures, use Little-Endian.</li>
+<li><strong>Big-Endian:</strong> The most significant byte (MSB) is
+stored at the lowest memory address. This format is standard for network
+protocols (often called "network byte order") and certain RISC
+architectures.</li>
+</ul>
+<p>When a Little-Endian processor communicates over a network or parses
+specific file formats, it must convert data to or from Big-Endian.</p>
+<hr />
+<h2 id="what-is-the-bswap-instruction">What Is the BSWAP
+Instruction?</h2>
+<p><code>BSWAP</code> (Byte Swap) is a hardware-level machine
+instruction introduced in the Intel 486 processor. Similar instructions
+exist in other architectures, such as <code>REV</code> in ARM.</p>
+<p>Instead of requiring software to perform multiple shifts, masks, and
+logical OR operations to rearrange bytes, <code>BSWAP</code> reverses
+the byte order of a 32-bit or 64-bit general-purpose register in a
+single clock cycle.</p>
+<hr />
+<h2 id="how-binary-byte-inversion-works">How Binary Byte Inversion
+Works</h2>
+<p>A 32-bit word consists of 4 bytes (32 bits). Consider a 32-bit value
+divided into four 8-bit segments:</p>
+<p><span class="math display">\[\text{Word} =
+[B_3][B_2][B_1][B_0]\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(B_3\)</span> is bits 31–24 (Most
+Significant Byte)</li>
+<li><span class="math inline">\(B_2\)</span> is bits 23–16</li>
+<li><span class="math inline">\(B_1\)</span> is bits 15–8</li>
+<li><span class="math inline">\(B_0\)</span> is bits 7–0 (Least
+Significant Byte)</li>
+</ul>
+<p>When the <code>BSWAP</code> instruction executes on this register, it
+inverts the byte positions:</p>
+<p><span class="math display">\[\text{BSWAP}([B_3][B_2][B_1][B_0])
+\rightarrow [B_0][B_1][B_2][B_3]\]</span></p>
+<h3 id="concrete-binary-example">Concrete Binary Example</h3>
+<p>Consider the 32-bit hexadecimal value <code>0x12345678</code>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Byte Index</th>
+<th style="text-align: left;">Hex Value</th>
+<th style="text-align: left;">Binary Representation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(B_3\)</span></td>
+<td style="text-align: left;"><code>0x12</code></td>
+<td style="text-align: left;"><code>00010010</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(B_2\)</span></td>
+<td style="text-align: left;"><code>0x34</code></td>
+<td style="text-align: left;"><code>00110100</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(B_1\)</span></td>
+<td style="text-align: left;"><code>0x56</code></td>
+<td style="text-align: left;"><code>01010110</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(B_0\)</span></td>
+<td style="text-align: left;"><code>0x78</code></td>
+<td style="text-align: left;"><code>01111000</code></td>
+</tr>
+</tbody>
+</table>
+<p>After running <code>BSWAP</code>, the new register value is
+<code>0x78563412</code>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">New Position</th>
+<th style="text-align: left;">Byte Source</th>
+<th style="text-align: left;">Hex Value</th>
+<th style="text-align: left;">Binary Representation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Bits 31–24</td>
+<td style="text-align: left;"><span
+class="math inline">\(B_0\)</span></td>
+<td style="text-align: left;"><code>0x78</code></td>
+<td style="text-align: left;"><code>01111000</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Bits 23–16</td>
+<td style="text-align: left;"><span
+class="math inline">\(B_1\)</span></td>
+<td style="text-align: left;"><code>0x56</code></td>
+<td style="text-align: left;"><code>01010110</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Bits 15–8</td>
+<td style="text-align: left;"><span
+class="math inline">\(B_2\)</span></td>
+<td style="text-align: left;"><code>0x34</code></td>
+<td style="text-align: left;"><code>00110100</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Bits 7–0</td>
+<td style="text-align: left;"><span
+class="math inline">\(B_3\)</span></td>
+<td style="text-align: left;"><code>0x12</code></td>
+<td style="text-align: left;"><code>00010010</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="crucial-distinction-bytes-vs-bits">Crucial Distinction: Bytes
+vs. Bits</h3>
+<p>An endianness swap only changes the sequence of the
+<strong>bytes</strong> within the word. It does <strong>not</strong>
+invert the individual bits within each byte. As shown in the table
+above, byte <code>0x12</code> remains <code>00010010</code> in binary;
+only its position within the 32-bit container changes from the highest 8
+bits to the lowest 8 bits.</p>
+<hr />
+<h2 id="64-bit-operations">64-Bit Operations</h2>
+<p>On 64-bit systems, <code>BSWAP</code> handles 8-byte words (<span
+class="math inline">\(B_7\)</span> through <span
+class="math inline">\(B_0\)</span>):</p>
+<p><span
+class="math display">\[\text{BSWAP}_{64}([B_7][B_6][B_5][B_4][B_3][B_2][B_1][B_0])
+\rightarrow [B_0][B_1][B_2][B_3][B_4][B_5][B_6][B_7]\]</span></p>
+<p>For 16-bit values, architectures typically use dedicated instructions
+(such as <code>ROL r16, 8</code> or <code>REV16</code> on ARM), as
+executing <code>BSWAP</code> on a 32-bit register holding a 16-bit value
+would place the swapped data into the upper 16 bits.</p>
+<hr />
+<h2 id="hardware-implementation">Hardware Implementation</h2>
+<p>In the CPU's Arithmetic Logic Unit (ALU), byte-swapping does not
+require arithmetic computation. It is implemented using hardwired
+multiplexers and routing paths. The internal data bus simply connects
+the physical lines of the lower byte inputs directly to the higher byte
+outputs, allowing the transformation to complete instantly with minimal
+power and processing overhead.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimizing Integer Division with Magic Constants - binary</title>
+    <meta name="description" content="In modern computing, integer division is one of the most computationally expensive arithmetic instructions an execution unit can perform. To maximize processing speed, optimizing compilers routinely replace division by a known constant with a sequence of">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/optimizing-integer-division-with-magic-constants">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Optimizing Integer Division with Magic Constants - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/optimizing-integer-division-with-magic-constants" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In modern computing, integer division is one of the most computationally expensive arithmetic instructions an execution unit can perform. To maximize processing speed, optimizing compilers routinely replace division by a known constant with a sequence of" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="optimizing-integer-division-with-magic-constants">Optimizing
+Integer Division with Magic Constants</h1>
+<p>In modern computing, integer division is one of the most
+computationally expensive arithmetic instructions an execution unit can
+perform. To maximize processing speed, optimizing compilers routinely
+replace division by a known constant with a sequence of cheaper
+instructions: multiplying by a precalculated "magic constant" and
+performing a right bit-shift. This optimization leverages fixed-point
+arithmetic to achieve mathematically identical results to hardware
+division while executing in a fraction of the clock cycles.</p>
+<h3 id="the-performance-cost-of-division">The Performance Cost of
+Division</h3>
+<p>On modern CPU architectures (such as x86 and ARM), integer division
+instructions (like <code>DIV</code> or <code>IDIV</code>) are inherently
+non-linear and difficult to pipeline. A standard hardware division
+operation typically requires anywhere from 10 to over 40 clock cycles,
+depending on the operand width and specific microarchitecture.</p>
+<p>By comparison, integer multiplication instructions (like
+<code>MUL</code> or <code>IMUL</code>) are fully pipelined and typically
+take only 3 to 4 cycles, while bitwise shifts (<code>SHR</code> or
+<code>SAR</code>) take just a single cycle. Replacing a division
+instruction with a multiplication and a shift reduces CPU latency and
+allows multiple arithmetic operations to execute simultaneously across
+processor pipelines.</p>
+<h3 id="the-mathematics-of-reciprocal-multiplication">The Mathematics of
+Reciprocal Multiplication</h3>
+<p>Dividing a variable <span class="math inline">\(x\)</span> by a
+divisor <span class="math inline">\(d\)</span> is mathematically
+equivalent to multiplying <span class="math inline">\(x\)</span> by the
+reciprocal <span class="math inline">\(\frac{1}{d}\)</span>:</p>
+<p><span class="math display">\[\frac{x}{d} = x \times
+\frac{1}{d}\]</span></p>
+<p>Because microprocessors operate on discrete integers, they cannot
+store <span class="math inline">\(\frac{1}{d}\)</span> as a true
+floating-point decimal during an integer operation. Instead, the
+compiler scales the fraction by a power of two (<span
+class="math inline">\(2^N\)</span>), turning it into a high-precision
+fixed-point number:</p>
+<p><span class="math display">\[M = \left\lfloor \frac{2^N}{d}
+\right\rfloor + 1 \quad \text{(or an equivalent calibrated
+constant)}\]</span></p>
+<p>The value <span class="math inline">\(M\)</span> is the "magic
+constant." The operation is computed by performing a wide multiplication
+of <span class="math inline">\(x\)</span> by <span
+class="math inline">\(M\)</span> and subsequently dividing the result by
+<span class="math inline">\(2^N\)</span>. In binary, dividing by <span
+class="math inline">\(2^N\)</span> is achieved simply by shifting the
+bits to the right by <span class="math inline">\(N\)</span>
+positions:</p>
+<p><span class="math display">\[\lfloor \frac{x}{d} \rfloor = (x \times
+M) \gg N\]</span></p>
+<h3 id="precision-and-rounding-correctness">Precision and Rounding
+Correctness</h3>
+<p>Truncating fractions can cause rounding errors across a wide range of
+input values. Compilers utilize established mathematical algorithms
+(such as those formulated by Torbjörn Granlund and Peter L. Montgomery)
+to select the smallest exponent <span class="math inline">\(N\)</span>
+and the precise integer <span class="math inline">\(M\)</span> that
+guarantee correct integer division for every possible input within the
+data type's domain (such as all <span
+class="math inline">\(2^{32}\)</span> values of a 32-bit integer).</p>
+<p>In 32-bit architectures, this computation often utilizes the high 32
+bits of a 64-bit multiplication result, effectively performing a free
+right-shift of 32 bits before applying any remaining bit-shifts.</p>
+<h3 id="handling-signed-integers">Handling Signed Integers</h3>
+<p>For signed integer division, standard programming semantics (such as
+in C, C++, and Rust) require division to round toward zero (truncation),
+whereas arithmetic right-shifts round toward negative infinity.</p>
+<p>To maintain correctness for negative numbers without introducing
+expensive branching instructions, compilers automatically add the sign
+bit of the original number to the shifted result. This slight adjustment
+ensures that both positive and negative values yield exact truncated
+quotients identical to a native hardware division instruction.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

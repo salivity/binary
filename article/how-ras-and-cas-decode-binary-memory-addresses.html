@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How RAS and CAS Decode Binary Memory Addresses - binary</title>
+    <meta name="description" content="This article explains how Dynamic Random-Access Memory (DRAM) uses Row Address Strobe (RAS) and Column Address Strobe (CAS) signals in conjunction with binary decoding to locate and access individual memory cells. By multiplexing binary address inputs ov">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/how-ras-and-cas-decode-binary-memory-addresses">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How RAS and CAS Decode Binary Memory Addresses - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/how-ras-and-cas-decode-binary-memory-addresses" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explains how Dynamic Random-Access Memory (DRAM) uses Row Address Strobe (RAS) and Column Address Strobe (CAS) signals in conjunction with binary decoding to locate and access individual memory cells. By multiplexing binary address inputs ov" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="how-ras-and-cas-decode-binary-memory-addresses">How RAS and CAS
+Decode Binary Memory Addresses</h1>
+<p>This article explains how Dynamic Random-Access Memory (DRAM) uses
+Row Address Strobe (RAS) and Column Address Strobe (CAS) signals in
+conjunction with binary decoding to locate and access individual memory
+cells. By multiplexing binary address inputs over shared physical pins,
+memory controllers split addresses into row and column coordinates,
+activating internal logic gates that isolate specific data bits within a
+high-density two-dimensional storage grid.</p>
+<h3 id="the-two-dimensional-dram-grid">The Two-Dimensional DRAM
+Grid</h3>
+<p>DRAM stores individual bits of data inside microscopic cells
+consisting of a single transistor and a capacitor. To manage billions of
+these cells efficiently, they are organized in a two-dimensional grid
+composed of horizontal rows (wordlines) and vertical columns (bitlines).
+Every unique intersection of a wordline and a bitline represents a
+single bit location.</p>
+<h3 id="binary-address-multiplexing">Binary Address Multiplexing</h3>
+<p>A memory address is transmitted by the CPU or memory controller as a
+binary number. In a system without multiplexing, accessing <span
+class="math inline">\(2^N\)</span> memory locations would require <span
+class="math inline">\(N\)</span> dedicated physical address lines. To
+reduce chip size and pin count, modern DRAM uses address multiplexing,
+splitting the binary address into two separate halves:</p>
+<ol type="1">
+<li><strong>Row Address:</strong> The upper binary bits designating the
+horizontal coordinate.</li>
+<li><strong>Column Address:</strong> The lower binary bits designating
+the vertical coordinate.</li>
+</ol>
+<p>Because both halves travel across the exact same physical address
+pins at different times, the memory chip relies on the RAS and CAS
+control signals to determine which part of the binary address is
+currently present on the bus.</p>
+<h3 id="the-ras-phase-selecting-the-row">The RAS Phase: Selecting the
+Row</h3>
+<ol type="1">
+<li><strong>Address Assertion:</strong> The memory controller places the
+row’s binary value onto the shared address bus.</li>
+<li><strong>Signal Activation:</strong> The <span
+class="math inline">\(\overline{\text{RAS}}\)</span> (Row Address
+Strobe) signal transitions to an active low state, signaling the memory
+chip to latch the binary bits present on the pins.</li>
+<li><strong>Binary Row Decoding:</strong> The binary bits enter an
+internal row decoder—a network of binary logic gates (such as AND and
+NAND gates). An <span class="math inline">\(n\)</span>-bit binary input
+activates exactly one of <span class="math inline">\(2^n\)</span>
+wordlines.</li>
+<li><strong>Row Activation:</strong> The selected wordline turns on all
+the access transistors along that row, dumping the stored charge of
+every cell in that row into a bank of sense amplifiers.</li>
+</ol>
+<h3 id="the-cas-phase-selecting-the-column">The CAS Phase: Selecting the
+Column</h3>
+<ol type="1">
+<li><strong>Address Assertion:</strong> With the row contents held in
+the sense amplifiers, the memory controller places the column’s binary
+value onto the same address bus pins.</li>
+<li><strong>Signal Activation:</strong> The <span
+class="math inline">\(\overline{\text{CAS}}\)</span> (Column Address
+Strobe) signal transitions to an active low state, commanding the chip
+to latch the column address bits.</li>
+<li><strong>Binary Column Decoding:</strong> An internal column decoder
+processes the binary column bits, translating the <span
+class="math inline">\(m\)</span>-bit input to activate one of <span
+class="math inline">\(2^m\)</span> column select lines.</li>
+<li><strong>Data Transfer:</strong> The active column line opens the
+corresponding gate in the sense amplifier bank, connecting only the
+targeted bit (or word) to the input/output (I/O) data buffer for reading
+or writing.</li>
+</ol>
+<h3 id="summary-of-the-binary-decoding-process">Summary of the Binary
+Decoding Process</h3>
+<p>The complete access cycle relies on translating a flat binary address
+into sequential coordinates:</p>
+<p><span class="math display">\[\text{Full Binary Address}
+\longrightarrow [\text{Row Bits}] + [\text{Column Bits}]\]</span></p>
+<ol type="1">
+<li><strong>Binary Row Bits</strong> <span
+class="math inline">\(\xrightarrow{\text{RAS Latch}}\)</span>
+<strong>Row Decoder</strong> <span
+class="math inline">\(\longrightarrow\)</span> Activates single wordline
+(Row).</li>
+<li><strong>Binary Column Bits</strong> <span
+class="math inline">\(\xrightarrow{\text{CAS Latch}}\)</span>
+<strong>Column Decoder</strong> <span
+class="math inline">\(\longrightarrow\)</span> Connects target bitline
+(Column) to I/O.</li>
+</ol>
+<p>Through this coordinated timing of RAS and CAS, DRAM accurately
+isolates any single memory cell out of millions using a minimal number
+of physical pins and standard binary logic decoding.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

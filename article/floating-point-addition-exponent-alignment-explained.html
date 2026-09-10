@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floating-Point Addition: Exponent Alignment Explained - binary</title>
+    <meta name="description" content="In binary floating-point arithmetic, adding two numbers requires their radix points to be aligned before their significands (mantissas) can be summed. This article explains the alignment process in floating-point addition, focusing on how hardware compar">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/floating-point-addition-exponent-alignment-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Floating-Point Addition: Exponent Alignment Explained - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/floating-point-addition-exponent-alignment-explained" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In binary floating-point arithmetic, adding two numbers requires their radix points to be aligned before their significands (mantissas) can be summed. This article explains the alignment process in floating-point addition, focusing on how hardware compar" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1
+id="floating-point-addition-exponent-alignment-explained">Floating-Point
+Addition: Exponent Alignment Explained</h1>
+<p>In binary floating-point arithmetic, adding two numbers requires
+their radix points to be aligned before their significands (mantissas)
+can be summed. This article explains the alignment process in
+floating-point addition, focusing on how hardware compares exponents,
+determines the magnitude difference, and performs logical right shifts
+on the smaller operand's significand to ensure both values share the
+same scale according to standards like IEEE 754.</p>
+<h2 id="representation-of-floating-point-numbers">Representation of
+Floating-Point Numbers</h2>
+<p>In the IEEE 754 standard, a binary floating-point number is
+represented by three components: a sign bit (<span
+class="math inline">\(S\)</span>), a biased exponent (<span
+class="math inline">\(E\)</span>), and a significand or mantissa (<span
+class="math inline">\(M\)</span>). The value is expressed mathematically
+as:</p>
+<p><span class="math display">\[\text{Value} = (-1)^S \times 1.M \times
+2^{E - \text{bias}}\]</span></p>
+<p>Because numbers can represent vastly different scales (e.g., <span
+class="math inline">\(1.011_2 \times 2^5\)</span> versus <span
+class="math inline">\(1.100_2 \times 2^2\)</span>), their significand
+bits represent different powers of two. Directly adding the significands
+without adjustment would result in an arithmetic error, analogous to
+adding decimal <span class="math inline">\(3 \times 10^3\)</span>
+directly to <span class="math inline">\(4 \times 10^1\)</span> to get
+<span class="math inline">\(7 \times 10^3\)</span>.</p>
+<h2 id="the-exponent-alignment-process">The Exponent Alignment
+Process</h2>
+<p>To add two floating-point numbers, the arithmetic logic unit (ALU)
+follows a structured sequence to align the operands:</p>
+<h3 id="1-comparing-exponents-and-calculating-the-difference">1.
+Comparing Exponents and Calculating the Difference</h3>
+<p>The processor first extracts the exponents of both operands, <span
+class="math inline">\(E_A\)</span> and <span
+class="math inline">\(E_B\)</span>, and calculates the difference:</p>
+<p><span class="math display">\[\Delta E = |E_A - E_B|\]</span></p>
+<p>The operand with the larger exponent designates the target exponent
+for the final operation. The operand with the smaller exponent is
+selected for alignment.</p>
+<h3 id="2-shifting-the-significand-to-the-right">2. Shifting the
+Significand to the Right</h3>
+<p>To match the larger exponent without changing the actual value of the
+smaller number, its exponent must be incremented by <span
+class="math inline">\(\Delta E\)</span>. To mathematically compensate
+for increasing the exponent by <span class="math inline">\(\Delta
+E\)</span>, its significand must be divided by <span
+class="math inline">\(2^{\Delta E}\)</span>.</p>
+<p>In binary arithmetic, division by powers of two corresponds directly
+to a logical right shift:</p>
+<ul>
+<li>The hidden leading bit (the implicit <code>1.</code> in normalized
+numbers) is made explicit.</li>
+<li>The entire significand of the smaller number is shifted to the right
+by <span class="math inline">\(\Delta E\)</span> bit positions.</li>
+<li>For each single-bit shift to the right, the effective exponent
+increases by 1, and the least significant bit drops into rounding/guard
+registers.</li>
+</ul>
+<p>By shifting the smaller number rather than shifting the larger number
+to the left, the system avoids generating bits beyond the maximum
+integer capacity of the register, though it may push least-significant
+bits out of standard precision.</p>
+<h3 id="3-addition-and-guard-bits">3. Addition and Guard Bits</h3>
+<p>Once the significand of the smaller number is right-shifted by <span
+class="math inline">\(\Delta E\)</span>, both operands effectively share
+the larger exponent. The significands can now be added (or subtracted if
+the signs differ) using standard fixed-point binary addition:</p>
+<p><span class="math display">\[\text{Result Significand} =
+M_{\text{larger}} \pm (M_{\text{smaller}} \gg \Delta E)\]</span></p>
+<p>During the shift, bits shifted off the right edge are retained in
+intermediate hardware storage (Guard, Round, and Sticky bits). These
+extra bits prevent catastrophic cancellation and ensure compliant
+rounding according to IEEE 754 rounding modes (such as round-to-nearest,
+ties-to-even).</p>
+<h2 id="normalization-after-addition">Normalization After Addition</h2>
+<p>After the significands are summed, the resulting value might no
+longer be normalized:</p>
+<ul>
+<li><strong>Carry-out:</strong> If the addition produces a carry beyond
+the most significant bit (e.g., <span class="math inline">\(1.x + 1.y =
+10.z\)</span>), the sum is shifted right by one bit, and the exponent is
+incremented by 1.</li>
+<li><strong>Cancellation:</strong> If subtraction results in leading
+zeros (e.g., <span class="math inline">\(1.001 - 1.000 =
+0.001\)</span>), the result is shifted left until the first non-zero bit
+occupies the leading position, and the exponent is decremented
+accordingly.</li>
+</ul>
+<p>Once normalized and rounded to the target precision format (e.g.,
+32-bit single precision or 64-bit double precision), the final sign,
+exponent, and significand are packaged into the output register.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

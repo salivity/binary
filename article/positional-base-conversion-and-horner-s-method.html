@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Positional Base Conversion and Horner's Method - binary</title>
+    <meta name="description" content="This article provides an overview of positional notation base conversion and explains how Horner's method optimizes the evaluation of polynomials representing binary numbers. Positional notation expresses numerical values as sums of weighted powers of a">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/positional-base-conversion-and-horner-s-method">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Positional Base Conversion and Horner's Method - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/positional-base-conversion-and-horner-s-method" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article provides an overview of positional notation base conversion and explains how Horner's method optimizes the evaluation of polynomials representing binary numbers. Positional notation expresses numerical values as sums of weighted powers of a" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="positional-base-conversion-and-horners-method">Positional Base
+Conversion and Horner's Method</h1>
+<p>This article provides an overview of positional notation base
+conversion and explains how Horner's method optimizes the evaluation of
+polynomials representing binary numbers. Positional notation expresses
+numerical values as sums of weighted powers of a base, meaning binary
+numbers can be mathematically modeled as polynomials with a base of two.
+By restructuring these polynomials, Horner’s method minimizes
+computational complexity, allowing base conversions from binary to
+decimal to be performed quickly using basic multiplication and
+addition.</p>
+<h2
+id="understanding-positional-notation-and-base-conversion">Understanding
+Positional Notation and Base Conversion</h2>
+<p>Positional notation is a system for representing numbers where the
+value of each digit depends on its position relative to the base (or
+radix). In general, a number represented by digits <span
+class="math inline">\(d_n d_{n-1} \dots d_1 d_0\)</span> in base <span
+class="math inline">\(b\)</span> represents the polynomial value:</p>
+<p><span class="math display">\[V = d_n b^n + d_{n-1} b^{n-1} + \dots +
+d_1 b^1 + d_0 b^0\]</span></p>
+<p>In the binary number system, the base is <span
+class="math inline">\(b = 2\)</span>, and the digits (bits) are
+restricted to <span class="math inline">\(0\)</span> and <span
+class="math inline">\(1\)</span>. Converting a binary number to decimal
+simply requires evaluating this polynomial for <span
+class="math inline">\(b = 2\)</span>. For example, the binary string
+<span class="math inline">\(1101_2\)</span> represents:</p>
+<p><span class="math display">\[V = (1 \times 2^3) + (1 \times 2^2) + (0
+\times 2^1) + (1 \times 2^0) = 8 + 4 + 0 + 1 = 13_{10}\]</span></p>
+<p>Evaluating this standard form directly requires calculating powers of
+two and multiplying them by their respective coefficients, which
+requires multiple exponentiation and multiplication steps.</p>
+<h2 id="how-horners-method-works">How Horner's Method Works</h2>
+<p>Horner's method (or Horner's rule) is an efficient algorithm for
+evaluating polynomials. It factors out the variable <span
+class="math inline">\(x\)</span> repeatedly, transforming an <span
+class="math inline">\(n\)</span>-degree polynomial from an expanded sum
+into a nested sequence of operations:</p>
+<p><span class="math display">\[P(x) = (\dots((a_n x + a_{n-1})x +
+a_{n-2})x + \dots + a_1)x + a_0\]</span></p>
+<p>This nested form reduces the evaluation of an <span
+class="math inline">\(n\)</span>-degree polynomial to exactly <span
+class="math inline">\(n\)</span> multiplications and <span
+class="math inline">\(n\)</span> additions, eliminating the need to
+compute independent powers of <span
+class="math inline">\(x\)</span>.</p>
+<h2 id="applying-horners-method-to-binary-numbers">Applying Horner's
+Method to Binary Numbers</h2>
+<p>When applied to binary-to-decimal conversion, Horner's method sets
+<span class="math inline">\(x = 2\)</span> and uses the binary digits as
+coefficients. The algorithm processes the binary string from the most
+significant bit (left) to the least significant bit (right) using an
+iterative loop:</p>
+<ol type="1">
+<li>Start with an accumulator value of <span
+class="math inline">\(0\)</span>.</li>
+<li>For each bit from left to right:
+<ul>
+<li>Multiply the current accumulator by <span
+class="math inline">\(2\)</span>.</li>
+<li>Add the value of the current bit.</li>
+</ul></li>
+<li>The final accumulator value is the decimal equivalent.</li>
+</ol>
+<h3 id="step-by-step-example">Step-by-Step Example</h3>
+<p>Converting the binary number <span
+class="math inline">\(1101_2\)</span> to decimal using Horner's
+method:</p>
+<ul>
+<li><strong>Start:</strong> <span
+class="math inline">\(\text{Accumulator} = 0\)</span></li>
+<li><strong>Bit 1 (1):</strong> <span class="math inline">\((0 \times 2)
++ 1 = 1\)</span></li>
+<li><strong>Bit 2 (1):</strong> <span class="math inline">\((1 \times 2)
++ 1 = 3\)</span></li>
+<li><strong>Bit 3 (0):</strong> <span class="math inline">\((3 \times 2)
++ 0 = 6\)</span></li>
+<li><strong>Bit 4 (1):</strong> <span class="math inline">\((6 \times 2)
++ 1 = 13\)</span></li>
+</ul>
+<p>The nested arithmetic directly resolves to <span
+class="math inline">\(((1 \times 2 + 1) \times 2 + 0) \times 2 + 1 =
+13\)</span>.</p>
+<h2 id="computational-efficiency">Computational Efficiency</h2>
+<p>In digital systems and low-level programming, Horner's method is
+particularly efficient for binary evaluation. Multiplying by the base
+<span class="math inline">\(2\)</span> corresponds to a single binary
+left shift operation (<code>&lt;&lt; 1</code>), and adding a bit
+corresponds to a bitwise OR (<code>|</code>) or simple addition. As a
+result, converting an arbitrary-length binary string to an integer value
+requires only a single pass of simple bit-shifts and additions, making
+it optimal in both time and hardware resource utilization.</p></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

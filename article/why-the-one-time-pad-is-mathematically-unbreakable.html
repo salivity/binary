@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why the One-Time Pad Is Mathematically Unbreakable - binary</title>
+    <meta name="description" content="The One-Time Pad (OTP) is the only cryptosystem proven to offer information-theoretic security, also known as perfect secrecy. When applied using random binary bits, the encryption process utilizes the bitwise Exclusive OR (XOR) operation to produce a ci">
+    <link rel="canonical" href="https://salivity.github.io/binary/article/why-the-one-time-pad-is-mathematically-unbreakable">
+    <link rel="search" type="application/opensearchdescription+xml" title="binary" href="/binary/opensearch.xml">
+    <link rel="icon" href="/binary/favicon.ico">
+    <link rel="stylesheet" href="/binary/css/style.css">
+    <link media="print" rel="stylesheet" href="/binary/css/print.css">
+    <script src="/binary/js/fuse.min.js"></script>
+    <script src="/binary/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why the One-Time Pad Is Mathematically Unbreakable - binary" />
+    <meta property="og:url" content="https://salivity.github.io/binary/article/why-the-one-time-pad-is-mathematically-unbreakable" />
+    <meta property="og:image:url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/binary/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The One-Time Pad (OTP) is the only cryptosystem proven to offer information-theoretic security, also known as perfect secrecy. When applied using random binary bits, the encryption process utilizes the bitwise Exclusive OR (XOR) operation to produce a ci" />
+    <link rel="manifest" href="/binary/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/binary/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>binary</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/binary/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article><h1 id="why-the-one-time-pad-is-mathematically-unbreakable">Why the
+One-Time Pad Is Mathematically Unbreakable</h1>
+<p>The One-Time Pad (OTP) is the only cryptosystem proven to offer
+information-theoretic security, also known as perfect secrecy. When
+applied using random binary bits, the encryption process utilizes the
+bitwise Exclusive OR (XOR) operation to produce a ciphertext that
+reveals zero information about the original message. Because every
+possible decryption is equally probable, no adversary can break the
+cipher through computational brute force or mathematical analysis,
+regardless of their computing power.</p>
+<h3 id="the-binary-xor-operation">The Binary XOR Operation</h3>
+<p>In modern computing, the one-time pad operates on binary numbers
+(bits of 0 and 1). The plaintext is converted into a binary sequence,
+and a key of equal length consisting of truly random bits is generated.
+The encryption process combines the plaintext bit (<span
+class="math inline">\(P\)</span>) and the key bit (<span
+class="math inline">\(K\)</span>) using the XOR (<span
+class="math inline">\(\oplus\)</span>) logic gate:</p>
+<ul>
+<li><span class="math inline">\(0 \oplus 0 = 0\)</span></li>
+<li><span class="math inline">\(0 \oplus 1 = 1\)</span></li>
+<li><span class="math inline">\(1 \oplus 0 = 1\)</span></li>
+<li><span class="math inline">\(1 \oplus 1 = 0\)</span></li>
+</ul>
+<p>Decryption uses the identical operation: the ciphertext bit (<span
+class="math inline">\(C\)</span>) is XORed with the key bit (<span
+class="math inline">\(K\)</span>) to recover the original plaintext bit
+(<span class="math inline">\(P \oplus K \oplus K = P\)</span>).</p>
+<h3 id="the-principle-of-perfect-secrecy">The Principle of Perfect
+Secrecy</h3>
+<p>In 1949, mathematician Claude Shannon published a mathematical proof
+establishing that the one-time pad provides perfect secrecy. Shannon
+defined perfect secrecy as a state where the conditional probability of
+a plaintext message <span class="math inline">\(M\)</span>, given a
+ciphertext <span class="math inline">\(C\)</span>, is identical to the
+prior probability of the plaintext message occurring on its own:</p>
+<p><span class="math display">\[P(M = m \mid C = c) = P(M =
+m)\]</span></p>
+<p>This means that intercepting the ciphertext provides an attacker with
+zero additional knowledge about the contents of the plaintext.</p>
+<h3 id="true-randomness-and-uniform-distribution">True Randomness and
+Uniform Distribution</h3>
+<p>The mathematical unbreakability depends directly on the statistical
+independence of the key's bits. If the binary key is generated from a
+truly random source, each bit has an exact <span
+class="math inline">\(0.5\)</span> (50%) probability of being a
+<code>0</code> and a <span class="math inline">\(0.5\)</span>
+probability of being a <code>1</code>.</p>
+<p>When a plaintext bit (whether <code>0</code> or <code>1</code>) is
+XORed with a truly random key bit, the resulting ciphertext bit has an
+exact <span class="math inline">\(0.5\)</span> probability of being
+<code>0</code> and a <span class="math inline">\(0.5\)</span>
+probability of being <code>1</code>. Consequently, the ciphertext
+matches a series of independent coin flips, containing no statistical
+patterns, frequencies, or language characteristics of the underlying
+message.</p>
+<h3 id="equal-likelihood-of-all-possible-plaintexts">Equal Likelihood of
+All Possible Plaintexts</h3>
+<p>The primary reason brute-force attacks fail against a binary one-time
+pad is the problem of false decryptions. If an attacker attempts to test
+every possible binary key against a ciphertext of length <span
+class="math inline">\(N\)</span>, they will generate all <span
+class="math inline">\(2^N\)</span> possible plaintexts of that
+length.</p>
+<p>For example, an intercepted 40-bit ciphertext could decode to the
+word "ATTACK," but it will also decode with equal mathematical
+probability to "DEFEND," "IGNORE," or any other string of the same
+length. Because every candidate plaintext corresponds to a valid,
+equally probable random key, there is no mathematical or statistical
+indicator to distinguish the true message from the incorrect ones.</p>
+<h3 id="required-conditions-for-mathematical-immunity">Required
+Conditions for Mathematical Immunity</h3>
+<p>To maintain absolute mathematical unbreakability, four criteria must
+be met:</p>
+<ol type="1">
+<li><strong>True Randomness:</strong> The binary key must come from a
+non-deterministic, hardware-based random physical process, not an
+algorithmic pseudo-random number generator (PRNG).</li>
+<li><strong>Key Length:</strong> The key must be at least as long as the
+plaintext message being encrypted.</li>
+<li><strong>No Reuse:</strong> A key must never be reused in whole or in
+part. Reusing a key allows an attacker to XOR two ciphertexts together,
+canceling out the key (<span class="math inline">\(C_1 \oplus C_2 = P_1
+\oplus P_2\)</span>) and exposing the statistical properties of the
+plaintexts.</li>
+<li><strong>Absolute Secrecy:</strong> The key must remain known only to
+the sender and recipient, as physical compromise of the key bypasses the
+mathematical protection entirely.</li>
+</ol></article>
+        <div id="comments-container"></div>
+
+        <script>
+            const utterancesScript = document.createElement('script');
+            
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/binary'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/binary/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/binary/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>
